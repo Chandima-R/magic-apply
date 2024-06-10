@@ -7,7 +7,7 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   prefix: "",
   theme: {
     container: {
@@ -51,6 +51,21 @@ const config = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        federalBlue: {
+          DEFAULT: "hsl(var(--federal-blue))"
+        },
+        honoluluBlue: {
+          DEFAULT: "hsl(var(--honolulu-blue))"
+        },
+        pacificCyan: {
+          DEFAULT: "hsl(var(--pacific-cyan))"
+        },
+        nonPhotoBlue: {
+          DEFAULT: "hsl(var(--non-photo-blue))"
+        },
+        lightCyan: {
+          DEFAULT: "hsl(var(--light-cyan))"
         },
       },
       borderRadius: {
