@@ -23,9 +23,9 @@ export const InputField = ({name, placeholder, label, control, required, labelCo
                         {required && <RequiredIndicator />}
                     </FormLabel>
                     <FormControl>
-                        <Input placeholder={placeholder} {...field} className={'h-12'}/>
+                        <Input placeholder={placeholder} {...field} className={'h-10'}/>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className={'text-xs'}/>
                 </FormItem>
             )}
         />

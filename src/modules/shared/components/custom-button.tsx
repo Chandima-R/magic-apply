@@ -11,7 +11,7 @@ export const CustomButton = ({title, onSubmit, type}: Props) => {
         <Button
             onSubmit={onSubmit}
             type={type}
-            className={'w-full h-12 uppercase bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue'}
+            className={'w-full h-10 uppercase bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue'}
         >
             {title}
         </Button>

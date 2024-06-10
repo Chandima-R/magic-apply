@@ -38,7 +38,7 @@ export const PasswordField = ({name, placeholder, label, control, required, labe
                                 placeholder={placeholder}
                                 type={showPassword ? "text" : "password"}
                                 {...field}
-                                className={'h-12'}
+                                className={'h-10'}
                             />
                             <span
                                 style={{
@@ -58,7 +58,7 @@ export const PasswordField = ({name, placeholder, label, control, required, labe
                           </span>
                         </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className={'text-xs'} />
                 </FormItem>
             )}
         />
