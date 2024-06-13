@@ -1,10 +1,23 @@
+'use client'
+
 import {AlignJustify, ChevronDown} from "lucide-react";
+import {useState} from "react";
+import {Sidebar} from "@/modules/shared/components/sidebar";
 
 export const Navbar = () => {
+    const[openSidebar, setOpenSidebar] = useState<boolean>(false)
+
+    const menuOnClick = () => {
+        console.log(openSidebar)
+        setOpenSidebar(!openSidebar)
+    }
 
     return(
-        <nav className={'flex lg:hidden sticky top-0 left-0 right-0 bg-white border-b p-4 items-center justify-between shadow-sm'}>
-            <div className={'cursor-pointer rounded-md border p-1 hover:shadow-sm'}>
+        <nav className={'flex lg:hidden sticky top-0 left-0 right-0 bg-white border-b p-4 items-center justify-between shadow-sm z-10'}>
+            {openSidebar && (
+                <Sidebar />
+            )}
+            <div className={'cursor-pointer rounded-md border p-1 hover:shadow-sm'} onClick={menuOnClick}>
                 <AlignJustify  className={'size-4'}/>
             </div>
 
