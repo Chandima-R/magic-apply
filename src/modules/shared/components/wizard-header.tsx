@@ -1,4 +1,3 @@
-import { Progress } from "@/components/ui/progress";
 import {Button} from "@/components/ui/button";
 
 interface WizardHeaderProps {
@@ -14,8 +13,9 @@ export const WizardHeader = ({ currentStep, steps }: WizardHeaderProps) => {
                 <div className="flex flex-wrap gap-4">
                     {steps.map((step) => (
                         <Button
+                            size={'sm'}
                             key={step}
-                            className={`text- cursor-pointer text-md font-normal rounded-md capitalize text-black bg-slate-200/40 px-2 py-1 ${
+                            className={`text-sm cursor-pointer font-normal rounded-md capitalize text-black bg-slate-200/40 px-2 py-1 ${
                                 currentStep === step ? 'text-white bg-honoluluBlue' : ''
                             } hover:bg-slate-400/40 transition duration-100`}
                         >

@@ -24,7 +24,7 @@ const resumeSchema = z.object({
     country: z.string().nonempty('Full name is required.'),
 })
 
-export const Connect = ({formData, setFormData, refSubmitButton, setIsButtonDisabled, setCurrentStep, refFormSaveButton}: Props) => {
+export const Contact = ({formData, setFormData, refSubmitButton, setIsButtonDisabled, setCurrentStep, refFormSaveButton}: Props) => {
     const form = useForm<z.infer<typeof resumeSchema>>({
         resolver: zodResolver(resumeSchema),
         defaultValues: {

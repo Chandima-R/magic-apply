@@ -5,6 +5,8 @@ export interface RegisterData{
     linkedin: string;
     personalWebsite: string;
     country: string;
+    state: string;
+    city: string;
     monthYear: string;
     cvv: string;
     cardCountry: string;
@@ -24,6 +26,8 @@ export const REGISTER_INITIAL_DATA: RegisterData = {
     linkedin: '',
     personalWebsite: '',
     country: '',
+    state: '',
+    city: '',
     monthYear: '',
     cvv: '',
     cardCountry: '',

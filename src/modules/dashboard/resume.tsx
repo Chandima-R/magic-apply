@@ -53,6 +53,8 @@ export const Resume = ({formData, setFormData, refSubmitButton, setIsButtonDisab
                     <TextInput fieldLabel={'LinkedIn'} fieldName={'linkedin'} control={form.control} placeholder={'in/cbloomberg'} required={true} />
                     <TextInput fieldLabel={'Personal Website'} fieldName={'personalWebsite'} control={form.control} placeholder={'https://www.chaarlesbloomberg.com'} required={true} />
                     <TextInput fieldLabel={'Country'} fieldName={'country'} control={form.control} placeholder={'country'} required={true} />
+                    <TextInput fieldLabel={'state'} fieldName={'State'} control={form.control} placeholder={'state'} required={true} />
+                    <TextInput fieldLabel={'city'} fieldName={'City'} control={form.control} placeholder={'city'} required={true} />
                 </div>
                 <button
                     type={'submit'}

@@ -5,7 +5,7 @@ import {useRef, useState} from "react";
 import {REGISTER_INITIAL_DATA, RegisterData} from "@/modules/dashboard/initialData";
 import {WizardHeader} from "@/modules/shared/components/wizard-header";
 import {Resume} from "@/modules/dashboard/resume";
-import {Connect} from "@/modules/dashboard/connect";
+import {Contact} from "@/modules/dashboard/contact";
 import {Experience} from "@/modules/dashboard/experience";
 import {Project} from "@/modules/dashboard/project";
 import {Education} from "@/modules/dashboard/education";
@@ -18,7 +18,7 @@ import {FinishReview} from "@/modules/dashboard/finish-review";
 
 const steps = [
     'resume',
-    'connect',
+    'contact',
     'experience',
     'project',
     'education',
@@ -50,9 +50,9 @@ export default function Home() {
                         setIsButtonDisabled={setIsButtonDisabled}
                     />
                 )
-            case 'connect':
+            case 'contact':
                 return(
-                    <Connect
+                    <Contact
                         formData={formData}
                         refSubmitButton={refSubmitButton}
                         setCurrentStep={setCurrentStep}
