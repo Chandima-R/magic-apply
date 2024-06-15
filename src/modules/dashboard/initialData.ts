@@ -13,6 +13,12 @@ export interface RegisterData{
     endDate: any;
     companyLocation: string;
     jobDescription: string;
+    projectTitle: string;
+    organization: string;
+    projectStartDate: any;
+    projectEndDate: any;
+    projectUrl: string;
+    projectDescription: string;
 }
 
 export const REGISTER_INITIAL_DATA: RegisterData = {
@@ -29,5 +35,11 @@ export const REGISTER_INITIAL_DATA: RegisterData = {
     startDate: '',
     endDate: '',
     companyLocation: '',
-    jobDescription: ''
+    jobDescription: '',
+    projectTitle: '',
+    organization: '',
+    projectStartDate: '',
+    projectEndDate: '',
+    projectUrl: '',
+    projectDescription: '',
 }
