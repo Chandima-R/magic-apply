@@ -48,9 +48,19 @@ export const Navigation = () => {
                                 </Link>
                             </div>
 
-                            {sidebarLinks.map((route) => (
-                                <SidebarLink label={route.label} href={route.href} icon={route.icon} isActive={pathname === route.href} key={route.href}/>
-                            ))}
+                            <div>
+                                <Button
+                                    className={'w-full h-10 uppercase bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue'}
+                                >
+                                    create new resume
+                                </Button>
+                            </div>
+
+                            <div>
+                                {sidebarLinks.map((route) => (
+                                    <SidebarLink label={route.label} href={route.href} icon={route.icon} isActive={pathname === route.href} key={route.href}/>
+                                ))}
+                            </div>
                         </nav>
                     </SheetContent>
                 </Sheet>
