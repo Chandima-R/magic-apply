@@ -3,7 +3,7 @@ import {Source_Sans_3} from "next/font/google";
 import React from "react";
 import {ClerkProvider} from "@clerk/nextjs";
 import {Toaster} from "@/components/ui/sonner";
-import {Navigation} from "@/modules/dashboard/navigation";
+import {Navigation} from "@/modules/shared/components/navigation";
 
 const source_sans_3 = Source_Sans_3({subsets: ["latin"]});
 
