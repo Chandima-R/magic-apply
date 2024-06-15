@@ -26,6 +26,10 @@ export interface RegisterData{
     minorDegree: string;
     gpa: string;
     additionalInformation: string;
+    certificateName: string;
+    certificateInstitute: string;
+    certificateDate: string;
+    certificateDescription: string
 }
 
 export const REGISTER_INITIAL_DATA: RegisterData = {
@@ -56,4 +60,8 @@ export const REGISTER_INITIAL_DATA: RegisterData = {
     minorDegree: '',
     gpa: '',
     additionalInformation: '',
+    certificateName: '',
+    certificateInstitute: '',
+    certificateDate: '',
+    certificateDescription:'',
 }
