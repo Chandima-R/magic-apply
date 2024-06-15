@@ -7,6 +7,7 @@ interface Props {
     refSubmitButton: RefObject<HTMLButtonElement> | null;
     setIsButtonDisabled: (data: boolean) => void;
     setCurrentStep: Dispatch<SetStateAction<string>>
+    refFormSaveButton: RefObject<HTMLButtonElement> | null;
 }
 export const Experience = ({formData, setFormData, refSubmitButton, setIsButtonDisabled, setCurrentStep}: Props) => {
     return(

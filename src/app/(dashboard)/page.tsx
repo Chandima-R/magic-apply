@@ -58,6 +58,7 @@ export default function Home() {
                         setCurrentStep={setCurrentStep}
                         setFormData={setFormData}
                         setIsButtonDisabled={setIsButtonDisabled}
+                        refFormSaveButton={refFormSaveButton}
                     />
                 )
             case 'experience':
@@ -68,6 +69,7 @@ export default function Home() {
                         setCurrentStep={setCurrentStep}
                         setFormData={setFormData}
                         setIsButtonDisabled={setIsButtonDisabled}
+                        refFormSaveButton={refFormSaveButton}
                     />
                 )
             case 'project':
@@ -78,6 +80,7 @@ export default function Home() {
                         setCurrentStep={setCurrentStep}
                         setFormData={setFormData}
                         setIsButtonDisabled={setIsButtonDisabled}
+                        refFormSaveButton={refFormSaveButton}
                     />
                 )
             case 'education':
@@ -88,6 +91,7 @@ export default function Home() {
                         setCurrentStep={setCurrentStep}
                         setFormData={setFormData}
                         setIsButtonDisabled={setIsButtonDisabled}
+                        refFormSaveButton={refFormSaveButton}
                     />
                 )
             case 'certifications':
@@ -98,6 +102,7 @@ export default function Home() {
                         setCurrentStep={setCurrentStep}
                         setFormData={setFormData}
                         setIsButtonDisabled={setIsButtonDisabled}
+                        refFormSaveButton={refFormSaveButton}
                     />
                 )
             case 'coursework':
@@ -108,6 +113,7 @@ export default function Home() {
                         setCurrentStep={setCurrentStep}
                         setFormData={setFormData}
                         setIsButtonDisabled={setIsButtonDisabled}
+                        refFormSaveButton={refFormSaveButton}
                     />
                 )
             case 'involvements':
@@ -118,6 +124,7 @@ export default function Home() {
                         setCurrentStep={setCurrentStep}
                         setFormData={setFormData}
                         setIsButtonDisabled={setIsButtonDisabled}
+                        refFormSaveButton={refFormSaveButton}
                     />
                 )
             case 'skills':
@@ -128,6 +135,7 @@ export default function Home() {
                         setCurrentStep={setCurrentStep}
                         setFormData={setFormData}
                         setIsButtonDisabled={setIsButtonDisabled}
+                        refFormSaveButton={refFormSaveButton}
                     />
                 )
             case 'summary':
@@ -138,6 +146,7 @@ export default function Home() {
                         setCurrentStep={setCurrentStep}
                         setFormData={setFormData}
                         setIsButtonDisabled={setIsButtonDisabled}
+                        refFormSaveButton={refFormSaveButton}
                     />
                 )
             case 'finish up & review':
@@ -148,6 +157,7 @@ export default function Home() {
                         setCurrentStep={setCurrentStep}
                         setFormData={setFormData}
                         setIsButtonDisabled={setIsButtonDisabled}
+                        refFormSaveButton={refFormSaveButton}
                     />
                 )
             default:
@@ -161,7 +171,7 @@ export default function Home() {
 
        <div>
            <div
-               className="relative bg-white w-full max-w-[1440px] min-h-[600px] h-full flex items-center justify-center p-2 z-30 shadow rounded flex-col"
+               className="relative bg-white w-full max-w-[1440px] h-full flex items-center justify-center p-2 z-10 border rounded-md flex-col"
            >
                <div className={'h-8'}>
                    <WizardHeader
@@ -170,7 +180,7 @@ export default function Home() {
                    />
                </div>
 
-               <div>
+               <div className={'w-full px-8 lg:px-32 mt-32 mb-16 lg:my-16'}>
                    {renderStep()}
                </div>
 

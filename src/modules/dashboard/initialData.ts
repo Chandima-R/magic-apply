@@ -1,10 +1,10 @@
 export interface RegisterData{
-    country: string;
-    countryCode: string;
-    passportNumber: string;
+    fullName: string;
     email: string;
-    cardType: string;
-    cardNumber: string;
+    phone: string;
+    linkedin: string;
+    personalWebsite: string;
+    country: string;
     monthYear: string;
     cvv: string;
     cardCountry: string;
@@ -18,12 +18,12 @@ export interface RegisterData{
 }
 
 export const REGISTER_INITIAL_DATA: RegisterData = {
-    country: '',
-    countryCode: '',
-    passportNumber: '',
+    fullName: '',
     email: '',
-    cardType: '',
-    cardNumber: '',
+    phone: '',
+    linkedin: '',
+    personalWebsite: '',
+    country: '',
     monthYear: '',
     cvv: '',
     cardCountry: '',
