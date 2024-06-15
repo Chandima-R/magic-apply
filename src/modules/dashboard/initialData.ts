@@ -7,6 +7,12 @@ export interface RegisterData{
     country: string;
     state: string;
     city: string;
+    role: string;
+    company: string;
+    startDate: any;
+    endDate: any;
+    companyLocation: string;
+    jobDescription: string;
 }
 
 export const REGISTER_INITIAL_DATA: RegisterData = {
@@ -18,4 +24,10 @@ export const REGISTER_INITIAL_DATA: RegisterData = {
     country: '',
     state: '',
     city: '',
+    role: '',
+    company: '',
+    startDate: '',
+    endDate: '',
+    companyLocation: '',
+    jobDescription: ''
 }

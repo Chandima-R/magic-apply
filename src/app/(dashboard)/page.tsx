@@ -4,7 +4,6 @@ import {WizardFooter} from "@/modules/shared/components/wizard-footer";
 import {useRef, useState} from "react";
 import {REGISTER_INITIAL_DATA, RegisterData} from "@/modules/dashboard/initialData";
 import {WizardHeader} from "@/modules/shared/components/wizard-header";
-import {Resume} from "@/modules/dashboard/resume";
 import {Contact} from "@/modules/dashboard/contact";
 import {Experience} from "@/modules/dashboard/experience";
 import {Project} from "@/modules/dashboard/project";
@@ -17,7 +16,6 @@ import {Summary} from "@/modules/dashboard/summary";
 import {FinishReview} from "@/modules/dashboard/finish-review";
 
 const steps = [
-    'resume',
     'contact',
     'experience',
     'project',
@@ -40,16 +38,6 @@ export default function Home() {
 
     const renderStep = () => {
         switch(currentStep){
-            case 'resume':
-                return(
-                    <Resume
-                        formData={formData}
-                        refSubmitButton={refSubmitButton}
-                        setCurrentStep={setCurrentStep}
-                        setFormData={setFormData}
-                        setIsButtonDisabled={setIsButtonDisabled}
-                    />
-                )
             case 'contact':
                 return(
                     <Contact
@@ -58,7 +46,6 @@ export default function Home() {
                         setCurrentStep={setCurrentStep}
                         setFormData={setFormData}
                         setIsButtonDisabled={setIsButtonDisabled}
-                        refFormSaveButton={refFormSaveButton}
                     />
                 )
             case 'experience':
