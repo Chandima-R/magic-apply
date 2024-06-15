@@ -7,16 +7,6 @@ export interface RegisterData{
     country: string;
     state: string;
     city: string;
-    monthYear: string;
-    cvv: string;
-    cardCountry: string;
-    zipCode: string;
-    ticketNumber: string;
-    flightNumber: string;
-    takeOffFrom: string;
-    takeOffTime: string;
-    landingTo: string;
-    landingTime: string;
 }
 
 export const REGISTER_INITIAL_DATA: RegisterData = {
@@ -28,14 +18,4 @@ export const REGISTER_INITIAL_DATA: RegisterData = {
     country: '',
     state: '',
     city: '',
-    monthYear: '',
-    cvv: '',
-    cardCountry: '',
-    zipCode: '',
-    ticketNumber: '',
-    flightNumber: '',
-    takeOffFrom: '',
-    takeOffTime: '',
-    landingTo: '',
-    landingTime: ''
 }

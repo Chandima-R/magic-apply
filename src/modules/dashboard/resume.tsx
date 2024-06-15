@@ -16,11 +16,13 @@ interface Props {
 
 const resumeSchema = z.object({
     fullName: z.string().nonempty('Full name is required.'),
-    email: z.string().nonempty('Full name is required.'),
-    phone: z.string().nonempty('Full name is required.'),
-    linkedin: z.string().nonempty('Full name is required.'),
-    personalWebsite: z.string().nonempty('Full name is required.'),
-    country: z.string().nonempty('Full name is required.'),
+    email: z.string().nonempty('Email address is required.').email(),
+    phone: z.string().nonempty('Phone number is required.'),
+    linkedin: z.string().nonempty('Linkedin is required.'),
+    personalWebsite: z.string().nonempty('Personal website name is required.'),
+    country: z.string().nonempty('Country is required.'),
+    state: z.string().nonempty('State is required.'),
+    city: z.string().nonempty('City is required.'),
 })
 
 export const Resume = ({formData, setFormData, refSubmitButton, setIsButtonDisabled, setCurrentStep}: Props) => {
@@ -33,19 +35,21 @@ export const Resume = ({formData, setFormData, refSubmitButton, setIsButtonDisab
             linkedin: formData?.linkedin,
             personalWebsite: formData?.personalWebsite,
             country: formData?.country,
+            state: formData.state,
+            city: formData.city
         },
     })
 
     const onSubmit = (values: z.infer<typeof resumeSchema>) => {
         if(values){
             setFormData({...formData, ...values})
-            setCurrentStep('connect')
+            setCurrentStep('contact')
         }
     }
 
     return(
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} >
+            <form onSubmit={form.handleSubmit(onSubmit)}>
                 <div className={'gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-2 w-full'}>
                     <TextInput fieldLabel={'full name'} fieldName={'fullName'} control={form.control} placeholder={'Charles Bloomberg'} required={true} />
                     <TextInput fieldLabel={'Email address'} fieldName={'email'} control={form.control} placeholder={'charlesbloomberg@wisc.edu'} required={true} />
@@ -53,8 +57,8 @@ export const Resume = ({formData, setFormData, refSubmitButton, setIsButtonDisab
                     <TextInput fieldLabel={'LinkedIn'} fieldName={'linkedin'} control={form.control} placeholder={'in/cbloomberg'} required={true} />
                     <TextInput fieldLabel={'Personal Website'} fieldName={'personalWebsite'} control={form.control} placeholder={'https://www.chaarlesbloomberg.com'} required={true} />
                     <TextInput fieldLabel={'Country'} fieldName={'country'} control={form.control} placeholder={'country'} required={true} />
-                    <TextInput fieldLabel={'state'} fieldName={'State'} control={form.control} placeholder={'state'} required={true} />
-                    <TextInput fieldLabel={'city'} fieldName={'City'} control={form.control} placeholder={'city'} required={true} />
+                    <TextInput fieldLabel={'State'} fieldName={'state'} control={form.control} placeholder={'state'} required={true} />
+                    <TextInput fieldLabel={'City'} fieldName={'city'} control={form.control} placeholder={'city'} required={true} />
                 </div>
                 <button
                     type={'submit'}

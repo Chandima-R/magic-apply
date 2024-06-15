@@ -15,18 +15,18 @@ interface Props {
     refFormSaveButton: RefObject<HTMLButtonElement> | null;
 }
 
-const resumeSchema = z.object({
+const contactSchema = z.object({
     fullName: z.string().nonempty('Full name is required.'),
-    email: z.string().nonempty('Full name is required.'),
-    phone: z.string().nonempty('Full name is required.'),
-    linkedin: z.string().nonempty('Full name is required.'),
+    email: z.string().nonempty('Email name is required.').email(),
+    phone: z.string().nonempty('Phone number is required.'),
+    linkedin: z.string().nonempty('Linkedin is required.'),
     personalWebsite: z.string().nonempty('Full name is required.'),
     country: z.string().nonempty('Full name is required.'),
 })
 
 export const Contact = ({formData, setFormData, refSubmitButton, setIsButtonDisabled, setCurrentStep, refFormSaveButton}: Props) => {
-    const form = useForm<z.infer<typeof resumeSchema>>({
-        resolver: zodResolver(resumeSchema),
+    const form = useForm<z.infer<typeof contactSchema>>({
+        resolver: zodResolver(contactSchema),
         defaultValues: {
             fullName: formData?.fullName,
             email: formData?.email,
@@ -37,7 +37,7 @@ export const Contact = ({formData, setFormData, refSubmitButton, setIsButtonDisa
         },
     })
 
-    const onSubmit = (values: z.infer<typeof resumeSchema>) => {
+    const onSubmit = (values: z.infer<typeof contactSchema>) => {
         if(values){
             setFormData({...formData, ...values})
             setCurrentStep('connect')
@@ -46,7 +46,6 @@ export const Contact = ({formData, setFormData, refSubmitButton, setIsButtonDisa
 
     return(
         <Form {...form}>
-            <p>connect</p>
             <form onSubmit={form.handleSubmit(onSubmit)} className={'gap-4 grid grid-cols-1 lg:grid-cols-2 w-full'}>
                 <TextInput fieldLabel={'full name'} fieldName={'fullName'} control={form.control}
                            placeholder={'Charles Bloomberg'} required={true}/>
