@@ -35,6 +35,12 @@ export interface RegisterData{
     courseCompletionDate: string;
     courseSkill: string;
     courseDescription: string;
+    organizationRole: string;
+    OrganizationName: string;
+    organizationRoleStartDate: string;
+    organizationRoleEndDate: string;
+    organizationLocation: string;
+    organizationRoleDescription: string;
 }
 
 export const REGISTER_INITIAL_DATA: RegisterData = {
@@ -74,5 +80,11 @@ export const REGISTER_INITIAL_DATA: RegisterData = {
     courseCompletionDate: '',
     courseSkill: '',
     courseDescription: '',
+    organizationRole: '',
+    OrganizationName: '',
+    organizationRoleStartDate: '',
+    organizationRoleEndDate: '',
+    organizationLocation: '',
+    organizationRoleDescription: '',
 
 }
