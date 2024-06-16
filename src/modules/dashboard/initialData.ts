@@ -30,6 +30,11 @@ export interface RegisterData{
     certificateInstitute: string;
     certificateDate: string;
     certificateDescription: string
+    courseName: string;
+    courseInstitute: string;
+    courseCompletionDate: string;
+    courseSkill: string;
+    courseDescription: string;
 }
 
 export const REGISTER_INITIAL_DATA: RegisterData = {
@@ -64,4 +69,10 @@ export const REGISTER_INITIAL_DATA: RegisterData = {
     certificateInstitute: '',
     certificateDate: '',
     certificateDescription:'',
+    courseName: '',
+    courseInstitute: '',
+    courseCompletionDate: '',
+    courseSkill: '',
+    courseDescription: '',
+
 }
