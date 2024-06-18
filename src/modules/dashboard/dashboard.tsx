@@ -2,6 +2,13 @@ import {Button} from "@/components/ui/button";
 import {useState} from "react";
 import {Contact} from "@/modules/dashboard/contact";
 import {Experience} from "@/modules/dashboard/experience";
+import {Project} from "@/modules/dashboard/project";
+import {Education} from "@/modules/dashboard/education";
+import {Certifications} from "@/modules/dashboard/certifications";
+import {Coursework} from "@/modules/dashboard/coursework";
+import {Involvements} from "@/modules/dashboard/involvements";
+import {Skills} from "@/modules/dashboard/skills";
+import {Summary} from "@/modules/dashboard/summary";
 
 const steps = [
     'contact',
@@ -24,21 +31,21 @@ export const Dashboard = () => {
             case 'experience':
                 return <Experience />
             case 'project':
-                return <div>projects</div>
+                return <Project />
             case 'education':
-                return <div>education</div>
+                return <Education />
             case 'certifications':
-                return <div>certifications</div>
+                return <Certifications />
             case 'coursework':
-                return <div>coursework</div>
+                return <Coursework />
             case 'involvements':
-                return <div>involvements</div>
+                return <Involvements />
             case 'skills':
-                return <div>skills</div>
+                return <Skills />
             case 'summary':
-                return <div>summary</div>
+                return <Summary />
             case 'finish up & review':
-                return <div>finish</div>
+                return <div>cv overview using a online pdf editor</div>
             default:
                 return <div>Select a step</div>;
         }

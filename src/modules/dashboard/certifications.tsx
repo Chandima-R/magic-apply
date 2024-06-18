@@ -1,42 +1,32 @@
-import {RegisterData} from "@/modules/dashboard/initialData";
-import {Dispatch, RefObject, SetStateAction} from "react";
 import {Form} from "@/components/ui/form";
 import {TextInput} from "@/modules/shared/components/text-input";
 import {TextArea} from "@/modules/shared/components/text-area";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {CustomButton} from "@/modules/shared/components/custom-button";
 
-interface Props {
-    formData: RegisterData;
-    setFormData: Dispatch<SetStateAction<RegisterData>>;
-    refSubmitButton: RefObject<HTMLButtonElement> | null;
-    setIsButtonDisabled: (data: boolean) => void;
-    setCurrentStep: Dispatch<SetStateAction<string>>
-    refFormSaveButton: RefObject<HTMLButtonElement> | null;
-}
 
-const resumeSchema = z.object({
+const certificationSchema = z.object({
     certificateName: z.string().nonempty('Certificate name is required.'),
     certificateInstitute: z.string().nonempty('Certificate issued institute is required.'),
     certificateDate: z.string().nonempty('Certificate issued date is required.'),
     certificateDescription: z.string().nonempty('Certificate description date is required.'),
 })
-export const Certifications = ({formData, setFormData, refSubmitButton, setIsButtonDisabled, setCurrentStep, refFormSaveButton}: Props) => {
-    const form = useForm<z.infer<typeof resumeSchema>>({
-        resolver: zodResolver(resumeSchema),
+export const Certifications = () => {
+    const form = useForm<z.infer<typeof certificationSchema>>({
+        resolver: zodResolver(certificationSchema),
         defaultValues: {
-            certificateName: formData?.certificateName,
-            certificateInstitute: formData?.certificateInstitute,
-            certificateDate: formData?.certificateDate,
-            certificateDescription: formData?.certificateDescription,
+            certificateName: '',
+            certificateInstitute: '',
+            certificateDate: '',
+            certificateDescription: '',
         },
     })
 
-    const onSubmit = (values: z.infer<typeof resumeSchema>) => {
+    const onSubmit = (values: z.infer<typeof certificationSchema>) => {
         if (values) {
-            setFormData({...formData, ...values})
-            setCurrentStep('coursework')
+            console.log(values)
         }
     }
 
@@ -84,22 +74,14 @@ export const Certifications = ({formData, setFormData, refSubmitButton, setIsBut
                             />
                         </div>
 
-                        <button
-                            type={'submit'}
-                            ref={refSubmitButton}
-                            className={'invisible'}
-                        >
-                            submit
-                        </button>
-
-                        <button
-                            type="button"
-                            ref={refFormSaveButton}
-                            className="invisible"
-                            onClick={() => setCurrentStep('education')}
-                        >
-                            back
-                        </button>
+                        <div className={'flex justify-end w-full mt-8'}>
+                            <div className={'w-38'}>
+                                <CustomButton
+                                    type={'submit'}
+                                    title={'Save to certifications list'}
+                                />
+                            </div>
+                        </div>
                     </form>
                 </Form>
 

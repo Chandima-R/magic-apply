@@ -5,7 +5,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {TextInput} from "@/modules/shared/components/text-input";
 import {CustomButton} from "@/modules/shared/components/custom-button";
 
-const resumeSchema = z.object({
+const contactSchema = z.object({
     fullName: z.string().nonempty('Full name is required.'),
     email: z.string().nonempty('Email address is required.').email(),
     phone: z.string().nonempty('Phone number is required.'),
@@ -17,8 +17,8 @@ const resumeSchema = z.object({
 })
 
 export const Contact = () => {
-    const form = useForm<z.infer<typeof resumeSchema>>({
-        resolver: zodResolver(resumeSchema),
+    const form = useForm<z.infer<typeof contactSchema>>({
+        resolver: zodResolver(contactSchema),
         defaultValues: {
             fullName: "",
             email: "",
@@ -31,7 +31,7 @@ export const Contact = () => {
         },
     })
 
-    const onSubmit = (values: z.infer<typeof resumeSchema>) => {
+    const onSubmit = (values: z.infer<typeof contactSchema>) => {
         if (values) {
             console.log(values)
         }

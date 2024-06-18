@@ -1,22 +1,12 @@
-import {RegisterData} from "@/modules/dashboard/initialData";
-import {Dispatch, RefObject, SetStateAction} from "react";
 import {Form} from "@/components/ui/form";
 import {TextInput} from "@/modules/shared/components/text-input";
 import {TextArea} from "@/modules/shared/components/text-area";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {CustomButton} from "@/modules/shared/components/custom-button";
 
-interface Props {
-    formData: RegisterData;
-    setFormData: Dispatch<SetStateAction<RegisterData>>;
-    refSubmitButton: RefObject<HTMLButtonElement> | null;
-    setIsButtonDisabled: (data: boolean) => void;
-    setCurrentStep: Dispatch<SetStateAction<string>>
-    refFormSaveButton: RefObject<HTMLButtonElement> | null;
-}
-
-const resumeSchema = z.object({
+const projectSchema = z.object({
     projectTitle: z.string().nonempty('Project title is required.'),
     organization: z.string().nonempty('Organization is required.'),
     projectStartDate: z.string().nonempty('Start date is required.'),
@@ -24,23 +14,22 @@ const resumeSchema = z.object({
     projectUrl: z.string().nonempty('Company Location is required.'),
     projectDescription: z.string().nonempty('Job description is required.'),
 })
-export const Project = ({formData, setFormData, refSubmitButton, setIsButtonDisabled, setCurrentStep, refFormSaveButton}: Props) => {
-    const form = useForm<z.infer<typeof resumeSchema>>({
-        resolver: zodResolver(resumeSchema),
+export const Project = () => {
+    const form = useForm<z.infer<typeof projectSchema>>({
+        resolver: zodResolver(projectSchema),
         defaultValues: {
-            projectTitle: formData?.projectTitle,
-            organization: formData?.organization,
-            projectStartDate: formData?.projectStartDate,
-            projectEndDate: formData?.projectEndDate,
-            projectUrl: formData?.projectUrl,
-            projectDescription: formData?.projectDescription,
+            projectTitle: '',
+            organization: '',
+            projectStartDate: '',
+            projectEndDate: '',
+            projectUrl: '',
+            projectDescription: '',
         },
     })
 
-    const onSubmit = (values: z.infer<typeof resumeSchema>) => {
+    const onSubmit = (values: z.infer<typeof projectSchema>) => {
         if (values) {
-            setFormData({...formData, ...values})
-            setCurrentStep('education')
+            console.log(values)
         }
     }
 
@@ -58,47 +47,64 @@ export const Project = ({formData, setFormData, refSubmitButton, setIsButtonDisa
                     <form onSubmit={form.handleSubmit(onSubmit)}>
 
                         <div className={'gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-2 w-full'}>
-                            <TextInput fieldLabel={'Give your project a title'} fieldName={'projectTitle'}
-                                       control={form.control}
-                                       placeholder={'Volunteer'} required={true}/>
-                            <TextInput fieldLabel={'In which organization did you do your project?'} fieldName={'organization'}
-                                       control={form.control}
-                                       placeholder={'Habitat for Humanity'} required={true}/>
-                            <TextInput fieldLabel={'Start date'} fieldName={'projectStartDate'} control={form.control}
-                                       placeholder={'start date'} required={true}/>
-                            <TextInput fieldLabel={'End date'} fieldName={'projectEndDate'} control={form.control}
-                                       placeholder={'end date'} required={true}/>
-                            <TextInput fieldLabel={'Project URL'} fieldName={'projectUrl'}
-                                       control={form.control} placeholder={'New York, NY'}
-                                       required={true}/>
+                            <TextInput
+                                fieldLabel={'Give your project a title'}
+                                fieldName={'projectTitle'}
+                                control={form.control}
+                                placeholder={'Volunteer'}
+                                required={true}
+                            />
+                            <TextInput
+                                fieldLabel={'In which organization did you do your project?'}
+                                fieldName={'organization'}
+                                control={form.control}
+                                placeholder={'Habitat for Humanity'}
+                                required={true}
+                            />
+                            <TextInput
+                                fieldLabel={'Start date'}
+                                fieldName={'projectStartDate'}
+                                control={form.control}
+                                placeholder={'start date'}
+                                required={true}
+                            />
+                            <TextInput
+                                fieldLabel={'End date'}
+                                fieldName={'projectEndDate'}
+                                control={form.control}
+                                placeholder={'end date'}
+                                required={true}
+                            />
+                            <TextInput
+                                fieldLabel={'Project URL'}
+                                fieldName={'projectUrl'}
+                                control={form.control}
+                                placeholder={'New York, NY'}
+                                required={true}
+                            />
                         </div>
                         <div className={'mt-4 lg:mt-8 '}>
-                            <TextArea fieldLabel={'Now describe what you did'} fieldName={'projectDescription'}
-                                      control={form.control}
-                                      placeholder={'Organized and implemented Google Analytics dta tracking campaigns to maximize the effectiveness of emil remarketing initiatives that were deployed using Salesforce&rsquo;s marketing cloud software. '}
-                                      required={true}/>
+                            <TextArea
+                                fieldLabel={'Now describe what you did'}
+                                fieldName={'projectDescription'}
+                                control={form.control}
+                                placeholder={'Organized and implemented Google Analytics dta tracking campaigns to maximize the effectiveness of emil remarketing initiatives that were deployed using Salesforce&rsquo;s marketing cloud software. '}
+                                required={true}
+                            />
 
                         </div>
 
-                        <button
-                            type={'submit'}
-                            ref={refSubmitButton}
-                            className={'invisible'}
-                        >
-                            submit
-                        </button>
+                        <div className={'flex justify-end w-full mt-8'}>
+                            <div className={'w-38'}>
+                                <CustomButton
+                                    type={'submit'}
+                                    title={'Save to project list'}
+                                />
+                            </div>
+                        </div>
 
-                        <button
-                            type="button"
-                            ref={refFormSaveButton}
-                            className="invisible"
-                            onClick={() => setCurrentStep('experience')}
-                        >
-                            back
-                        </button>
                     </form>
                 </Form>
-
             </div>
         </div>
     )

@@ -6,7 +6,7 @@ import {TextInput} from "@/modules/shared/components/text-input";
 import {TextArea} from "@/modules/shared/components/text-area";
 import {CustomButton} from "@/modules/shared/components/custom-button";
 
-const resumeSchema = z.object({
+const experienceSchema = z.object({
     role: z.string().nonempty('Role is required.'),
     company: z.string().nonempty('Company is required.'),
     startDate: z.string().nonempty('Start date is required.'),
@@ -15,8 +15,8 @@ const resumeSchema = z.object({
     jobDescription: z.string().nonempty('Job description is required.'),
 })
 export const Experience = () => {
-    const form = useForm<z.infer<typeof resumeSchema>>({
-        resolver: zodResolver(resumeSchema),
+    const form = useForm<z.infer<typeof experienceSchema>>({
+        resolver: zodResolver(experienceSchema),
         defaultValues: {
             role: '',
             company: 'formData?.company',
@@ -27,7 +27,7 @@ export const Experience = () => {
         },
     })
 
-    const onSubmit = (values: z.infer<typeof resumeSchema>) => {
+    const onSubmit = (values: z.infer<typeof experienceSchema>) => {
         if (values) {
             console.log(values)
         }

@@ -1,22 +1,12 @@
-import {RegisterData} from "@/modules/dashboard/initialData";
-import {Dispatch, RefObject, SetStateAction} from "react";
 import {Form} from "@/components/ui/form";
 import {TextInput} from "@/modules/shared/components/text-input";
 import {TextArea} from "@/modules/shared/components/text-area";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {CustomButton} from "@/modules/shared/components/custom-button";
 
-interface Props {
-    formData: RegisterData;
-    setFormData: Dispatch<SetStateAction<RegisterData>>;
-    refSubmitButton: RefObject<HTMLButtonElement> | null;
-    setIsButtonDisabled: (data: boolean) => void;
-    setCurrentStep: Dispatch<SetStateAction<string>>
-    refFormSaveButton: RefObject<HTMLButtonElement> | null;
-}
-
-const resumeSchema = z.object({
+const involvementSchema = z.object({
     organizationRole: z.string().nonempty('Project title is required.'),
     OrganizationName: z.string().nonempty('Organization is required.'),
     organizationRoleStartDate: z.string().nonempty('Start date is required.'),
@@ -24,30 +14,22 @@ const resumeSchema = z.object({
     organizationLocation: z.string().nonempty('Company Location is required.'),
     organizationRoleDescription: z.string().nonempty('Job description is required.'),
 })
-export const Involvements = ({
-                                 formData,
-                                 setFormData,
-                                 refSubmitButton,
-                                 setIsButtonDisabled,
-                                 setCurrentStep,
-                                 refFormSaveButton
-                             }: Props) => {
-    const form = useForm<z.infer<typeof resumeSchema>>({
-        resolver: zodResolver(resumeSchema),
+export const Involvements = () => {
+    const form = useForm<z.infer<typeof involvementSchema>>({
+        resolver: zodResolver(involvementSchema),
         defaultValues: {
-            organizationRole: formData?.organizationRole,
-            OrganizationName: formData?.OrganizationName,
-            organizationRoleStartDate: formData?.organizationRoleStartDate,
-            organizationRoleEndDate: formData?.organizationRoleEndDate,
-            organizationLocation: formData?.organizationLocation,
-            organizationRoleDescription: formData?.organizationRoleDescription,
+            organizationRole: '',
+            OrganizationName: '',
+            organizationRoleStartDate: '',
+            organizationRoleEndDate: '',
+            organizationLocation: '',
+            organizationRoleDescription: '',
         },
     })
 
-    const onSubmit = (values: z.infer<typeof resumeSchema>) => {
+    const onSubmit = (values: z.infer<typeof involvementSchema>) => {
         if (values) {
-            setFormData({...formData, ...values})
-            setCurrentStep('skills')
+            console.log(values)
         }
     }
 
@@ -106,22 +88,14 @@ export const Involvements = ({
 
                         </div>
 
-                        <button
-                            type={'submit'}
-                            ref={refSubmitButton}
-                            className={'invisible'}
-                        >
-                            submit
-                        </button>
-
-                        <button
-                            type="button"
-                            ref={refFormSaveButton}
-                            className="invisible"
-                            onClick={() => setCurrentStep('coursework')}
-                        >
-                            back
-                        </button>
+                        <div className={'flex justify-end w-full mt-8'}>
+                            <div className={'w-38'}>
+                                <CustomButton
+                                    type={'submit'}
+                                    title={'Save to involvement list'}
+                                />
+                            </div>
+                        </div>
                     </form>
                 </Form>
 

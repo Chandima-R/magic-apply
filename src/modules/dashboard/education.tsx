@@ -1,22 +1,13 @@
-import {RegisterData} from "@/modules/dashboard/initialData";
-import {Dispatch, RefObject, SetStateAction} from "react";
 import {Form} from "@/components/ui/form";
 import {TextInput} from "@/modules/shared/components/text-input";
 import {TextArea} from "@/modules/shared/components/text-area";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {CustomButton} from "@/modules/shared/components/custom-button";
 
-interface Props {
-    formData: RegisterData;
-    setFormData: Dispatch<SetStateAction<RegisterData>>;
-    refSubmitButton: RefObject<HTMLButtonElement> | null;
-    setIsButtonDisabled: (data: boolean) => void;
-    setCurrentStep: Dispatch<SetStateAction<string>>
-    refFormSaveButton: RefObject<HTMLButtonElement> | null;
-}
 
-const resumeSchema = z.object({
+const educationSchema = z.object({
     degree: z.string().nonempty('Degree or major required.'),
     institute: z.string().nonempty('Institute is required.'),
     instituteLocation: z.string().nonempty('Location of the institute is required.'),
@@ -25,31 +16,23 @@ const resumeSchema = z.object({
     gpa: z.string().nonempty('GPA is required.'),
     additionalInformation: z.string().nonempty('Additional information is required.'),
 })
-export const Education = ({
-                              formData,
-                              setFormData,
-                              refSubmitButton,
-                              setIsButtonDisabled,
-                              setCurrentStep,
-                              refFormSaveButton
-                          }: Props) => {
-    const form = useForm<z.infer<typeof resumeSchema>>({
-        resolver: zodResolver(resumeSchema),
+export const Education = () => {
+    const form = useForm<z.infer<typeof educationSchema>>({
+        resolver: zodResolver(educationSchema),
         defaultValues: {
-            degree: formData?.degree,
-            institute: formData?.institute,
-            instituteLocation: formData?.instituteLocation,
-            completionDate: formData?.completionDate,
-            minorDegree: formData?.minorDegree,
-            gpa: formData?.gpa,
-            additionalInformation: formData?.additionalInformation,
+            degree: '',
+            institute: '',
+            instituteLocation: '',
+            completionDate: '',
+            minorDegree: '',
+            gpa: '',
+            additionalInformation: '',
         },
     })
 
-    const onSubmit = (values: z.infer<typeof resumeSchema>) => {
+    const onSubmit = (values: z.infer<typeof educationSchema>) => {
         if (values) {
-            setFormData({...formData, ...values})
-            setCurrentStep('certifications')
+            console.log(values)
         }
     }
 
@@ -118,22 +101,14 @@ export const Education = ({
                             />
                         </div>
 
-                        <button
-                            type={'submit'}
-                            ref={refSubmitButton}
-                            className={'invisible'}
-                        >
-                            submit
-                        </button>
-
-                        <button
-                            type="button"
-                            ref={refFormSaveButton}
-                            className="invisible"
-                            onClick={() => setCurrentStep('project')}
-                        >
-                            back
-                        </button>
+                        <div className={'flex justify-end w-full mt-8'}>
+                            <div className={'w-38'}>
+                                <CustomButton
+                                    type={'submit'}
+                                    title={'Save to education list'}
+                                />
+                            </div>
+                        </div>
                     </form>
                 </Form>
 
