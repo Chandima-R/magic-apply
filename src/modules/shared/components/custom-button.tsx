@@ -2,7 +2,7 @@ import {Button} from "@/components/ui/button";
 
 interface Props{
     title: string;
-    onSubmit: () => void
+    onSubmit?: () => void
     type: any;
 }
 
