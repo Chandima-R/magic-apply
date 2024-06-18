@@ -5,6 +5,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {TextInput} from "@/modules/shared/components/text-input";
 import {TextArea} from "@/modules/shared/components/text-area";
 import {CustomButton} from "@/modules/shared/components/custom-button";
+import {CalendarField} from "@/modules/shared/components/calendar.-field";
 
 const experienceSchema = z.object({
     role: z.string().nonempty('Role is required.'),
@@ -61,18 +62,18 @@ export const Experience = () => {
                                 placeholder={'Google'}
                                 required={true}
                             />
-                            <TextInput
+                            <CalendarField
                                 fieldLabel={'Start date'}
                                 fieldName={'startDate'}
                                 control={form.control}
-                                placeholder={'start date'}
+                                placeholder={'city'}
                                 required={true}
                             />
-                            <TextInput
+                            <CalendarField
                                 fieldLabel={'End date'}
                                 fieldName={'endDate'}
                                 control={form.control}
-                                placeholder={'end date'}
+                                placeholder={'city'}
                                 required={true}
                             />
                             <TextInput

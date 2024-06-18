@@ -5,6 +5,7 @@ import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {CustomButton} from "@/modules/shared/components/custom-button";
+import {CalendarField} from "@/modules/shared/components/calendar.-field";
 
 const projectSchema = z.object({
     projectTitle: z.string().nonempty('Project title is required.'),
@@ -61,18 +62,18 @@ export const Project = () => {
                                 placeholder={'Habitat for Humanity'}
                                 required={true}
                             />
-                            <TextInput
+                            <CalendarField
                                 fieldLabel={'Start date'}
                                 fieldName={'projectStartDate'}
                                 control={form.control}
-                                placeholder={'start date'}
+                                placeholder={'city'}
                                 required={true}
                             />
-                            <TextInput
+                            <CalendarField
                                 fieldLabel={'End date'}
                                 fieldName={'projectEndDate'}
                                 control={form.control}
-                                placeholder={'end date'}
+                                placeholder={'city'}
                                 required={true}
                             />
                             <TextInput

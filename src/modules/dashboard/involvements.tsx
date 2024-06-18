@@ -5,6 +5,7 @@ import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {CustomButton} from "@/modules/shared/components/custom-button";
+import {CalendarField} from "@/modules/shared/components/calendar.-field";
 
 const involvementSchema = z.object({
     organizationRole: z.string().nonempty('Project title is required.'),
@@ -59,18 +60,20 @@ export const Involvements = () => {
                                 control={form.control}
                                 placeholder={'Economics Student Association'}
                                 required={true}/>
-                            <TextInput
+                            <CalendarField
                                 fieldLabel={'Start date'}
                                 fieldName={'organizationRoleStartDate'}
                                 control={form.control}
-                                placeholder={'start date'}
-                                required={true}/>
-                            <TextInput
+                                placeholder={'city'}
+                                required={true}
+                            />
+                            <CalendarField
                                 fieldLabel={'End date'}
                                 fieldName={'organizationRoleEndDate'}
                                 control={form.control}
-                                placeholder={'end date'}
-                                required={true}/>
+                                placeholder={'city'}
+                                required={true}
+                            />
                             <TextInput
                                 fieldLabel={'At which college was the organization located?'}
                                 fieldName={'organizationLocation'}
