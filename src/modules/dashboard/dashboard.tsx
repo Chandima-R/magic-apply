@@ -1,6 +1,7 @@
 import {Button} from "@/components/ui/button";
 import {useState} from "react";
 import {Contact} from "@/modules/dashboard/contact";
+import {Experience} from "@/modules/dashboard/experience";
 
 const steps = [
     'contact',
@@ -21,8 +22,7 @@ export const Dashboard = () => {
             case 'contact':
                 return <Contact/>
             case 'experience':
-                return <div>experience</div>
-            // Add cases for other steps and return their respective components
+                return <Experience />
             case 'project':
                 return <div>projects</div>
             case 'education':
