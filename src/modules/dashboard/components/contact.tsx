@@ -10,9 +10,9 @@ const contactSchema = z.object({
     email: z.string().nonempty('Email address is required.').email(),
     phone: z.string().nonempty('Phone number is required.'),
     linkedin: z.string().nonempty('Linkedin is required.'),
-    personalWebsite: z.string().nonempty('Personal website name is required.'),
+    personalWebsite: z.string(),
     country: z.string().nonempty('Country is required.'),
-    state: z.string().nonempty('State is required.'),
+    state: z.string(),
     city: z.string().nonempty('City is required.'),
 })
 
@@ -72,7 +72,7 @@ export const Contact = () => {
                         fieldName={'personalWebsite'}
                         control={form.control}
                         placeholder={'https://www.chaarlesbloomberg.com'}
-                        required={true}
+                        required={false}
                     />
                     <TextInput
                         fieldLabel={'Country'}
@@ -86,7 +86,7 @@ export const Contact = () => {
                         fieldName={'state'}
                         control={form.control}
                         placeholder={'state'}
-                        required={true}
+                        required={false}
                     />
                     <TextInput
                         fieldLabel={'City'}

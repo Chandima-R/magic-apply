@@ -13,8 +13,8 @@ const educationSchema = z.object({
     instituteLocation: z.string().nonempty('Location of the institute is required.'),
     completionDate: z.string().nonempty('Completion date is required.'),
     minorDegree: z.string().nonempty('Any minor is required.'),
-    gpa: z.string().nonempty('GPA is required.'),
-    additionalInformation: z.string().nonempty('Additional information is required.'),
+    gpa: z.string(),
+    additionalInformation: z.string()
 })
 export const Education = () => {
     const form = useForm<z.infer<typeof educationSchema>>({
@@ -90,14 +90,14 @@ export const Education = () => {
                                 fieldName={'gpa'}
                                 control={form.control}
                                 placeholder={'3.28'}
-                                required={true}
+                                required={false}
                             />
                             <TextArea
                                 fieldLabel={'Open field for additional information'}
                                 fieldName={'additionalInformation'}
                                 control={form.control}
                                 placeholder={'Awarded full scholarship for 4 years due to grades.'}
-                                required={true}
+                                required={false}
                             />
                         </div>
 
