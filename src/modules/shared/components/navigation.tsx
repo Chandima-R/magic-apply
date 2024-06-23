@@ -1,17 +1,17 @@
 'use client'
 
-import {ClerkLoaded, ClerkLoading, UserButton} from "@clerk/nextjs";
-import {Loader2, Menu} from "lucide-react";
+import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
+import { Loader2, Menu } from "lucide-react";
 import Image from "next/image";
-import {Button} from "@/components/ui/button";
-import {sidebarLinks} from "@/modules/dashboard/sidebarLinks";
-import {SidebarLink} from "@/modules/shared/components/sidebar-link";
-import {useState} from "react";
-import {usePathname} from "next/navigation";
-import {useMedia} from "react-use";
-import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet";
-import {NavButton} from "@/modules/shared/components/nav-button";
-import {HeaderLogo} from "@/modules/shared/components/header-logo";
+import { Button } from "@/components/ui/button";
+import { sidebarLinks } from "@/modules/dashboard/utils/sidebarLinks";
+import { SidebarLink } from "@/modules/shared/components/sidebar-link";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useMedia } from "react-use";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { NavButton } from "@/modules/shared/components/nav-button";
+import { HeaderLogo } from "@/modules/shared/components/header-logo";
 import Link from "next/link";
 
 export const Navigation = () => {
@@ -29,7 +29,7 @@ export const Navigation = () => {
                             size='sm'
                             className="font-normal hover:bg-black/20 hover:text-blak border-none focus-visible:ring-offset-0 focus-visible:ring-transparent outline-none text-black focus:bg-black/30 transtion"
                         >
-                            <Menu className="size-4"/>
+                            <Menu className="size-4" />
                         </Button>
                     </SheetTrigger>
                     <SheetContent side={'left'} className="px-2">
@@ -58,7 +58,7 @@ export const Navigation = () => {
 
                             <div>
                                 {sidebarLinks.map((route) => (
-                                    <SidebarLink label={route.label} href={route.href} icon={route.icon} isActive={pathname === route.href} key={route.href}/>
+                                    <SidebarLink label={route.label} href={route.href} icon={route.icon} isActive={pathname === route.href} key={route.href} />
                                 ))}
                             </div>
                         </nav>
@@ -76,10 +76,10 @@ export const Navigation = () => {
 
                 <div>
                     <ClerkLoaded>
-                        <UserButton afterSignOutUrl="/sign-in"/>
+                        <UserButton afterSignOutUrl="/sign-in" />
                     </ClerkLoaded>
                     <ClerkLoading>
-                        <Loader2 className="animate-spin size-8 text-slate-400"/>
+                        <Loader2 className="animate-spin size-8 text-slate-400" />
                     </ClerkLoading>
                 </div>
             </div>
@@ -92,7 +92,7 @@ export const Navigation = () => {
                 <div className="max-w-screen-2xl mx-auto">
                     <div className="w-full flex items-center justify-between mb-8">
                         <div className="flex items-center lg:gap-x-16">
-                            <HeaderLogo/>
+                            <HeaderLogo />
                             <nav className="hidden lg:flex items-center gap-x-2 overflow-x-auto">
                                 {sidebarLinks.map((route) => (
                                     <NavButton
@@ -105,10 +105,10 @@ export const Navigation = () => {
                             </nav>
                         </div>
                         <ClerkLoaded>
-                            <UserButton afterSignOutUrl="/sign-in"/>
+                            <UserButton afterSignOutUrl="/sign-in" />
                         </ClerkLoaded>
                         <ClerkLoading>
-                            <Loader2 className="animate-spin size-8 text-slate-400"/>
+                            <Loader2 className="animate-spin size-8 text-slate-400" />
                         </ClerkLoading>
                     </div>
                 </div>

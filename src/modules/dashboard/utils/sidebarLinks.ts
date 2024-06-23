@@ -1,10 +1,15 @@
-import {FileCheck2, FileText, FolderCog, LayoutDashboard} from "lucide-react";
+import { FileCheck2, FileText, FolderCog, LayoutDashboard, AppWindow } from "lucide-react";
 
 export const sidebarLinks = [
     {
         href: '/',
         label: 'my dashboard',
         icon: LayoutDashboard
+    },
+    {
+        href: '/apply-jobs',
+        label: 'apply jobs',
+        icon: AppWindow
     },
     {
         href: '/sample-library',

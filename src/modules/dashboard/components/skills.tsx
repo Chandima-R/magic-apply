@@ -1,6 +1,5 @@
 import {CustomButton} from "@/modules/shared/components/custom-button";
 import {Form} from "@/components/ui/form";
-import {TextInput} from "@/modules/shared/components/text-input";
 import {TextArea} from "@/modules/shared/components/text-area";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
