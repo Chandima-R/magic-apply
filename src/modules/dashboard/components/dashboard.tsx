@@ -9,6 +9,7 @@ import { Coursework } from "@/modules/dashboard/components/coursework";
 import { Involvements } from "@/modules/dashboard/components/involvements";
 import { Skills } from "@/modules/dashboard/components/skills";
 import { Summary } from "@/modules/dashboard/components/summary";
+import {FinishReview} from "@/modules/dashboard/components/finish-review";
 
 const steps = [
     'contact',
@@ -45,7 +46,7 @@ export const Dashboard = () => {
             case 'summary':
                 return <Summary />
             case 'finish up & review':
-                return <div>cv overview using a online pdf editor</div>
+                return <FinishReview />
             default:
                 return <div>Select a step</div>;
         }
