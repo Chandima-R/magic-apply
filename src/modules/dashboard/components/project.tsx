@@ -12,7 +12,7 @@ const projectSchema = z.object({
     organization: z.string().nonempty('Organization is required.'),
     projectStartDate: z.string().nonempty('Start date is required.'),
     projectEndDate: z.string().nonempty('End date is required.'),
-    projectUrl: z.string().nonempty('Company Location is required.'),
+    projectUrl: z.string(),
     projectDescription: z.string().nonempty('Job description is required.'),
 })
 export const Project = () => {
@@ -81,7 +81,7 @@ export const Project = () => {
                                 fieldName={'projectUrl'}
                                 control={form.control}
                                 placeholder={'New York, NY'}
-                                required={true}
+                                required={false}
                             />
                         </div>
                         <div className={'mt-4 lg:mt-8 '}>

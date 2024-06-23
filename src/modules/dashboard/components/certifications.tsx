@@ -11,7 +11,7 @@ const certificationSchema = z.object({
     certificateName: z.string().nonempty('Certificate name is required.'),
     certificateInstitute: z.string().nonempty('Certificate issued institute is required.'),
     certificateDate: z.string().nonempty('Certificate issued date is required.'),
-    certificateDescription: z.string().nonempty('Certificate description date is required.'),
+    certificateDescription: z.string(),
 })
 export const Certifications = () => {
     const form = useForm<z.infer<typeof certificationSchema>>({
@@ -70,7 +70,7 @@ export const Certifications = () => {
                                 fieldName={'certificateDescription'}
                                 control={form.control}
                                 placeholder={'Certified in a standardized and evolving set of project management principles..'}
-                                required={true}
+                                required={false}
                             />
                         </div>
 

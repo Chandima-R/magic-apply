@@ -11,8 +11,8 @@ const courseworkSchema = z.object({
     courseName: z.string().nonempty('Certificate name is required.'),
     courseInstitute: z.string().nonempty('Certificate issued institute is required.'),
     courseCompletionDate: z.string().nonempty('Certificate issued date is required.'),
-    courseSkill: z.string().nonempty('Certificate issued date is required.'),
-    courseDescription: z.string().nonempty('Certificate description date is required.'),
+    courseSkill: z.string(),
+    courseDescription: z.string(),
 })
 export const Coursework = () => {
     const form = useForm<z.infer<typeof courseworkSchema>>({
@@ -71,14 +71,14 @@ export const Coursework = () => {
                                 fieldName={'courseSkill'}
                                 control={form.control}
                                 placeholder={'Teamwork'}
-                                required={true}
+                                required={false}
                             />
                             <TextArea
                                 fieldLabel={'How was that skill applied?'}
                                 fieldName={'courseDescription'}
                                 control={form.control}
                                 placeholder={'Coordinating on code with a small group of people.'}
-                                required={true}
+                                required={false}
                             />
                         </div>
 

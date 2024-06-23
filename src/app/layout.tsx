@@ -4,6 +4,7 @@ import React from "react";
 import {ClerkProvider} from "@clerk/nextjs";
 import {Toaster} from "@/components/ui/sonner";
 import {Navigation} from "@/modules/shared/components/navigation";
+import {GraphqlProvider} from "@/modules/shared/components/graphql-provider";
 
 const source_sans_3 = Source_Sans_3({subsets: ["latin"]});
 
@@ -22,13 +23,16 @@ export default function RootLayout({
     return (
         <html lang="en">
         <ClerkProvider>
-            <body className={source_sans_3.className}>
-            <Toaster/>
-            <div>
-              <Navigation />
-              {children}
-            </div>
-            </body>
+            <GraphqlProvider>
+                <body className={source_sans_3.className}>
+                <Toaster/>
+                <div>
+                    <Navigation/>
+                    {children}
+                </div>
+                </body>
+            </GraphqlProvider>
+
         </ClerkProvider>
         </html>
     )
