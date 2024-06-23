@@ -6,7 +6,7 @@ import {getMainDefinition} from '@apollo/client/utilities';
 const GRAPHQL_API_URL = process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT;
 
 const authHeader =
-    process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ADMIN_SECRET || '';
+    process.env.NEXT_PUBLIC_HASURA_GRAPHQL_SECRET_KEY || '';
 
 const httpLink = new HttpLink({
     uri: GRAPHQL_API_URL,
