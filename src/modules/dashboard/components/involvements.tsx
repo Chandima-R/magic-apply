@@ -53,13 +53,15 @@ export const Involvements = () => {
                                 fieldName={'organizationRole'}
                                 control={form.control}
                                 placeholder={'Selected Member'}
-                                required={true}/>
+                                required={true}
+                            />
                             <TextInput
                                 fieldLabel={'For which organization did you work?'}
                                 fieldName={'OrganizationName'}
                                 control={form.control}
                                 placeholder={'Economics Student Association'}
-                                required={true}/>
+                                required={true}
+                            />
                             <CalendarField
                                 fieldLabel={'Start date'}
                                 fieldName={'organizationRoleStartDate'}
@@ -79,7 +81,8 @@ export const Involvements = () => {
                                 fieldName={'organizationLocation'}
                                 control={form.control}
                                 placeholder={'University of Wisconsin, Madison'}
-                                required={true}/>
+                                required={true}
+                            />
                         </div>
                         <div className={'mt-4 lg:mt-8 '}>
                             <TextArea
@@ -87,7 +90,8 @@ export const Involvements = () => {
                                 fieldName={'organizationRoleDescription'}
                                 control={form.control}
                                 placeholder={'Participated in forums and discussions presented by key economic thinkers and companies associated with the uniiversity.'}
-                                required={true}/>
+                                required={true}
+                            />
 
                         </div>
 
