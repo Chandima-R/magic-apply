@@ -1,9 +1,17 @@
+'use client'
+
 import {Form} from "@/components/ui/form";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {TextInput} from "@/modules/shared/components/text-input";
 import {CustomButton} from "@/modules/shared/components/custom-button";
+import {useState} from "react";
+import {useToast} from "@/components/ui/use-toast";
+import {useMutation} from "@apollo/client";
+import {ADD_NEW_CONTACT} from "@/graphql/contact";
+import {LoadingButton} from "@/modules/shared/loading-button";
+import {useUser} from "@clerk/nextjs";
 
 const contactSchema = z.object({
     fullName: z.string().nonempty('Full name is required.'),
@@ -17,6 +25,11 @@ const contactSchema = z.object({
 })
 
 export const Contact = () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const {toast} = useToast();
+    const {user} = useUser();
+    console.log(user?.id)
+
     const form = useForm<z.infer<typeof contactSchema>>({
         resolver: zodResolver(contactSchema),
         defaultValues: {
@@ -29,11 +42,40 @@ export const Contact = () => {
             state: "",
             city: "",
         },
-    })
+    });
 
-    const onSubmit = (values: z.infer<typeof contactSchema>) => {
-        if (values) {
-            console.log(values)
+    const [addContact] = useMutation(ADD_NEW_CONTACT);
+
+    async function onSubmit(values: z.infer<typeof contactSchema>) {
+        try {
+            setIsLoading(true);
+            await addContact({
+                variables: {
+                    contact_city: values.city,
+                    contact_country: values.country,
+                    contact_email: values.email,
+                    contact_linkedin: values.linkedin,
+                    contact_name: values.fullName,
+                    contact_phone: values.phone,
+                    contact_state: values.state,
+                    contact_website: values.personalWebsite,
+                    user_id: user?.id,
+                },
+            });
+            toast({
+                variant: "default",
+                title: "Success.",
+                description: "Your item was added.",
+            });
+            form.reset();
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "There was a problem with your request.",
+            });
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -99,13 +141,19 @@ export const Contact = () => {
 
                 <div className={'flex justify-end w-full mt-8'}>
                     <div className={'w-38'}>
-                        <CustomButton
-                            type={'submit'}
-                            title={'Save basic info'}
-                        />
+                        {
+                            isLoading ? (
+                                <LoadingButton/>
+                            ) : (
+                                <CustomButton
+                                    type={'submit'}
+                                    title={'Save basic info'}
+                                />
+                            )
+                        }
                     </div>
                 </div>
             </form>
         </Form>
-    )
-}
+    );
+};

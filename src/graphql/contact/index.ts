@@ -17,8 +17,8 @@ export const CONTACT_INFORMATION = gql`
 `
 
 export const ADD_NEW_CONTACT = gql`
-    mutation addNewContact($contact_city: String, $contact_country: String, $contact_email: String, $contact_linkedin: String, $contact_name: String, $contact_phone: String, $contact_state: String, $contact_website: String) {
-      insert_contact(objects: {contact_city: $contact_city, contact_country: $contact_country, contact_email: $contact_email, contact_linkedin: $contact_linkedin, contact_name: $contact_name, contact_phone: $contact_phone, contact_state: $contact_state, contact_website: $contact_website}) {
+    mutation addNewContact($contact_city: String, $contact_country: String, $contact_email: String, $contact_linkedin: String, $contact_name: String, $contact_phone: String, $contact_state: String, $contact_website: String, $user_id: String) {
+      insert_contact(objects: {contact_city: $contact_city, contact_country: $contact_country, contact_email: $contact_email, contact_linkedin: $contact_linkedin, contact_name: $contact_name, contact_phone: $contact_phone, contact_state: $contact_state, contact_website: $contact_website, user_id: $user_id}) {
         affected_rows
       }
     }
