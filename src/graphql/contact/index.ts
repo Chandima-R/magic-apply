@@ -12,6 +12,7 @@ export const CONTACT_INFORMATION = gql`
         contact_state
         contact_website
         id
+        user_id
       }
     }
 `
@@ -25,8 +26,27 @@ export const ADD_NEW_CONTACT = gql`
 `
 
 export const UPDATE_CONTACT = gql`
-    mutation updateContact{
-        update_contact(where: {id: {_eq: $_eq}}, _set: {contact_city: $contact_city1, contact_country: $contact_country1, contact_email: $contact_email1, contact_linkedin: $contact_linkedin1, contact_name: $contact_name1, contact_phone: $contact_phone1, contact_state: $contact_state1, contact_website: $contact_website1}) {
+    mutation updateContact(
+        $contact_website: String, 
+        $contact_state: String, 
+        $contact_phone: String, 
+        $contact_name: String, 
+        $contact_linkedin: String, 
+        $contact_email: String, 
+        $contact_country: String, 
+        $contact_city: String, 
+        $_eq: uuid
+    ){
+        update_contact(where: {id: {_eq: $_eq}}, _set: {
+        contact_city: $contact_city, 
+        contact_country: $contact_country, 
+        contact_email: $contact_email, 
+        contact_linkedin: $contact_linkedin, 
+        contact_name: $contact_name, 
+        contact_phone: $contact_phone, 
+        contact_state: $contact_state, 
+        contact_website: $contact_website
+        }) {
             affected_rows
       }
     }
