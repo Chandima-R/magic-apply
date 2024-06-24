@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Contact } from "@/modules/dashboard/components/contact";
 import { Experience } from "@/modules/dashboard/components/experience";
 import { Project } from "@/modules/dashboard/components/project";
@@ -10,6 +10,9 @@ import { Involvements } from "@/modules/dashboard/components/involvements";
 import { Skills } from "@/modules/dashboard/components/skills";
 import { Summary } from "@/modules/dashboard/components/summary";
 import {FinishReview} from "@/modules/dashboard/components/finish-review";
+import {useMutation, useSubscription} from "@apollo/client";
+import {ADD_USER_BY_CLERK_ID, GET_USER} from "@/graphql/user";
+import {useUser} from "@clerk/nextjs";
 
 const steps = [
     'contact',
@@ -24,6 +27,30 @@ const steps = [
     'finish up & review',
 ]
 export const Dashboard = () => {
+    const { user } = useUser();
+    const { data: userData, loading: userLoading } = useSubscription(GET_USER);
+    const [addUser] = useMutation(ADD_USER_BY_CLERK_ID);
+
+    useEffect(() => {
+        if (user && !userLoading && userData) {
+            const userExists = userData?.user?.some((existingUser: any) => existingUser.user_clerk_id === user.id);
+
+            if (!userExists) {
+                addUser({
+                    variables: {
+                        user_clerk_id: user.id,
+                        user_email: user.emailAddresses[0]?.emailAddress,
+                        user_firstname: user.firstName,
+                        user_lastname: user.lastName,
+                        user_image_url: user.imageUrl,
+                    }
+                });
+            }
+        }
+    }, [user, userData, userLoading, addUser]);
+
+
+
     const [currentStep, setCurrentStep] = useState('contact');
     const renderStepComponent = () => {
         switch (currentStep) {
