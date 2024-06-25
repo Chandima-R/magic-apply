@@ -66,11 +66,10 @@ export const Experience = () => {
   );
 
   const visibleExperience = experienceData?.experience?.filter(
-    (exp: any) => exp.visibility === false
+    (exp: any) => exp.visibility === true
   );
 
   async function onSubmit(values: z.infer<typeof experienceSchema>) {
-    console.log(45, values);
     try {
       setIsLoading(true);
       if (!user?.id) {
@@ -108,9 +107,7 @@ export const Experience = () => {
   }
 
   const [deleteExperience] = useMutation(DELETE_EXPERIENCE_BY_PK);
-
   const deleteExperienceAction = async (id: string) => {
-    console.log("Experience deleted successfully");
     try {
       await deleteExperience({
         variables: {
@@ -131,7 +128,29 @@ export const Experience = () => {
     }
   };
 
-  //   const [hideExperience] = useMutation(HIDE_EXPERIENCE_BY_PK);
+  const [hideExperience] = useMutation(HIDE_EXPERIENCE_BY_PK);
+  const hideExperienceAction = async (id: string) => {
+    try {
+      await hideExperience({
+        variables: {
+          id,
+          visibility: false,
+        },
+      });
+      toast({
+        variant: "default",
+        title: "Success.",
+        description: "Your project was hide from the project list.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "There was an error deleting the experience.",
+      });
+    }
+  };
+
   return (
     <div className={"w-full flex flex-col lg:flex-row"}>
       <div className={"w-full lg:w-1/3"}>
@@ -169,7 +188,7 @@ export const Experience = () => {
                       hideDescription={
                         "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
                       }
-                      hideAction={() => {}}
+                      hideAction={() => hideExperienceAction(exp.id)}
                     />
                   </AccordionContent>
                 ))}

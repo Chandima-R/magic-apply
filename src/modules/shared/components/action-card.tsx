@@ -9,7 +9,7 @@ interface Props {
   deleteAction: (id: string) => void;
   deleteTitle: string;
   deleteDescription: string;
-  hideAction: () => void;
+  hideAction: (id: string) => void;
   hideTitle: string;
   hideDescription: string;
 }
@@ -51,16 +51,16 @@ export const ActionCard = ({
           icon={Trash}
         />
 
-        {/* <CustomAlertDialog
+        <CustomAlertDialog
           buttonVariant={"outline"}
           buttonSize={"sm"}
           buttonText={"hide"}
           title={hideTitle}
           description={hideDescription}
           actionButtonText={"hide"}
-          actionButtonFn={handleHide}
+          actionButtonFn={() => hideAction(id)}
           icon={EyeOff}
-        /> */}
+        />
       </div>
     </div>
   );
