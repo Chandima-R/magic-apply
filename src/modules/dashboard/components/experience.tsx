@@ -11,9 +11,9 @@ import { useUser } from "@clerk/nextjs";
 import { useMutation, useSubscription } from "@apollo/client";
 import { CONTACT_INFORMATION } from "@/graphql/contact";
 import {
-  ADD_NEW_EXPERIENCE,
+  ADD_NEW_EXPERIENCE_BY_USER_ID,
   DELETE_EXPERIENCE_BY_PK,
-  EXPERIENCE_INFORMATION,
+  EXPERIENCE_INFORMATION_BY_USER_ID,
   HIDE_EXPERIENCE_BY_PK,
 } from "@/graphql/experience";
 import { LoadingButton } from "@/modules/shared/loading-button";
@@ -60,15 +60,20 @@ export const Experience = () => {
     },
   });
 
-  const [addExperience] = useMutation(ADD_NEW_EXPERIENCE);
   const { data: experienceData, loading: expoerienceLoading } = useSubscription(
-    EXPERIENCE_INFORMATION
+    EXPERIENCE_INFORMATION_BY_USER_ID,
+    {
+      variables: {
+        _eq: user?.id,
+      },
+    }
   );
 
   const visibleExperience = experienceData?.experience?.filter(
     (exp: any) => exp.visibility === true
   );
 
+  const [addExperience] = useMutation(ADD_NEW_EXPERIENCE_BY_USER_ID);
   async function onSubmit(values: z.infer<typeof experienceSchema>) {
     try {
       setIsLoading(true);
@@ -163,37 +168,41 @@ export const Experience = () => {
           {expoerienceLoading ? (
             <LoadingSpinner />
           ) : (
-            <Accordion
-              type="single"
-              collapsible
-              className="w-full"
-              defaultValue="experience"
-            >
-              <AccordionItem value="experience">
-                <AccordionTrigger className="text-xl font-semibold capitalize">
-                  your experience
-                </AccordionTrigger>
-                {visibleExperience?.map((exp: any) => (
-                  <AccordionContent key={exp.id}>
-                    <ActionCard
-                      id={exp.id}
-                      company={exp.company_name}
-                      role={exp.company_role}
-                      deleteTitle={"Delete your project."}
-                      deleteDescription={
-                        "Are you sure to delete this project. This action cannot be undone and it will completely remove this project from your projects."
-                      }
-                      deleteAction={() => deleteExperienceAction(exp.id)}
-                      hideTitle={"Hide your project."}
-                      hideDescription={
-                        "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
-                      }
-                      hideAction={() => hideExperienceAction(exp.id)}
-                    />
-                  </AccordionContent>
-                ))}
-              </AccordionItem>
-            </Accordion>
+            <>
+              {experienceData?.experience?.length > 0 && (
+                <Accordion
+                  type="single"
+                  collapsible
+                  className="w-full"
+                  defaultValue="experience"
+                >
+                  <AccordionItem value="experience">
+                    <AccordionTrigger className="text-xl font-semibold capitalize">
+                      your experience
+                    </AccordionTrigger>
+                    {visibleExperience?.map((exp: any) => (
+                      <AccordionContent key={exp.id}>
+                        <ActionCard
+                          id={exp.id}
+                          company={exp.company_name}
+                          role={exp.company_role}
+                          deleteTitle={"Delete your project."}
+                          deleteDescription={
+                            "Are you sure to delete this project. This action cannot be undone and it will completely remove this project from your projects."
+                          }
+                          deleteAction={() => deleteExperienceAction(exp.id)}
+                          hideTitle={"Hide your project."}
+                          hideDescription={
+                            "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
+                          }
+                          hideAction={() => hideExperienceAction(exp.id)}
+                        />
+                      </AccordionContent>
+                    ))}
+                  </AccordionItem>
+                </Accordion>
+              )}
+            </>
           )}
         </div>
       </div>

@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
-export const EXPERIENCE_INFORMATION = gql`
-  subscription experienceInformation {
-    experience {
+export const EXPERIENCE_INFORMATION_BY_USER_ID = gql`
+  subscription experienceInformation($_eq: String) {
+    experience(where: { user_id: { _eq: $_eq } }) {
       company_end_date
       company_location
       company_name
@@ -16,7 +16,7 @@ export const EXPERIENCE_INFORMATION = gql`
   }
 `;
 
-export const ADD_NEW_EXPERIENCE = gql`
+export const ADD_NEW_EXPERIENCE_BY_USER_ID = gql`
   mutation addNewExperience(
     $company_end_date: String
     $company_location: String
