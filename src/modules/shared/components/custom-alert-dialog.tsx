@@ -43,8 +43,8 @@ export const CustomAlertDialog = ({
   description,
   icon,
 }: Props) => {
-  console.log(11, actionButtonFn);
   const Icon = icon;
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
