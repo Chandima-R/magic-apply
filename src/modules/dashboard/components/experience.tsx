@@ -23,6 +23,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
+import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 
 const experienceSchema = z.object({
   role: z.string().nonempty("Role is required."),
@@ -58,7 +59,9 @@ export const Experience = () => {
   });
 
   const [addExperience] = useMutation(ADD_NEW_EXPERIENCE);
-  const { data: experienceData } = useSubscription(EXPERIENCE_INFORMATION);
+  const { data: experienceData, loading: expoerienceLoading } = useSubscription(
+    EXPERIENCE_INFORMATION
+  );
 
   async function onSubmit(values: z.infer<typeof experienceSchema>) {
     console.log(45, values);
@@ -100,26 +103,30 @@ export const Experience = () => {
           </video>
         </div>
         <div>
-          <Accordion
-            type="single"
-            collapsible
-            className="w-full"
-            defaultValue="experience"
-          >
-            <AccordionItem value="experience">
-              <AccordionTrigger className="text-xl font-semibold capitalize">
-                your experience
-              </AccordionTrigger>
-              {experienceData?.experience?.map((exp: any) => (
-                <AccordionContent key={exp.id}>
-                  <ExperienceCard
-                    company={exp.company_name}
-                    role={exp.company_role}
-                  />
-                </AccordionContent>
-              ))}
-            </AccordionItem>
-          </Accordion>
+          {expoerienceLoading ? (
+            <LoadingSpinner />
+          ) : (
+            <Accordion
+              type="single"
+              collapsible
+              className="w-full"
+              defaultValue="experience"
+            >
+              <AccordionItem value="experience">
+                <AccordionTrigger className="text-xl font-semibold capitalize">
+                  your experience
+                </AccordionTrigger>
+                {experienceData?.experience?.map((exp: any) => (
+                  <AccordionContent key={exp.id}>
+                    <ExperienceCard
+                      company={exp.company_name}
+                      role={exp.company_role}
+                    />
+                  </AccordionContent>
+                ))}
+              </AccordionItem>
+            </Accordion>
+          )}
         </div>
       </div>
       <div className={"w-full lg:w-2/3 px-2 lg:px-6  py-4 lg:py-0"}>
