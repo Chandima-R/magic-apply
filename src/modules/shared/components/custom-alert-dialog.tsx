@@ -43,6 +43,7 @@ export const CustomAlertDialog = ({
   description,
   icon,
 }: Props) => {
+  console.log(11, actionButtonFn);
   const Icon = icon;
   return (
     <AlertDialog>
@@ -63,7 +64,7 @@ export const CustomAlertDialog = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => actionButtonFn} className="gap-2">
+          <AlertDialogAction onClick={actionButtonFn} className="gap-2">
             <Icon className="size-4" />
             {actionButtonText}
           </AlertDialogAction>

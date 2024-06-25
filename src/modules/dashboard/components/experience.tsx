@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput } from "@/modules/shared/components/text-input";
 import { TextArea } from "@/modules/shared/components/text-area";
 import { CustomButton } from "@/modules/shared/components/custom-button";
-import { CalendarField } from "@/modules/shared/components/calendar.-field";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
@@ -13,10 +12,12 @@ import { useMutation, useSubscription } from "@apollo/client";
 import { CONTACT_INFORMATION } from "@/graphql/contact";
 import {
   ADD_NEW_EXPERIENCE,
+  DELETE_EXPERIENCE_BY_PK,
   EXPERIENCE_INFORMATION,
+  HIDE_EXPERIENCE_BY_PK,
 } from "@/graphql/experience";
 import { LoadingButton } from "@/modules/shared/loading-button";
-import { ExperienceCard } from "./experience-card";
+import { ActionCard } from "../../shared/components/action-card";
 import {
   Accordion,
   AccordionItem,
@@ -24,6 +25,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
+import { CalendarField } from "@/modules/shared/components/calendar-field";
 
 const experienceSchema = z.object({
   role: z.string().nonempty("Role is required."),
@@ -63,9 +65,14 @@ export const Experience = () => {
     EXPERIENCE_INFORMATION
   );
 
+  const visibleExperience = experienceData?.experience?.filter(
+    (exp: any) => exp.visibility === false
+  );
+
   async function onSubmit(values: z.infer<typeof experienceSchema>) {
     console.log(45, values);
     try {
+      setIsLoading(true);
       if (!user?.id) {
         throw new Error("User is not authenticated");
       } else {
@@ -79,6 +86,12 @@ export const Experience = () => {
             company_start_date: values.startDate,
             user_id: user?.id,
           },
+        });
+
+        toast({
+          variant: "default",
+          title: "Success.",
+          description: "Your project was added to project list.",
         });
       }
       form.reset();
@@ -94,6 +107,31 @@ export const Experience = () => {
     }
   }
 
+  const [deleteExperience] = useMutation(DELETE_EXPERIENCE_BY_PK);
+
+  const deleteExperienceAction = async (id: string) => {
+    console.log("Experience deleted successfully");
+    try {
+      await deleteExperience({
+        variables: {
+          id,
+        },
+      });
+      toast({
+        variant: "default",
+        title: "Success.",
+        description: "Your project was deleted from the project list.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "There was an error deleting the experience.",
+      });
+    }
+  };
+
+  //   const [hideExperience] = useMutation(HIDE_EXPERIENCE_BY_PK);
   return (
     <div className={"w-full flex flex-col lg:flex-row"}>
       <div className={"w-full lg:w-1/3"}>
@@ -116,11 +154,22 @@ export const Experience = () => {
                 <AccordionTrigger className="text-xl font-semibold capitalize">
                   your experience
                 </AccordionTrigger>
-                {experienceData?.experience?.map((exp: any) => (
+                {visibleExperience?.map((exp: any) => (
                   <AccordionContent key={exp.id}>
-                    <ExperienceCard
+                    <ActionCard
+                      id={exp.id}
                       company={exp.company_name}
                       role={exp.company_role}
+                      deleteTitle={"Delete your project."}
+                      deleteDescription={
+                        "Are you sure to delete this project. This action cannot be undone and it will completely remove this project from your projects."
+                      }
+                      deleteAction={() => deleteExperienceAction(exp.id)}
+                      hideTitle={"Hide your project."}
+                      hideDescription={
+                        "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
+                      }
+                      hideAction={() => {}}
                     />
                   </AccordionContent>
                 ))}

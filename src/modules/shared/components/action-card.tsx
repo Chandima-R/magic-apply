@@ -3,11 +3,28 @@ import { CustomAlertDialog } from "@/modules/shared/components/custom-alert-dial
 import { EyeOff, Pencil, Trash } from "lucide-react";
 
 interface Props {
+  id: string;
   role: string;
   company: string;
+  deleteAction: (id: string) => void;
+  deleteTitle: string;
+  deleteDescription: string;
+  hideAction: () => void;
+  hideTitle: string;
+  hideDescription: string;
 }
 
-export const ExperienceCard = ({ role, company }: Props) => {
+export const ActionCard = ({
+  id,
+  role,
+  company,
+  deleteAction,
+  deleteTitle,
+  deleteDescription,
+  hideAction,
+  hideTitle,
+  hideDescription,
+}: Props) => {
   return (
     <div className="border p-2 rounded shadow cursor-pointer">
       <div className="mb-2">
@@ -27,27 +44,23 @@ export const ExperienceCard = ({ role, company }: Props) => {
           buttonVariant={"destructive"}
           buttonSize={"sm"}
           buttonText={"delete"}
-          title={"Delete your project."}
-          description={
-            "Are you sure to delete this project. This action cannot be undone and it will completely remove this project from your projects."
-          }
+          title={deleteTitle}
+          description={deleteDescription}
           actionButtonText={"delete"}
-          actionButtonFn={() => {}}
+          actionButtonFn={() => deleteAction(id)}
           icon={Trash}
         />
 
-        <CustomAlertDialog
+        {/* <CustomAlertDialog
           buttonVariant={"outline"}
           buttonSize={"sm"}
           buttonText={"hide"}
-          title={"Hide your project."}
-          description={
-            "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
-          }
+          title={hideTitle}
+          description={hideDescription}
           actionButtonText={"hide"}
-          actionButtonFn={() => {}}
+          actionButtonFn={handleHide}
           icon={EyeOff}
-        />
+        /> */}
       </div>
     </div>
   );

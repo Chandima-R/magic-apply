@@ -6,7 +6,7 @@ export const LoadingSpinner = () => {
     >
       <svg
         aria-hidden="true"
-        className="w-8 h-8 text-accent animate-spin dark:text-gray-600 fill-primary"
+        className="w-4 h-4 text-accent animate-spin dark:text-federalBlue fill-honoluluBlue"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
