@@ -111,7 +111,7 @@ export const Experience = () => {
                 your experience
               </AccordionTrigger>
               {experienceData?.experience?.map((exp: any) => (
-                <AccordionContent>
+                <AccordionContent key={exp.id}>
                   <ExperienceCard
                     company={exp.company_name}
                     role={exp.company_role}
