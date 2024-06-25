@@ -7,7 +7,7 @@ interface Props{
     fieldName: string;
     control: any;
     placeholder: string;
-    required: boolean;
+    required?: boolean;
     fieldLabelColor?: string;
     description?: string;
 }
