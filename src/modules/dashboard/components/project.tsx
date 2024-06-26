@@ -44,10 +44,6 @@ export const Project = () => {
   const { toast } = useToast();
   const { user } = useUser();
 
-  const { data: contactData } = useSubscription(CONTACT_INFORMATION);
-  const contactDetails =
-    contactData?.contact?.find((c: any) => c?.user_id === user?.id) || {};
-
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
