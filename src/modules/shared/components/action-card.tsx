@@ -43,10 +43,12 @@ export const ActionCard = ({
                 {format(fromDate, "dd MMMM, yyyy")} {" - "}
               </span>
             )}
-            {toDate && (
+            {toDate ? (
               <>
                 <span>{format(toDate, "dd MMMM, yyyy")}</span>
               </>
+            ) : (
+              ""
             )}
           </p>
         </div>

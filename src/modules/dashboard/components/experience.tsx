@@ -44,10 +44,6 @@ export const Experience = () => {
   const { toast } = useToast();
   const { user } = useUser();
 
-  const { data: contactData } = useSubscription(CONTACT_INFORMATION);
-  const contactDetails =
-    contactData?.contact?.find((c: any) => c?.user_id === user?.id) || {};
-
   const form = useForm<z.infer<typeof experienceSchema>>({
     resolver: zodResolver(experienceSchema),
     defaultValues: {
