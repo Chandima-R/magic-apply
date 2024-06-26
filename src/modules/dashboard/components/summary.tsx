@@ -109,7 +109,7 @@ export const Summary = () => {
                 fieldLabel="Write a professional summary"
                 fieldName="summary"
                 control={form.control}
-                placeholder="Experienced in global early-stage executive..."
+                placeholder="Experienced in global early-stage executive with economics and mathematics degree from the University ow Wisconsin. Passion for building inspiring companies people love through industry-leading design, development, branding and making big bets."
                 required
               />
             </div>
