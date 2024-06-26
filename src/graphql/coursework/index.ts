@@ -10,6 +10,7 @@ export const COURSEWORK_INFORMATION_BY_USER_ID = gql`
       id
       user_id
       course_completion_year
+      visibility
     }
   }
 `;
