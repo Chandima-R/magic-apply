@@ -75,7 +75,7 @@ export const Experience = () => {
 
   const allExperience = experienceData?.experience?.map((e: any) => e);
 
-  const hiddenExperience = allExperience.length - visibleExperience?.length;
+  const hiddenExperience = allExperience?.length - visibleExperience?.length;
 
   const [addExperience] = useMutation(ADD_NEW_EXPERIENCE_BY_USER_ID);
   async function onSubmit(values: z.infer<typeof experienceSchema>) {
