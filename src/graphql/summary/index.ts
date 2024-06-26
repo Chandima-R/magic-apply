@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const CERTIFICATE_INFORMATION_BY_USER_ID = gql`
+export const SUMMARY_INFORMATION_BY_USER_ID = gql`
   subscription summaryInformationByUserId($_eq: String) {
     summary(where: { user_id: { _eq: $_eq } }) {
       id
