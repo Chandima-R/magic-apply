@@ -16,7 +16,6 @@ import {
   EXPERIENCE_INFORMATION_BY_USER_ID,
   HIDE_EXPERIENCE_BY_PK,
 } from "@/graphql/experience";
-import { LoadingButton } from "@/modules/shared/loading-button";
 import { ActionCard } from "../../shared/components/action-card";
 import {
   Accordion,
@@ -26,6 +25,7 @@ import {
 } from "@/components/ui/accordion";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
+import { LoadingButton } from "@/modules/shared/components/loading-button";
 
 const experienceSchema = z.object({
   role: z.string().nonempty("Role is required."),
@@ -72,6 +72,10 @@ export const Experience = () => {
   const visibleExperience = experienceData?.experience?.filter(
     (exp: any) => exp.visibility === true
   );
+
+  const allExperience = experienceData?.experience?.map((e: any) => e);
+
+  const hiddenExperience = allExperience.length - visibleExperience?.length;
 
   const [addExperience] = useMutation(ADD_NEW_EXPERIENCE_BY_USER_ID);
   async function onSubmit(values: z.infer<typeof experienceSchema>) {
@@ -180,12 +184,21 @@ export const Experience = () => {
                     <AccordionTrigger className="text-xl font-semibold capitalize">
                       your experience
                     </AccordionTrigger>
+                    {hiddenExperience && (
+                      <span>
+                        You have {hiddenExperience} hidden experiences in your
+                        bucket.
+                      </span>
+                    )}
                     {visibleExperience?.map((exp: any) => (
                       <AccordionContent key={exp.id}>
                         <ActionCard
                           id={exp.id}
                           company={exp.company_name}
                           role={exp.company_role}
+                          country={exp.company_location}
+                          fromDate={exp.company_start_date}
+                          toDate={exp.company_end_date}
                           deleteTitle={"Delete your project."}
                           deleteDescription={
                             "Are you sure to delete this project. This action cannot be undone and it will completely remove this project from your projects."

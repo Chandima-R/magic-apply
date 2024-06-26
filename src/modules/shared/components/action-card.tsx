@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { CustomAlertDialog } from "@/modules/shared/components/custom-alert-dialog";
+import { format } from "date-fns";
 import { EyeOff, Pencil, Trash } from "lucide-react";
 
 interface Props {
@@ -12,6 +13,9 @@ interface Props {
   hideAction: (id: string) => void;
   hideTitle: string;
   hideDescription: string;
+  country: string;
+  fromDate: string;
+  toDate: string;
 }
 
 export const ActionCard = ({
@@ -24,12 +28,29 @@ export const ActionCard = ({
   hideAction,
   hideTitle,
   hideDescription,
+  country,
+  fromDate,
+  toDate,
 }: Props) => {
   return (
     <div className="border p-2 rounded shadow cursor-pointer">
       <div className="mb-2">
-        <h2 className="font-semibold text-lg capitalize">{role}</h2>
-        <p className="font-semibold capitalize">{company}</p>
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-lg capitalize">{role}</h2>
+          <p className="font-semibold">
+            <span>{format(fromDate, "dd MMMM, yyyy")}</span>
+            {" - "}
+            <span>{format(toDate, "dd MMMM, yyyy")}</span>
+          </p>
+        </div>
+        <p className="font-normal capitalize flex gap-2">
+          {company}
+          {country && (
+            <>
+              , <span className="font-bold"> {country}</span>
+            </>
+          )}
+        </p>
       </div>
       <div className="flex items-between gap-4">
         <Button
