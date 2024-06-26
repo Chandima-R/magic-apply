@@ -74,7 +74,7 @@ export const DELETE_CERTIFICATE_BY_PK = gql`
 `;
 
 export const HIDE_CERTIFICATE_BY_PK = gql`
-  mutation hideCertificateByPk($id: uuid = "", $visibility: Boolean = false) {
+  mutation hideCertificateByPk($id: uuid!, $visibility: Boolean = false) {
     update_certification_by_pk(
       pk_columns: { id: $id }
       _set: { visibility: $visibility }
