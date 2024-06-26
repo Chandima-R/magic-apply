@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const INVOLVEMENT_INFORMATION_BY_USER_ID = gql`
   subscription involvementInformationByUserId($_eq: String) {
     involvement(where: { user_id: { _eq: $_eq } }) {
-      involevementOrganization
+      involevement_organization
       id
       involvement_college
       involvement_description
@@ -11,13 +11,14 @@ export const INVOLVEMENT_INFORMATION_BY_USER_ID = gql`
       involvement_organization_role
       involvement_start_date
       user_id
+      visibility
     }
   }
 `;
 
 export const ADD_NEW_INVOLVEMENT_BY_USER_ID = gql`
   mutation addNewInvolvementByUserId(
-    $involevementOrganization: String
+    $involevement_organization: String
     $involvement_college: String
     $involvement_description: String
     $involvement_end_date: String
@@ -27,7 +28,7 @@ export const ADD_NEW_INVOLVEMENT_BY_USER_ID = gql`
   ) {
     insert_involvement(
       objects: {
-        involevementOrganization: $involevementOrganization
+        involevement_organization: $involevement_organization
         involvement_college: $involvement_college
         involvement_description: $involvement_description
         involvement_end_date: $involvement_end_date
@@ -43,7 +44,7 @@ export const ADD_NEW_INVOLVEMENT_BY_USER_ID = gql`
 
 export const UPDATE_INVOLVEMENT_BY_ID = gql`
   mutation updateInvolvementById(
-    $involevementOrganization: String
+    $involevement_organization: String
     $involvement_college: String
     $involvement_description: String
     $involvement_end_date: String
@@ -54,7 +55,7 @@ export const UPDATE_INVOLVEMENT_BY_ID = gql`
     update_involvement(
       where: { id: { _eq: $_eq } }
       _set: {
-        involevementOrganization: $involevementOrganization
+        involevement_organization: $involevement_organization
         involvement_college: $involvement_college
         involvement_description: $involvement_description
         involvement_end_date: $involvement_end_date
@@ -68,15 +69,15 @@ export const UPDATE_INVOLVEMENT_BY_ID = gql`
 `;
 
 export const DELETE_INVOLVEMENT_BY_PK = gql`
-  mutation deleteInvolvementById($id: uuid!) {
-    delete_experience_by_pk(id: $id) {
-      company_end_date
-      company_location
-      company_name
-      company_role
-      company_role_description
-      company_start_date
+  mutation deleteInvlvementByPk($id: uuid!) {
+    delete_involvement_by_pk(id: $id) {
       id
+      involevement_organization
+      involvement_college
+      involvement_description
+      involvement_end_date
+      involvement_organization_role
+      involvement_start_date
       user_id
     }
   }
