@@ -43,11 +43,11 @@ export const ActionCard = ({
             <span>{format(toDate, "dd MMMM, yyyy")}</span>
           </p>
         </div>
-        <p className="font-normal capitalize flex gap-2">
+        <p className="font-semibold capitalize flex gap-2">
           {company}
           {country && (
             <>
-              , <span className="font-bold"> {country}</span>
+              , <span className="font-normal"> {country}</span>
             </>
           )}
         </p>
