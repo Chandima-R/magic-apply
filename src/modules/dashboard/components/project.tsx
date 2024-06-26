@@ -74,7 +74,6 @@ export const Project = () => {
   const hiddenProjects = allProjects?.length - visibleProjects?.length;
 
   const [addProject] = useMutation(ADD_NEW_PROJECT_BY_USER_ID);
-
   async function onSubmit(values: z.infer<typeof projectSchema>) {
     try {
       setIsLoading(true);
