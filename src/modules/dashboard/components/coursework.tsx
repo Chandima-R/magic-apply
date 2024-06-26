@@ -169,17 +169,19 @@ export const Coursework = () => {
                   type="single"
                   collapsible
                   className="w-full"
-                  defaultValue="courserowk"
+                  defaultValue="coursework"
                 >
                   <AccordionItem value="coursework">
                     <AccordionTrigger className="text-xl font-semibold capitalize">
                       your coursework
                     </AccordionTrigger>
-                    {hiddenCoursework > 0 && (
+                    {hiddenCoursework ? (
                       <span>
                         You have {hiddenCoursework} hidden coursework(s) in your
                         bucket.
                       </span>
+                    ) : (
+                      ""
                     )}
                     {visibleCoursework?.map((coursework: any) => (
                       <AccordionContent key={coursework.id}>

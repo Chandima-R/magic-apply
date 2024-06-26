@@ -180,11 +180,13 @@ export const Experience = () => {
                     <AccordionTrigger className="text-xl font-semibold capitalize">
                       your experience
                     </AccordionTrigger>
-                    {hiddenExperience && (
+                    {hiddenExperience ? (
                       <span>
                         You have {hiddenExperience} hidden experiences in your
                         bucket.
                       </span>
+                    ) : (
+                      ""
                     )}
                     {visibleExperience?.map((exp: any) => (
                       <AccordionContent key={exp.id}>

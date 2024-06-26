@@ -172,11 +172,13 @@ export const Certifications = () => {
                     <AccordionTrigger className="text-xl font-semibold capitalize">
                       your experience
                     </AccordionTrigger>
-                    {hiddenCertificates && (
+                    {hiddenCertificates ? (
                       <span>
                         You have {hiddenCertificates} hidden experiences in your
                         bucket.
                       </span>
+                    ) : (
+                      ""
                     )}
                     {visibleCertificates?.map((certificate: any) => (
                       <AccordionContent key={certificate.id}>
