@@ -5,17 +5,17 @@ import { EyeOff, Pencil, Trash } from "lucide-react";
 
 interface Props {
   id: string;
-  role: string;
-  company: string;
+  role?: string;
+  company?: string;
   deleteAction: (id: string) => void;
   deleteTitle: string;
   deleteDescription: string;
   hideAction: (id: string) => void;
   hideTitle: string;
   hideDescription: string;
-  country: string;
-  fromDate: string;
-  toDate: string;
+  country?: string;
+  fromDate?: string;
+  toDate?: string;
 }
 
 export const ActionCard = ({
@@ -38,9 +38,16 @@ export const ActionCard = ({
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-lg capitalize">{role}</h2>
           <p className="font-semibold">
-            <span>{format(fromDate, "dd MMMM, yyyy")}</span>
-            {" - "}
-            <span>{format(toDate, "dd MMMM, yyyy")}</span>
+            {fromDate && (
+              <span>
+                {format(fromDate, "dd MMMM, yyyy")} {" - "}
+              </span>
+            )}
+            {toDate && (
+              <>
+                <span>{format(toDate, "dd MMMM, yyyy")}</span>
+              </>
+            )}
           </p>
         </div>
         <p className="font-semibold capitalize flex gap-2">

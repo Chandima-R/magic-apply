@@ -68,6 +68,7 @@ export const Project = () => {
       },
     }
   );
+
   const visibleProjects = projectData?.project?.filter(
     (exp: any) => exp.visibility === true
   );
