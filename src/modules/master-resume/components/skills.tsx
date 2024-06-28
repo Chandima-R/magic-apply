@@ -1,3 +1,5 @@
+"use client";
+
 import { CustomButton } from "@/modules/shared/components/custom-button";
 import { Form } from "@/components/ui/form";
 import { TextArea } from "@/modules/shared/components/text-area";
