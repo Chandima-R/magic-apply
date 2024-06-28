@@ -1,3 +1,5 @@
+"use client";
+
 import { Form } from "@/components/ui/form";
 import { TextInput } from "@/modules/shared/components/text-input";
 import { TextArea } from "@/modules/shared/components/text-area";
@@ -24,6 +26,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
+import { usePathname } from "next/navigation";
+import { MasterResumeActiveLink } from "./master-resume-active-link";
 
 const certificationSchema = z.object({
   certificateName: z.string().nonempty("Certificate name is required."),
@@ -148,132 +152,138 @@ export const Certifications = () => {
     }
   };
 
-  return (
-    <div className={"w-full flex flex-col lg:flex-row"}>
-      <div className={"w-full lg:w-1/3"}>
-        <div className={"rounded-sm overflow-hidden shadow mb-4"}>
-          <video className={"w-full object-cover h-auto"} controls>
-            <source src={"/video/resume-builder.mp4"} />
-          </video>
-        </div>
-        <div>
-          {certificateLoding ? (
-            <LoadingSpinner />
-          ) : (
-            <>
-              {certificateData?.certification?.length > 0 && (
-                <Accordion
-                  type="single"
-                  collapsible
-                  className="w-full"
-                  defaultValue="certification"
-                >
-                  <AccordionItem value="certification">
-                    <AccordionTrigger className="text-xl font-semibold capitalize">
-                      your experience
-                    </AccordionTrigger>
-                    {hiddenCertificates ? (
-                      <span>
-                        You have {hiddenCertificates} hidden experiences in your
-                        bucket.
-                      </span>
-                    ) : (
-                      ""
-                    )}
-                    {visibleCertificates?.map((certificate: any) => (
-                      <AccordionContent key={certificate.id}>
-                        <ActionCard
-                          id={certificate.id}
-                          company={certificate.certification_institute}
-                          role={certificate.certification_name}
-                          country={""}
-                          fromDate={""}
-                          toDate={certificate.certification_completion_year}
-                          deleteTitle={"Delete your certification."}
-                          deleteDescription={
-                            "Are you sure to delete this certificate. This action cannot be undone and it will completely remove this certificate from your certifications."
-                          }
-                          deleteAction={() =>
-                            deleteCertifictionAction(certificate.id)
-                          }
-                          hideTitle={"Hide your certification."}
-                          hideDescription={
-                            "Are you sure to hide this certificate. This action cannot be undone and it will completely hide this certificate from your certifications."
-                          }
-                          hideAction={() =>
-                            hideECertificationAction(certificate.id)
-                          }
-                        />
-                      </AccordionContent>
-                    ))}
-                  </AccordionItem>
-                </Accordion>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-      <div className={"w-full lg:w-2/3 px-2 lg:px-6 py-4 lg:py-0"}>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className={"gap-4 lg:gap-8 grid grid-cols-1 w-full"}>
-              <TextInput
-                fieldLabel={"What was the certificate name?"}
-                fieldName={"certificateName"}
-                control={form.control}
-                placeholder={"Project management professional(PMP)"}
-                required={true}
-              />
-              <TextInput
-                fieldLabel={"Where did you get the certificate?"}
-                fieldName={"certificateInstitute"}
-                control={form.control}
-                placeholder={"Project management institute"}
-                required={true}
-              />
-              <TextInput
-                fieldLabel={"When did you get the certificate?"}
-                fieldName={"certificateDate"}
-                control={form.control}
-                placeholder={"2024"}
-                required={true}
-              />
-              <TextArea
-                fieldLabel={"How is the certificate relevant?"}
-                fieldName={"certificateDescription"}
-                control={form.control}
-                placeholder={
-                  "Certified in a standardized and evolving set of project management principles.."
-                }
-                required={false}
-              />
-            </div>
+  const path = usePathname();
+  const activeLink = path.split("/")[2];
 
-            <div className="flex justify-end w-full mt-8">
-              <div className="w-38">
-                {isLoading ? (
-                  <LoadingButton />
-                ) : (
-                  <>
-                    {certificateData?.certification?.length >= 5 ? (
-                      <CustomButton
-                        disabled
-                        type="submit"
-                        title="Save to certificate list"
-                      />
-                    ) : (
-                      <CustomButton
-                        type="submit"
-                        title="Save to certificate list"
-                      />
-                    )}
-                  </>
+  return (
+    <>
+      <MasterResumeActiveLink activeLink={activeLink} />
+      <div className={"w-full flex flex-col lg:flex-row"}>
+        <div className={"w-full lg:w-1/3"}>
+          <div className={"rounded-sm overflow-hidden shadow mb-4"}>
+            <video className={"w-full object-cover h-auto"} controls>
+              <source src={"/video/resume-builder.mp4"} />
+            </video>
+          </div>
+          <div>
+            {certificateLoding ? (
+              <LoadingSpinner />
+            ) : (
+              <>
+                {certificateData?.certification?.length > 0 && (
+                  <Accordion
+                    type="single"
+                    collapsible
+                    className="w-full"
+                    defaultValue="certification"
+                  >
+                    <AccordionItem value="certification">
+                      <AccordionTrigger className="text-xl font-semibold capitalize">
+                        your experience
+                      </AccordionTrigger>
+                      {hiddenCertificates ? (
+                        <span>
+                          You have {hiddenCertificates} hidden experiences in
+                          your bucket.
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                      {visibleCertificates?.map((certificate: any) => (
+                        <AccordionContent key={certificate.id}>
+                          <ActionCard
+                            id={certificate.id}
+                            company={certificate.certification_institute}
+                            role={certificate.certification_name}
+                            country={""}
+                            fromDate={""}
+                            toDate={certificate.certification_completion_year}
+                            deleteTitle={"Delete your certification."}
+                            deleteDescription={
+                              "Are you sure to delete this certificate. This action cannot be undone and it will completely remove this certificate from your certifications."
+                            }
+                            deleteAction={() =>
+                              deleteCertifictionAction(certificate.id)
+                            }
+                            hideTitle={"Hide your certification."}
+                            hideDescription={
+                              "Are you sure to hide this certificate. This action cannot be undone and it will completely hide this certificate from your certifications."
+                            }
+                            hideAction={() =>
+                              hideECertificationAction(certificate.id)
+                            }
+                          />
+                        </AccordionContent>
+                      ))}
+                    </AccordionItem>
+                  </Accordion>
                 )}
+              </>
+            )}
+          </div>
+        </div>
+        <div className={"w-full lg:w-2/3 px-2 lg:px-6 py-4 lg:py-0"}>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className={"gap-4 lg:gap-8 grid grid-cols-1 w-full"}>
+                <TextInput
+                  fieldLabel={"What was the certificate name?"}
+                  fieldName={"certificateName"}
+                  control={form.control}
+                  placeholder={"Project management professional(PMP)"}
+                  required={true}
+                />
+                <TextInput
+                  fieldLabel={"Where did you get the certificate?"}
+                  fieldName={"certificateInstitute"}
+                  control={form.control}
+                  placeholder={"Project management institute"}
+                  required={true}
+                />
+                <TextInput
+                  fieldLabel={"When did you get the certificate?"}
+                  fieldName={"certificateDate"}
+                  control={form.control}
+                  placeholder={"2024"}
+                  required={true}
+                />
+                <TextArea
+                  fieldLabel={"How is the certificate relevant?"}
+                  fieldName={"certificateDescription"}
+                  control={form.control}
+                  placeholder={
+                    "Certified in a standardized and evolving set of project management principles.."
+                  }
+                  required={false}
+                />
               </div>
-            </div>
-          </form>
-        </Form>
+
+              <div className="flex justify-end w-full mt-8">
+                <div className="w-38">
+                  {isLoading ? (
+                    <LoadingButton />
+                  ) : (
+                    <>
+                      {certificateData?.certification?.length >= 5 ? (
+                        <CustomButton
+                          disabled
+                          type="submit"
+                          title="Save to certificate list"
+                        />
+                      ) : (
+                        <CustomButton
+                          type="submit"
+                          title="Save to certificate list"
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            </form>
+          </Form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
