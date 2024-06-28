@@ -1,3 +1,5 @@
+"use client";
+
 import { Form } from "@/components/ui/form";
 import { TextInput } from "@/modules/shared/components/text-input";
 import { TextArea } from "@/modules/shared/components/text-area";
@@ -26,6 +28,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
+import { usePathname } from "next/navigation";
+import { MasterResumeActiveLink } from "./master-resume-active-link";
 
 const projectSchema = z.object({
   projectTitle: z.string().nonempty("Project title is required."),
@@ -157,148 +161,154 @@ export const Project = () => {
     }
   };
 
-  return (
-    <div className={"w-full flex flex-col lg:flex-row"}>
-      <div className={"w-full lg:w-1/3"}>
-        <div className={"rounded-sm overflow-hidden shadow mb-4"}>
-          <video className={"w-full object-cover h-auto"} controls>
-            <source src={"/video/resume-builder.mp4"} />
-          </video>
-        </div>
-        <div>
-          {projectLoading ? (
-            <LoadingSpinner />
-          ) : (
-            <>
-              {projectData?.project?.length > 0 && (
-                <Accordion
-                  type="single"
-                  collapsible
-                  className="w-full"
-                  defaultValue="project"
-                >
-                  <AccordionItem value="project">
-                    <AccordionTrigger className="text-xl font-semibold capitalize">
-                      your projects
-                    </AccordionTrigger>
-                    {hiddenProjects ? (
-                      <span>
-                        You have {hiddenProjects} hidden project(s) in your
-                        bucket.
-                      </span>
-                    ) : (
-                      ""
-                    )}
-                    {visibleProjects?.map((poject: any) => (
-                      <AccordionContent key={poject.id}>
-                        <ActionCard
-                          id={poject.id}
-                          company={poject.project_organization}
-                          role={poject.project_name}
-                          country={""}
-                          fromDate={poject.project_start_date}
-                          toDate={poject.project_end_date}
-                          deleteTitle={"Delete your project."}
-                          deleteDescription={
-                            "Are you sure to delete this project. This action cannot be undone and it will completely remove this project from your projects."
-                          }
-                          deleteAction={() => deleteProjectAction(poject.id)}
-                          hideTitle={"Hide your project."}
-                          hideDescription={
-                            "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
-                          }
-                          hideAction={() => hideProjectAction(poject.id)}
-                        />
-                      </AccordionContent>
-                    ))}
-                  </AccordionItem>
-                </Accordion>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-      <div className={"w-full lg:w-2/3 px-2 lg:px-6  py-4 lg:py-0"}>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div
-              className={
-                "gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-2 w-full"
-              }
-            >
-              <TextInput
-                fieldLabel={"Give your project a title"}
-                fieldName={"projectTitle"}
-                control={form.control}
-                placeholder={"Volunteer"}
-                required={true}
-              />
-              <TextInput
-                fieldLabel={"In which organization did you do your project?"}
-                fieldName={"organization"}
-                control={form.control}
-                placeholder={"Habitat for Humanity"}
-                required={true}
-              />
-              <CalendarField
-                fieldLabel={"Start date"}
-                fieldName={"projectStartDate"}
-                control={form.control}
-                placeholder={"city"}
-                required={true}
-              />
-              <CalendarField
-                fieldLabel={"End date"}
-                fieldName={"projectEndDate"}
-                control={form.control}
-                placeholder={"city"}
-                required={true}
-              />
-              <TextInput
-                fieldLabel={"Project URL"}
-                fieldName={"projectUrl"}
-                control={form.control}
-                placeholder={"New York, NY"}
-                required={false}
-              />
-            </div>
-            <div className={"mt-4 lg:mt-8 "}>
-              <TextArea
-                fieldLabel={"Now describe what you did"}
-                fieldName={"projectDescription"}
-                control={form.control}
-                placeholder={
-                  "Organized and implemented Google Analytics dta tracking campaigns to maximize the effectiveness of emil remarketing initiatives that were deployed using Salesforce&rsquo;s marketing cloud software. "
-                }
-                required={true}
-              />
-            </div>
+  const path = usePathname();
+  const activeLink = path.split("/")[2];
 
-            <div className="flex justify-end w-full mt-8">
-              <div className="w-38">
-                {isLoading ? (
-                  <LoadingButton />
-                ) : (
-                  <>
-                    {projectData?.project?.length >= 5 ? (
-                      <CustomButton
-                        disabled
-                        type="submit"
-                        title="Save to roject list"
-                      />
-                    ) : (
-                      <CustomButton
-                        type="submit"
-                        title="Save to project list"
-                      />
-                    )}
-                  </>
+  return (
+    <>
+      <MasterResumeActiveLink activeLink={activeLink} />
+      <div className={"w-full flex flex-col lg:flex-row"}>
+        <div className={"w-full lg:w-1/3"}>
+          <div className={"rounded-sm overflow-hidden shadow mb-4"}>
+            <video className={"w-full object-cover h-auto"} controls>
+              <source src={"/video/resume-builder.mp4"} />
+            </video>
+          </div>
+          <div>
+            {projectLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <>
+                {projectData?.project?.length > 0 && (
+                  <Accordion
+                    type="single"
+                    collapsible
+                    className="w-full"
+                    defaultValue="project"
+                  >
+                    <AccordionItem value="project">
+                      <AccordionTrigger className="text-xl font-semibold capitalize">
+                        your projects
+                      </AccordionTrigger>
+                      {hiddenProjects ? (
+                        <span>
+                          You have {hiddenProjects} hidden project(s) in your
+                          bucket.
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                      {visibleProjects?.map((poject: any) => (
+                        <AccordionContent key={poject.id}>
+                          <ActionCard
+                            id={poject.id}
+                            company={poject.project_organization}
+                            role={poject.project_name}
+                            country={""}
+                            fromDate={poject.project_start_date}
+                            toDate={poject.project_end_date}
+                            deleteTitle={"Delete your project."}
+                            deleteDescription={
+                              "Are you sure to delete this project. This action cannot be undone and it will completely remove this project from your projects."
+                            }
+                            deleteAction={() => deleteProjectAction(poject.id)}
+                            hideTitle={"Hide your project."}
+                            hideDescription={
+                              "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
+                            }
+                            hideAction={() => hideProjectAction(poject.id)}
+                          />
+                        </AccordionContent>
+                      ))}
+                    </AccordionItem>
+                  </Accordion>
                 )}
+              </>
+            )}
+          </div>
+        </div>
+        <div className={"w-full lg:w-2/3 px-2 lg:px-6  py-4 lg:py-0"}>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div
+                className={
+                  "gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-2 w-full"
+                }
+              >
+                <TextInput
+                  fieldLabel={"Give your project a title"}
+                  fieldName={"projectTitle"}
+                  control={form.control}
+                  placeholder={"Volunteer"}
+                  required={true}
+                />
+                <TextInput
+                  fieldLabel={"In which organization did you do your project?"}
+                  fieldName={"organization"}
+                  control={form.control}
+                  placeholder={"Habitat for Humanity"}
+                  required={true}
+                />
+                <CalendarField
+                  fieldLabel={"Start date"}
+                  fieldName={"projectStartDate"}
+                  control={form.control}
+                  placeholder={"city"}
+                  required={true}
+                />
+                <CalendarField
+                  fieldLabel={"End date"}
+                  fieldName={"projectEndDate"}
+                  control={form.control}
+                  placeholder={"city"}
+                  required={true}
+                />
+                <TextInput
+                  fieldLabel={"Project URL"}
+                  fieldName={"projectUrl"}
+                  control={form.control}
+                  placeholder={"New York, NY"}
+                  required={false}
+                />
               </div>
-            </div>
-          </form>
-        </Form>
+              <div className={"mt-4 lg:mt-8 "}>
+                <TextArea
+                  fieldLabel={"Now describe what you did"}
+                  fieldName={"projectDescription"}
+                  control={form.control}
+                  placeholder={
+                    "Organized and implemented Google Analytics dta tracking campaigns to maximize the effectiveness of emil remarketing initiatives that were deployed using Salesforce&rsquo;s marketing cloud software. "
+                  }
+                  required={true}
+                />
+              </div>
+
+              <div className="flex justify-end w-full mt-8">
+                <div className="w-38">
+                  {isLoading ? (
+                    <LoadingButton />
+                  ) : (
+                    <>
+                      {projectData?.project?.length >= 5 ? (
+                        <CustomButton
+                          disabled
+                          type="submit"
+                          title="Save to roject list"
+                        />
+                      ) : (
+                        <CustomButton
+                          type="submit"
+                          title="Save to project list"
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            </form>
+          </Form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };

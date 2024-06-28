@@ -1,3 +1,5 @@
+"use client";
+
 import { Form } from "@/components/ui/form";
 import { TextInput } from "@/modules/shared/components/text-input";
 import { TextArea } from "@/modules/shared/components/text-area";
@@ -24,6 +26,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
+import { usePathname } from "next/navigation";
+import { MasterResumeActiveLink } from "./master-resume-active-link";
 
 const courseworkSchema = z.object({
   courseName: z.string().nonempty("Certificate name is required."),
@@ -151,137 +155,145 @@ export const Coursework = () => {
     }
   };
 
-  return (
-    <div className={"w-full flex flex-col lg:flex-row"}>
-      <div className={"w-full lg:w-1/3"}>
-        <div className={"rounded-sm overflow-hidden shadow mb-4"}>
-          <video className={"w-full object-cover h-auto"} controls>
-            <source src={"/video/resume-builder.mp4"} />
-          </video>
-        </div>
-        <div>
-          {courseworkLoading ? (
-            <LoadingSpinner />
-          ) : (
-            <>
-              {courserworkData?.coursework?.length > 0 && (
-                <Accordion
-                  type="single"
-                  collapsible
-                  className="w-full"
-                  defaultValue="coursework"
-                >
-                  <AccordionItem value="coursework">
-                    <AccordionTrigger className="text-xl font-semibold capitalize">
-                      your coursework
-                    </AccordionTrigger>
-                    {hiddenCoursework ? (
-                      <span>
-                        You have {hiddenCoursework} hidden coursework(s) in your
-                        bucket.
-                      </span>
-                    ) : (
-                      ""
-                    )}
-                    {visibleCoursework?.map((coursework: any) => (
-                      <AccordionContent key={coursework.id}>
-                        <ActionCard
-                          id={coursework.id}
-                          company={coursework.course_institute}
-                          role={coursework.course_name}
-                          country={""}
-                          fromDate={""}
-                          toDate={coursework.course_completion_year}
-                          deleteTitle={"Delete your coursework."}
-                          deleteDescription={
-                            "Are you sure to delete this coursework. This action cannot be undone and it will completely remove this coursework from your coursework."
-                          }
-                          deleteAction={() =>
-                            deleteCourseworkAction(coursework.id)
-                          }
-                          hideTitle={"Hide your coursework."}
-                          hideDescription={
-                            "Are you sure to hide this coursework. This action cannot be undone and it will completely hide this coursework from your coursework."
-                          }
-                          hideAction={() => hideCourseworkAction(coursework.id)}
-                        />
-                      </AccordionContent>
-                    ))}
-                  </AccordionItem>
-                </Accordion>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-      <div className={"w-full lg:w-2/3 px-2 lg:px-6 py-4 lg:py-0"}>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className={"gap-4 lg:gap-8 grid grid-cols-1 w-full"}>
-              <TextInput
-                fieldLabel={"What was the course name?"}
-                fieldName={"courseName"}
-                control={form.control}
-                placeholder={"Introduction to Computer Science"}
-                required={true}
-              />
-              <TextInput
-                fieldLabel={"Where did you take the course?"}
-                fieldName={"courseInstitute"}
-                control={form.control}
-                placeholder={"University of Wisconsin, Madison"}
-                required={true}
-              />
-              <TextInput
-                fieldLabel={"When did you take the course?"}
-                fieldName={"courseCompletionDate"}
-                control={form.control}
-                placeholder={"2024"}
-                required={true}
-              />
-              <TextInput
-                fieldLabel={"When skill did you use?"}
-                fieldName={"courseSkill"}
-                control={form.control}
-                placeholder={"Teamwork"}
-                required={false}
-              />
-              <TextArea
-                fieldLabel={"How was that skill applied?"}
-                fieldName={"courseDescription"}
-                control={form.control}
-                placeholder={
-                  "Coordinating on code with a small group of people."
-                }
-                required={false}
-              />
-            </div>
+  const path = usePathname();
+  const activeLink = path.split("/")[2];
 
-            <div className="flex justify-end w-full mt-8">
-              <div className="w-38">
-                {isLoading ? (
-                  <LoadingButton />
-                ) : (
-                  <>
-                    {courserworkData?.coursework?.length >= 5 ? (
-                      <CustomButton
-                        disabled
-                        type="submit"
-                        title="Save to coursework list"
-                      />
-                    ) : (
-                      <CustomButton
-                        type="submit"
-                        title="Save to coursework list"
-                      />
-                    )}
-                  </>
+  return (
+    <>
+      <MasterResumeActiveLink activeLink={activeLink} />
+      <div className={"w-full flex flex-col lg:flex-row"}>
+        <div className={"w-full lg:w-1/3"}>
+          <div className={"rounded-sm overflow-hidden shadow mb-4"}>
+            <video className={"w-full object-cover h-auto"} controls>
+              <source src={"/video/resume-builder.mp4"} />
+            </video>
+          </div>
+          <div>
+            {courseworkLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <>
+                {courserworkData?.coursework?.length > 0 && (
+                  <Accordion
+                    type="single"
+                    collapsible
+                    className="w-full"
+                    defaultValue="coursework"
+                  >
+                    <AccordionItem value="coursework">
+                      <AccordionTrigger className="text-xl font-semibold capitalize">
+                        your coursework
+                      </AccordionTrigger>
+                      {hiddenCoursework ? (
+                        <span>
+                          You have {hiddenCoursework} hidden coursework(s) in
+                          your bucket.
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                      {visibleCoursework?.map((coursework: any) => (
+                        <AccordionContent key={coursework.id}>
+                          <ActionCard
+                            id={coursework.id}
+                            company={coursework.course_institute}
+                            role={coursework.course_name}
+                            country={""}
+                            fromDate={""}
+                            toDate={coursework.course_completion_year}
+                            deleteTitle={"Delete your coursework."}
+                            deleteDescription={
+                              "Are you sure to delete this coursework. This action cannot be undone and it will completely remove this coursework from your coursework."
+                            }
+                            deleteAction={() =>
+                              deleteCourseworkAction(coursework.id)
+                            }
+                            hideTitle={"Hide your coursework."}
+                            hideDescription={
+                              "Are you sure to hide this coursework. This action cannot be undone and it will completely hide this coursework from your coursework."
+                            }
+                            hideAction={() =>
+                              hideCourseworkAction(coursework.id)
+                            }
+                          />
+                        </AccordionContent>
+                      ))}
+                    </AccordionItem>
+                  </Accordion>
                 )}
+              </>
+            )}
+          </div>
+        </div>
+        <div className={"w-full lg:w-2/3 px-2 lg:px-6 py-4 lg:py-0"}>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className={"gap-4 lg:gap-8 grid grid-cols-1 w-full"}>
+                <TextInput
+                  fieldLabel={"What was the course name?"}
+                  fieldName={"courseName"}
+                  control={form.control}
+                  placeholder={"Introduction to Computer Science"}
+                  required={true}
+                />
+                <TextInput
+                  fieldLabel={"Where did you take the course?"}
+                  fieldName={"courseInstitute"}
+                  control={form.control}
+                  placeholder={"University of Wisconsin, Madison"}
+                  required={true}
+                />
+                <TextInput
+                  fieldLabel={"When did you take the course?"}
+                  fieldName={"courseCompletionDate"}
+                  control={form.control}
+                  placeholder={"2024"}
+                  required={true}
+                />
+                <TextInput
+                  fieldLabel={"When skill did you use?"}
+                  fieldName={"courseSkill"}
+                  control={form.control}
+                  placeholder={"Teamwork"}
+                  required={false}
+                />
+                <TextArea
+                  fieldLabel={"How was that skill applied?"}
+                  fieldName={"courseDescription"}
+                  control={form.control}
+                  placeholder={
+                    "Coordinating on code with a small group of people."
+                  }
+                  required={false}
+                />
               </div>
-            </div>
-          </form>
-        </Form>
+
+              <div className="flex justify-end w-full mt-8">
+                <div className="w-38">
+                  {isLoading ? (
+                    <LoadingButton />
+                  ) : (
+                    <>
+                      {courserworkData?.coursework?.length >= 5 ? (
+                        <CustomButton
+                          disabled
+                          type="submit"
+                          title="Save to coursework list"
+                        />
+                      ) : (
+                        <CustomButton
+                          type="submit"
+                          title="Save to coursework list"
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            </form>
+          </Form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };

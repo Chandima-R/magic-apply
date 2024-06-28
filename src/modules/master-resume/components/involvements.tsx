@@ -1,3 +1,5 @@
+"use client";
+
 import { Form } from "@/components/ui/form";
 import { TextInput } from "@/modules/shared/components/text-input";
 import { TextArea } from "@/modules/shared/components/text-area";
@@ -25,6 +27,8 @@ import {
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
+import { MasterResumeActiveLink } from "./master-resume-active-link";
+import { usePathname } from "next/navigation";
 
 const involvementSchema = z.object({
   organizationRole: z.string().nonempty("Project title is required."),
@@ -156,152 +160,158 @@ export const Involvements = () => {
     }
   };
 
-  return (
-    <div className={"w-full flex flex-col lg:flex-row"}>
-      <div className={"w-full lg:w-1/3"}>
-        <div className={"rounded-sm overflow-hidden shadow mb-4"}>
-          <video className={"w-full object-cover h-auto"} controls>
-            <source src={"/video/resume-builder.mp4"} />
-          </video>
-        </div>
-        <div>
-          {involvementLoading ? (
-            <LoadingSpinner />
-          ) : (
-            <>
-              {involvementData?.involvement?.length > 0 && (
-                <Accordion
-                  type="single"
-                  collapsible
-                  className="w-full"
-                  defaultValue="involvement"
-                >
-                  <AccordionItem value="involvement">
-                    <AccordionTrigger className="text-xl font-semibold capitalize">
-                      your projects
-                    </AccordionTrigger>
-                    {hiddenInvolvements ? (
-                      <span>
-                        You have {hiddenInvolvements} hidden project(s) in your
-                        bucket.
-                      </span>
-                    ) : (
-                      ""
-                    )}
-                    {visibleInvolvements?.map((involvement: any) => (
-                      <AccordionContent key={involvement.id}>
-                        <ActionCard
-                          id={involvement.id}
-                          company={involvement.involevement_organization}
-                          role={involvement.involvement_organization_role}
-                          country={involvement.involvement_college}
-                          fromDate={involvement.involvement_start_date}
-                          toDate={involvement.involvement_end_date}
-                          deleteTitle={"Delete your involvement."}
-                          deleteDescription={
-                            "Are you sure to delete this involvement. This action cannot be undone and it will completely remove this involvement from your involvements."
-                          }
-                          deleteAction={() =>
-                            deleteInvolvementAction(involvement.id)
-                          }
-                          hideTitle={"Hide your involvement."}
-                          hideDescription={
-                            "Are you sure to hide this involvement. This action cannot be undone and it will completely hide this involvement from your involvements."
-                          }
-                          hideAction={() =>
-                            hideinvolvementAction(involvement.id)
-                          }
-                        />
-                      </AccordionContent>
-                    ))}
-                  </AccordionItem>
-                </Accordion>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-      <div className={"w-full lg:w-2/3 px-2 lg:px-6  py-4 lg:py-0"}>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div
-              className={
-                "gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-2 w-full"
-              }
-            >
-              <TextInput
-                fieldLabel={"What was your role at the organization?"}
-                fieldName={"organizationRole"}
-                control={form.control}
-                placeholder={"Selected Member"}
-                required={true}
-              />
-              <TextInput
-                fieldLabel={"For which organization did you work?"}
-                fieldName={"organizationName"}
-                control={form.control}
-                placeholder={"Economics Student Association"}
-                required={true}
-              />
-              <CalendarField
-                fieldLabel={"Start date"}
-                fieldName={"organizationRoleStartDate"}
-                control={form.control}
-                placeholder={"city"}
-                required={true}
-              />
-              <CalendarField
-                fieldLabel={"End date"}
-                fieldName={"organizationRoleEndDate"}
-                control={form.control}
-                placeholder={"city"}
-                required={true}
-              />
-              <TextInput
-                fieldLabel={"At which college was the organization located?"}
-                fieldName={"organizationLocation"}
-                control={form.control}
-                placeholder={"University of Wisconsin, Madison"}
-                required={true}
-              />
-            </div>
-            <div className={"mt-4 lg:mt-8 "}>
-              <TextArea
-                fieldLabel={"What did you do at the organization?"}
-                fieldName={"organizationRoleDescription"}
-                control={form.control}
-                placeholder={
-                  "Participated in forums and discussions presented by key economic thinkers and companies associated with the uniiversity."
-                }
-                required={true}
-              />
-            </div>
+  const path = usePathname();
+  const activeLink = path.split("/")[2];
 
-            <div className="flex justify-end w-full mt-8">
-              <div className="w-38">
-                {isLoading ? (
-                  <LoadingButton />
-                ) : (
-                  <>
-                    {involvementData?.involvement?.length >= 5 ? (
-                      <CustomButton
-                        disabled
-                        type="submit"
-                        title="Save to involvement list"
-                      />
-                    ) : (
-                      <CustomButton
-                        type="submit"
-                        title="Save to involvement list"
-                      />
-                    )}
-                  </>
+  return (
+    <>
+      <MasterResumeActiveLink activeLink={activeLink} />
+      <div className={"w-full flex flex-col lg:flex-row"}>
+        <div className={"w-full lg:w-1/3"}>
+          <div className={"rounded-sm overflow-hidden shadow mb-4"}>
+            <video className={"w-full object-cover h-auto"} controls>
+              <source src={"/video/resume-builder.mp4"} />
+            </video>
+          </div>
+          <div>
+            {involvementLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <>
+                {involvementData?.involvement?.length > 0 && (
+                  <Accordion
+                    type="single"
+                    collapsible
+                    className="w-full"
+                    defaultValue="involvement"
+                  >
+                    <AccordionItem value="involvement">
+                      <AccordionTrigger className="text-xl font-semibold capitalize">
+                        your projects
+                      </AccordionTrigger>
+                      {hiddenInvolvements ? (
+                        <span>
+                          You have {hiddenInvolvements} hidden project(s) in
+                          your bucket.
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                      {visibleInvolvements?.map((involvement: any) => (
+                        <AccordionContent key={involvement.id}>
+                          <ActionCard
+                            id={involvement.id}
+                            company={involvement.involevement_organization}
+                            role={involvement.involvement_organization_role}
+                            country={involvement.involvement_college}
+                            fromDate={involvement.involvement_start_date}
+                            toDate={involvement.involvement_end_date}
+                            deleteTitle={"Delete your involvement."}
+                            deleteDescription={
+                              "Are you sure to delete this involvement. This action cannot be undone and it will completely remove this involvement from your involvements."
+                            }
+                            deleteAction={() =>
+                              deleteInvolvementAction(involvement.id)
+                            }
+                            hideTitle={"Hide your involvement."}
+                            hideDescription={
+                              "Are you sure to hide this involvement. This action cannot be undone and it will completely hide this involvement from your involvements."
+                            }
+                            hideAction={() =>
+                              hideinvolvementAction(involvement.id)
+                            }
+                          />
+                        </AccordionContent>
+                      ))}
+                    </AccordionItem>
+                  </Accordion>
                 )}
+              </>
+            )}
+          </div>
+        </div>
+        <div className={"w-full lg:w-2/3 px-2 lg:px-6  py-4 lg:py-0"}>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div
+                className={
+                  "gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-2 w-full"
+                }
+              >
+                <TextInput
+                  fieldLabel={"What was your role at the organization?"}
+                  fieldName={"organizationRole"}
+                  control={form.control}
+                  placeholder={"Selected Member"}
+                  required={true}
+                />
+                <TextInput
+                  fieldLabel={"For which organization did you work?"}
+                  fieldName={"organizationName"}
+                  control={form.control}
+                  placeholder={"Economics Student Association"}
+                  required={true}
+                />
+                <CalendarField
+                  fieldLabel={"Start date"}
+                  fieldName={"organizationRoleStartDate"}
+                  control={form.control}
+                  placeholder={"city"}
+                  required={true}
+                />
+                <CalendarField
+                  fieldLabel={"End date"}
+                  fieldName={"organizationRoleEndDate"}
+                  control={form.control}
+                  placeholder={"city"}
+                  required={true}
+                />
+                <TextInput
+                  fieldLabel={"At which college was the organization located?"}
+                  fieldName={"organizationLocation"}
+                  control={form.control}
+                  placeholder={"University of Wisconsin, Madison"}
+                  required={true}
+                />
               </div>
-            </div>
-          </form>
-        </Form>
+              <div className={"mt-4 lg:mt-8 "}>
+                <TextArea
+                  fieldLabel={"What did you do at the organization?"}
+                  fieldName={"organizationRoleDescription"}
+                  control={form.control}
+                  placeholder={
+                    "Participated in forums and discussions presented by key economic thinkers and companies associated with the uniiversity."
+                  }
+                  required={true}
+                />
+              </div>
+
+              <div className="flex justify-end w-full mt-8">
+                <div className="w-38">
+                  {isLoading ? (
+                    <LoadingButton />
+                  ) : (
+                    <>
+                      {involvementData?.involvement?.length >= 5 ? (
+                        <CustomButton
+                          disabled
+                          type="submit"
+                          title="Save to involvement list"
+                        />
+                      ) : (
+                        <CustomButton
+                          type="submit"
+                          title="Save to involvement list"
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            </form>
+          </Form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
