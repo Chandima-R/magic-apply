@@ -4,7 +4,7 @@ export const masterresumeLinks = [
     label: "contact",
   },
   {
-    href: "/master-resume/expereince",
+    href: "/master-resume/experience",
     label: "experience",
   },
   {

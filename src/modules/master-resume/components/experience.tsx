@@ -1,3 +1,5 @@
+"use client";
+
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -9,7 +11,6 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useSubscription } from "@apollo/client";
-import { CONTACT_INFORMATION } from "@/graphql/contact";
 import {
   ADD_NEW_EXPERIENCE_BY_USER_ID,
   DELETE_EXPERIENCE_BY_PK,
@@ -26,6 +27,8 @@ import {
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
+import { MasterResumeActiveLink } from "./master-resume-active-link";
+import { usePathname } from "next/navigation";
 
 const experienceSchema = z.object({
   role: z.string().nonempty("Role is required."),
@@ -156,148 +159,154 @@ export const Experience = () => {
     }
   };
 
-  return (
-    <div className={"w-full flex flex-col lg:flex-row"}>
-      <div className={"w-full lg:w-1/3"}>
-        <div className={"rounded-sm overflow-hidden shadow mb-4"}>
-          <video className={"w-full object-cover h-auto"} controls>
-            <source src={"/video/resume-builder.mp4"} />
-          </video>
-        </div>
-        <div>
-          {expoerienceLoading ? (
-            <LoadingSpinner />
-          ) : (
-            <>
-              {experienceData?.experience?.length > 0 && (
-                <Accordion
-                  type="single"
-                  collapsible
-                  className="w-full"
-                  defaultValue="experience"
-                >
-                  <AccordionItem value="experience">
-                    <AccordionTrigger className="text-xl font-semibold capitalize">
-                      your experience
-                    </AccordionTrigger>
-                    {hiddenExperience ? (
-                      <span>
-                        You have {hiddenExperience} hidden experiences in your
-                        bucket.
-                      </span>
-                    ) : (
-                      ""
-                    )}
-                    {visibleExperience?.map((exp: any) => (
-                      <AccordionContent key={exp.id}>
-                        <ActionCard
-                          id={exp.id}
-                          company={exp.company_name}
-                          role={exp.company_role}
-                          country={exp.company_location}
-                          fromDate={exp.company_start_date}
-                          toDate={exp.company_end_date}
-                          deleteTitle={"Delete your project."}
-                          deleteDescription={
-                            "Are you sure to delete this project. This action cannot be undone and it will completely remove this project from your projects."
-                          }
-                          deleteAction={() => deleteExperienceAction(exp.id)}
-                          hideTitle={"Hide your project."}
-                          hideDescription={
-                            "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
-                          }
-                          hideAction={() => hideExperienceAction(exp.id)}
-                        />
-                      </AccordionContent>
-                    ))}
-                  </AccordionItem>
-                </Accordion>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-      <div className={"w-full lg:w-2/3 px-2 lg:px-6  py-4 lg:py-0"}>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div
-              className={
-                "gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-2 w-full"
-              }
-            >
-              <TextInput
-                fieldLabel={"What was the your role at the company?"}
-                fieldName={"role"}
-                control={form.control}
-                placeholder={"Marketing Analyst"}
-                required={true}
-              />
-              <TextInput
-                fieldLabel={"For which company did you work?"}
-                fieldName={"company"}
-                control={form.control}
-                placeholder={"Google"}
-                required={true}
-              />
-              <CalendarField
-                fieldLabel={"Start date"}
-                fieldName={"startDate"}
-                control={form.control}
-                placeholder={"city"}
-                required={true}
-              />
-              <CalendarField
-                fieldLabel={"End date"}
-                fieldName={"endDate"}
-                control={form.control}
-                placeholder={"city"}
-                required={true}
-              />
-              <TextInput
-                fieldLabel={"Where is the company located?"}
-                fieldName={"companyLocation"}
-                control={form.control}
-                placeholder={"New York, NY"}
-                required={true}
-              />
-            </div>
-            <div className={"mt-4 lg:mt-8 "}>
-              <TextArea
-                fieldLabel={"What did you do at the company"}
-                fieldName={"jobDescription"}
-                control={form.control}
-                placeholder={
-                  "Organized and implemented Google Analytics dta tracking campaigns to maximize the effectiveness of emil remarketing initiatives that were deployed using Salesforce&rsquo;s marketing cloud software. "
-                }
-                required={true}
-              />
-            </div>
+  const path = usePathname();
+  const activeLink = path.split("/")[2];
 
-            <div className="flex justify-end w-full mt-8">
-              <div className="w-38">
-                {isLoading ? (
-                  <LoadingButton />
-                ) : (
-                  <>
-                    {experienceData?.experience?.length >= 5 ? (
-                      <CustomButton
-                        disabled
-                        type="submit"
-                        title="Save to experience list"
-                      />
-                    ) : (
-                      <CustomButton
-                        type="submit"
-                        title="Save to experience list"
-                      />
-                    )}
-                  </>
+  return (
+    <>
+      <MasterResumeActiveLink activeLink={activeLink} />
+      <div className={"w-full flex flex-col lg:flex-row"}>
+        <div className={"w-full lg:w-1/3"}>
+          <div className={"rounded-sm overflow-hidden shadow mb-4"}>
+            <video className={"w-full object-cover h-auto"} controls>
+              <source src={"/video/resume-builder.mp4"} />
+            </video>
+          </div>
+          <div>
+            {expoerienceLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <>
+                {experienceData?.experience?.length > 0 && (
+                  <Accordion
+                    type="single"
+                    collapsible
+                    className="w-full"
+                    defaultValue="experience"
+                  >
+                    <AccordionItem value="experience">
+                      <AccordionTrigger className="text-xl font-semibold capitalize">
+                        your experience
+                      </AccordionTrigger>
+                      {hiddenExperience ? (
+                        <span>
+                          You have {hiddenExperience} hidden experiences in your
+                          bucket.
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                      {visibleExperience?.map((exp: any) => (
+                        <AccordionContent key={exp.id}>
+                          <ActionCard
+                            id={exp.id}
+                            company={exp.company_name}
+                            role={exp.company_role}
+                            country={exp.company_location}
+                            fromDate={exp.company_start_date}
+                            toDate={exp.company_end_date}
+                            deleteTitle={"Delete your project."}
+                            deleteDescription={
+                              "Are you sure to delete this project. This action cannot be undone and it will completely remove this project from your projects."
+                            }
+                            deleteAction={() => deleteExperienceAction(exp.id)}
+                            hideTitle={"Hide your project."}
+                            hideDescription={
+                              "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
+                            }
+                            hideAction={() => hideExperienceAction(exp.id)}
+                          />
+                        </AccordionContent>
+                      ))}
+                    </AccordionItem>
+                  </Accordion>
                 )}
+              </>
+            )}
+          </div>
+        </div>
+        <div className={"w-full lg:w-2/3 px-2 lg:px-6  py-4 lg:py-0"}>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div
+                className={
+                  "gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-2 w-full"
+                }
+              >
+                <TextInput
+                  fieldLabel={"What was the your role at the company?"}
+                  fieldName={"role"}
+                  control={form.control}
+                  placeholder={"Marketing Analyst"}
+                  required={true}
+                />
+                <TextInput
+                  fieldLabel={"For which company did you work?"}
+                  fieldName={"company"}
+                  control={form.control}
+                  placeholder={"Google"}
+                  required={true}
+                />
+                <CalendarField
+                  fieldLabel={"Start date"}
+                  fieldName={"startDate"}
+                  control={form.control}
+                  placeholder={"city"}
+                  required={true}
+                />
+                <CalendarField
+                  fieldLabel={"End date"}
+                  fieldName={"endDate"}
+                  control={form.control}
+                  placeholder={"city"}
+                  required={true}
+                />
+                <TextInput
+                  fieldLabel={"Where is the company located?"}
+                  fieldName={"companyLocation"}
+                  control={form.control}
+                  placeholder={"New York, NY"}
+                  required={true}
+                />
               </div>
-            </div>
-          </form>
-        </Form>
+              <div className={"mt-4 lg:mt-8 "}>
+                <TextArea
+                  fieldLabel={"What did you do at the company"}
+                  fieldName={"jobDescription"}
+                  control={form.control}
+                  placeholder={
+                    "Organized and implemented Google Analytics dta tracking campaigns to maximize the effectiveness of emil remarketing initiatives that were deployed using Salesforce&rsquo;s marketing cloud software. "
+                  }
+                  required={true}
+                />
+              </div>
+
+              <div className="flex justify-end w-full mt-8">
+                <div className="w-38">
+                  {isLoading ? (
+                    <LoadingButton />
+                  ) : (
+                    <>
+                      {experienceData?.experience?.length >= 5 ? (
+                        <CustomButton
+                          disabled
+                          type="submit"
+                          title="Save to experience list"
+                        />
+                      ) : (
+                        <CustomButton
+                          type="submit"
+                          title="Save to experience list"
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            </form>
+          </Form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
