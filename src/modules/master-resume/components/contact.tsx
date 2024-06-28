@@ -16,6 +16,8 @@ import {
 } from "@/graphql/contact";
 import { useUser } from "@clerk/nextjs";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
+import { usePathname } from "next/navigation";
+import { MasterResumeActiveLink } from "./master-resume-active-link";
 
 const contactSchema = z.object({
   fullName: z.string().nonempty("Full name is required."),
@@ -128,76 +130,82 @@ export const Contact = () => {
     }
   }
 
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-2 w-full">
-          <TextInput
-            fieldLabel="Full name"
-            fieldName="fullName"
-            control={form.control}
-            placeholder="Charles Bloomberg"
-            required
-          />
-          <TextInput
-            fieldLabel="Email address"
-            fieldName="email"
-            control={form.control}
-            placeholder="charlesbloomberg@wisc.edu"
-            required
-          />
-          <TextInput
-            fieldLabel="Phone number"
-            fieldName="phone"
-            control={form.control}
-            placeholder="(621) 7999 5548"
-            required
-          />
-          <TextInput
-            fieldLabel="LinkedIn"
-            fieldName="linkedin"
-            control={form.control}
-            placeholder="in/cbloomberg"
-            required
-          />
-          <TextInput
-            fieldLabel="Personal Website"
-            fieldName="personalWebsite"
-            control={form.control}
-            placeholder="https://www.chaarlesbloomberg.com"
-          />
-          <TextInput
-            fieldLabel="Country"
-            fieldName="country"
-            control={form.control}
-            placeholder="Country"
-            required
-          />
-          <TextInput
-            fieldLabel="State"
-            fieldName="state"
-            control={form.control}
-            placeholder="State"
-          />
-          <TextInput
-            fieldLabel="City"
-            fieldName="city"
-            control={form.control}
-            placeholder="City"
-            required
-          />
-        </div>
+  const path = usePathname();
+  const activeLink = path.split("/")[2];
 
-        <div className="flex justify-end w-full mt-8">
-          <div className="w-38">
-            {isLoading ? (
-              <LoadingButton />
-            ) : (
-              <CustomButton type="submit" title="Save basic info" />
-            )}
+  return (
+    <>
+      <MasterResumeActiveLink activeLink={activeLink} />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-2 w-full">
+            <TextInput
+              fieldLabel="Full name"
+              fieldName="fullName"
+              control={form.control}
+              placeholder="Charles Bloomberg"
+              required
+            />
+            <TextInput
+              fieldLabel="Email address"
+              fieldName="email"
+              control={form.control}
+              placeholder="charlesbloomberg@wisc.edu"
+              required
+            />
+            <TextInput
+              fieldLabel="Phone number"
+              fieldName="phone"
+              control={form.control}
+              placeholder="(621) 7999 5548"
+              required
+            />
+            <TextInput
+              fieldLabel="LinkedIn"
+              fieldName="linkedin"
+              control={form.control}
+              placeholder="in/cbloomberg"
+              required
+            />
+            <TextInput
+              fieldLabel="Personal Website"
+              fieldName="personalWebsite"
+              control={form.control}
+              placeholder="https://www.chaarlesbloomberg.com"
+            />
+            <TextInput
+              fieldLabel="Country"
+              fieldName="country"
+              control={form.control}
+              placeholder="Country"
+              required
+            />
+            <TextInput
+              fieldLabel="State"
+              fieldName="state"
+              control={form.control}
+              placeholder="State"
+            />
+            <TextInput
+              fieldLabel="City"
+              fieldName="city"
+              control={form.control}
+              placeholder="City"
+              required
+            />
           </div>
-        </div>
-      </form>
-    </Form>
+
+          <div className="flex justify-end w-full mt-8">
+            <div className="w-38">
+              {isLoading ? (
+                <LoadingButton />
+              ) : (
+                <CustomButton type="submit" title="Save basic info" />
+              )}
+            </div>
+          </div>
+        </form>
+      </Form>
+    </>
   );
 };
