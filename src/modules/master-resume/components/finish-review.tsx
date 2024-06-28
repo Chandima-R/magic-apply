@@ -1,14 +1,20 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+import { MasterResumeActiveLink } from "./master-resume-active-link";
 
 export const FinishReview = () => {
-    return (
-        <div>
-            <p>finish review</p>
+  const path = usePathname();
+  const activeLink = path.split("/")[2];
 
-            <button
-                type={'submit'}
-            >
-                submit
-            </button>
-        </div>
-    )
-}
+  return (
+    <>
+      <MasterResumeActiveLink activeLink={activeLink} />
+      <div>
+        <p>finish review</p>
+
+        <button type={"submit"}>submit</button>
+      </div>
+    </>
+  );
+};
