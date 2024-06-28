@@ -7,11 +7,10 @@ interface Props {
 }
 
 export const MasterResumeActiveLink = ({ activeLink }: Props) => {
-  console.log(activeLink);
   return (
     <div className="flex flex-wrap gap-4 mb-8">
       {masterresumeLinks.map((link) => (
-        <Link href={link.href}>
+        <Link href={link.href} key={link.href}>
           <Button
             size={"sm"}
             key={link.href}
