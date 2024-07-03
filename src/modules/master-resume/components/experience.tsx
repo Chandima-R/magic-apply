@@ -215,6 +215,7 @@ export const Experience = () => {
                               "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
                             }
                             hideAction={() => hideExperienceAction(exp.id)}
+                            status={exp.visibility}
                           />
                         </AccordionContent>
                       ))}

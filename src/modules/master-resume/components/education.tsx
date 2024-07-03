@@ -218,6 +218,7 @@ export const Education = () => {
                               "Are you sure to hide this education. This action cannot be undone and it will completely hide this education from your educations."
                             }
                             hideAction={() => hideEducationAction(education.id)}
+                            status={education.visibility}
                           />
                         </AccordionContent>
                       ))}

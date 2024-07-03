@@ -215,6 +215,7 @@ export const Coursework = () => {
                             hideAction={() =>
                               hideCourseworkAction(coursework.id)
                             }
+                            status={coursework.visibility}
                           />
                         </AccordionContent>
                       ))}
