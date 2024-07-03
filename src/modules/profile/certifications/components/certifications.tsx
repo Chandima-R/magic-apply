@@ -74,14 +74,14 @@ export const Certifications = () => {
   const hiddenCertificatesLength =
     allCertificates?.length - visibleCertificates?.length;
 
-  const [addExperience] = useMutation(ADD_NEW_CERTIFICATE_BY_USER_ID);
+  const [addCertificate] = useMutation(ADD_NEW_CERTIFICATE_BY_USER_ID);
   async function onSubmit(values: z.infer<typeof certificationSchema>) {
     try {
       setIsLoading(true);
       if (!user?.id) {
         throw new Error("User is not authenticated");
       } else {
-        await addExperience({
+        await addCertificate({
           variables: {
             certification_completion_year: values.certificateDate,
             certification_description: values.certificateDescription,
