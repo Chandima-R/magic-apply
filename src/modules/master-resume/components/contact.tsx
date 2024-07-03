@@ -17,7 +17,7 @@ import {
 import { useUser } from "@clerk/nextjs";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname } from "next/navigation";
-import { MasterResumeActiveLink } from "./master-resume-active-link";
+import { ProfileActiveLinks } from "./profile-active-links";
 
 const contactSchema = z.object({
   fullName: z.string().nonempty("Full name is required."),
@@ -135,7 +135,7 @@ export const Contact = () => {
 
   return (
     <>
-      <MasterResumeActiveLink activeLink={activeLink} />
+      <ProfileActiveLinks activeLink={activeLink} />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="gap-4 lg:gap-8 grid grid-cols-1 lg:grid-cols-2 w-full">

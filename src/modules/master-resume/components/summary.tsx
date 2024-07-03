@@ -17,7 +17,7 @@ import {
 import { useMutation, useSubscription } from "@apollo/client";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname } from "next/navigation";
-import { MasterResumeActiveLink } from "./master-resume-active-link";
+import { ProfileActiveLinks } from "./profile-active-links";
 
 const summarySchema = z.object({
   summary: z.string().nonempty("Summary is required."),
@@ -38,7 +38,7 @@ export const Summary = () => {
   const [addSummary] = useMutation(ADD_NEW_SUMMARY_BY_USER_ID);
   const [updateSummary] = useMutation(UPDATE_SUMMARY_BY_ID);
 
-  const { data: summaryData, loading: summaryLoading } = useSubscription(
+  const { data: summaryData } = useSubscription(
     SUMMARY_INFORMATION_BY_USER_ID,
     {
       variables: {
@@ -101,7 +101,7 @@ export const Summary = () => {
 
   return (
     <>
-      <MasterResumeActiveLink activeLink={activeLink} />
+      <ProfileActiveLinks activeLink={activeLink} />
       <div className="w-full flex flex-col lg:flex-row">
         <div className="w-full lg:w-1/3">
           <div className="rounded-sm overflow-hidden shadow">

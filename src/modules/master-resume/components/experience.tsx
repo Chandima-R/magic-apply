@@ -27,7 +27,7 @@ import {
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
-import { MasterResumeActiveLink } from "./master-resume-active-link";
+import { ProfileActiveLinks } from "./profile-active-links";
 import { usePathname } from "next/navigation";
 
 const experienceSchema = z.object({
@@ -164,7 +164,7 @@ export const Experience = () => {
 
   return (
     <>
-      <MasterResumeActiveLink activeLink={activeLink} />
+      <ProfileActiveLinks activeLink={activeLink} />
       <div className={"w-full flex flex-col lg:flex-row"}>
         <div className={"w-full lg:w-1/3"}>
           <div className={"rounded-sm overflow-hidden shadow mb-4"}>

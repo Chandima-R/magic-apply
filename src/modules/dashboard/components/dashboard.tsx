@@ -20,7 +20,7 @@ export const Dashboard = () => {
         <CustomButtonCard
           icon={CircleUser}
           title="your profile"
-          link="profile"
+          link="profile/contact"
         />
         <CustomButtonCard
           icon={Aperture}
