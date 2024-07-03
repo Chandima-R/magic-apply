@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { usePathname } from "next/navigation";
-import { ProfileActiveLinks } from "./profile-active-links";
+import { ProfileActiveLinks } from "../../../master-resume/components/profile-active-links";
 
 const certificationSchema = z.object({
   certificateName: z.string().nonempty("Certificate name is required."),
@@ -240,14 +240,15 @@ export const Certifications = () => {
                               hideCertificationAction(certificate.id)
                             }
                             status={certificate.visibility}
+                            tab={'certification'}
                           />
                         </AccordionContent>
                       ))}
                     </AccordionItem>
 
                     <AccordionItem value="hidden-certification">
-                      <AccordionTrigger className="text-xl font-semibold capitalize flex justify-start gap-2">
-                        hidden experience {" "} <span className={'text-sm lowercase text-slate-600 font-normal'}>({hiddenCertificatesLength} hidden certificate(s))</span>
+                      <AccordionTrigger className="text-xl font-semibold capitalize flex justify-between gap-2">
+                        <div>hidden experience {" "} <span className={'text-sm lowercase text-slate-600 font-normal'}>({hiddenCertificatesLength} hidden certificate(s))</span></div>
                       </AccordionTrigger>
                       {hiddenCertificates?.map((certificate: any) => (
                           <AccordionContent key={certificate.id}>

@@ -1,4 +1,4 @@
-import { Certifications } from "@/modules/master-resume/components/certifications";
+import { Certifications } from "@/modules/profile/certifications/components/certifications";
 
 export default function page() {
   return (

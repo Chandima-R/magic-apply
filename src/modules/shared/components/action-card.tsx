@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { CustomAlertDialog } from "@/modules/shared/components/custom-alert-dialog";
 import { format } from "date-fns";
 import {Eye, EyeOff, Pencil, Trash} from "lucide-react";
+import Link from "next/link";
 
 interface Props {
   id: string;
@@ -20,6 +21,7 @@ interface Props {
   unhideTitle?: string;
   unhideDescription?: string;
   status: boolean;
+  tab?:string;
 }
 
 export const ActionCard = ({
@@ -38,7 +40,8 @@ export const ActionCard = ({
                              unhideAction,
 unhideTitle,
 unhideDescription,
-    status
+    status,
+    tab
 }: Props) => {
   return (
     <div className={`border p-2 rounded shadow cursor-pointer ${status ? 'bg-white' : 'bg-gray-200'}`}>
@@ -70,24 +73,31 @@ unhideDescription,
         </p>
       </div>
       <div className="flex items-between gap-4">
-        <Button
-          size={"sm"}
-          className="capitalize text-xs bg-honoluluBlue hover:bg-federalBlue gap-2"
-        >
-          <Pencil className="size-3" />
-          edit
-        </Button>
+        {
+          status && (
+              <>
+                <Link href={`/profile/${tab}/${id}/edit`}>
+                  <Button
+                      size={"sm"}
+                      className="capitalize text-sm bg-honoluluBlue hover:bg-blue-700 gap-2"
+                  >
+                    <Pencil className="size-3" />
+                    edit
+                  </Button>
+                </Link>
 
-        <CustomAlertDialog
-          buttonVariant={"destructive"}
-          buttonSize={"sm"}
-          buttonText={"delete"}
-          title={deleteTitle}
-          description={deleteDescription}
-          actionButtonText={"delete"}
-          actionButtonFn={() => deleteAction(id)}
-          icon={Trash}
-        />
+                <CustomAlertDialog
+                    buttonVariant={"destructive"}
+                    buttonSize={"sm"}
+                    buttonText={"delete"}
+                    title={deleteTitle}
+                    description={deleteDescription}
+                    actionButtonText={"delete"}
+                    actionButtonFn={() => deleteAction(id)}
+                    icon={Trash}
+                /></>
+            )
+        }
 
         <CustomAlertDialog
           buttonVariant={"outline"}

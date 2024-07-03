@@ -27,7 +27,7 @@ interface Props {
   buttonSize: "default" | "sm" | "lg" | "icon" | null | undefined;
   buttonText: string;
   title: any;
-  description: ny;
+  description: any;
   actionButtonText: string;
   actionButtonFn: () => void;
   icon: LucideIcon;
