@@ -16,7 +16,7 @@ export const Dashboard = () => {
         <hr />
       </div>
 
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-16">
         <CustomButtonCard
           icon={CircleUser}
           title="your profile"
