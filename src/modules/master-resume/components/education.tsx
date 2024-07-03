@@ -11,7 +11,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import { useMutation, useSubscription } from "@apollo/client";
-import { CONTACT_INFORMATION } from "@/graphql/contact";
 import {
   ADD_NEW_EDUCATION_BY_USER_ID,
   DELETE_EDUCATION_BY_PK,
@@ -28,7 +27,7 @@ import {
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname } from "next/navigation";
-import { MasterResumeActiveLink } from "./master-resume-active-link";
+import { ProfileActiveLinks } from "./profile-active-links";
 
 const educationSchema = z.object({
   degree: z.string().nonempty("Degree or major required."),
@@ -45,10 +44,6 @@ export const Education = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { user } = useUser();
-
-  const { data: contactData } = useSubscription(CONTACT_INFORMATION);
-  const contactDetails =
-    contactData?.contact?.find((c: any) => c?.user_id === user?.id) || {};
 
   const form = useForm<z.infer<typeof educationSchema>>({
     resolver: zodResolver(educationSchema),
@@ -170,7 +165,7 @@ export const Education = () => {
 
   return (
     <>
-      <MasterResumeActiveLink activeLink={activeLink} />
+      <ProfileActiveLinks activeLink={activeLink} />
       <div className={"w-full flex flex-col lg:flex-row"}>
         <div className={"w-full lg:w-1/3"}>
           <div className={"rounded-sm overflow-hidden shadow mb-4"}>
@@ -223,6 +218,7 @@ export const Education = () => {
                               "Are you sure to hide this education. This action cannot be undone and it will completely hide this education from your educations."
                             }
                             hideAction={() => hideEducationAction(education.id)}
+                            status={education.visibility}
                           />
                         </AccordionContent>
                       ))}

@@ -1,15 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { masterresumeLinks } from "../utils/master-resume-links";
+import { profileLinks } from "../utils/profile-links";
 import Link from "next/link";
 
 interface Props {
   activeLink: string;
 }
 
-export const MasterResumeActiveLink = ({ activeLink }: Props) => {
+export const ProfileActiveLinks = ({ activeLink }: Props) => {
   return (
-    <div className="flex flex-wrap gap-4 mb-8">
-      {masterresumeLinks.map((link) => (
+    <div className="flex flex-wrap gap-6 mb-10 w-full justify-center">
+      {profileLinks.map((link) => (
         <Link href={link.href} key={link.href}>
           <Button
             size={"sm"}

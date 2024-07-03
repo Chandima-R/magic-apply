@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
-import { MasterResumeActiveLink } from "./master-resume-active-link";
+import { ProfileActiveLinks } from "./profile-active-links";
 import { usePathname } from "next/navigation";
 
 const involvementSchema = z.object({
@@ -165,7 +165,7 @@ export const Involvements = () => {
 
   return (
     <>
-      <MasterResumeActiveLink activeLink={activeLink} />
+      <ProfileActiveLinks activeLink={activeLink} />
       <div className={"w-full flex flex-col lg:flex-row"}>
         <div className={"w-full lg:w-1/3"}>
           <div className={"rounded-sm overflow-hidden shadow mb-4"}>
@@ -220,6 +220,7 @@ export const Involvements = () => {
                             hideAction={() =>
                               hideinvolvementAction(involvement.id)
                             }
+                            status={involvement.visibility}
                           />
                         </AccordionContent>
                       ))}

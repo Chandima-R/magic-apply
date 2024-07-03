@@ -36,6 +36,19 @@ export const ADD_NEW_CERTIFICATE_BY_USER_ID = gql`
   }
 `;
 
+export const VIEW_CERTIFICATION_BY_ID = gql`subscription MySubscription($_eq: uuid!) {
+  certification(where: {id: {_eq: $_eq}}) {
+    certification_completion_year
+    certification_description
+    certification_institute
+    certification_name
+    id
+    user_id
+    visibility
+  }
+}
+`
+
 export const UPDATE_CERTIFICATE_BY_ID = gql`
   mutation updateCertificateById(
     $certification_completion_year: String

@@ -10,7 +10,6 @@ import { CustomButton } from "@/modules/shared/components/custom-button";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
 import { useMutation, useSubscription } from "@apollo/client";
 import { useToast } from "@/components/ui/use-toast";
-import { CONTACT_INFORMATION } from "@/graphql/contact";
 import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import {
@@ -29,7 +28,7 @@ import {
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { usePathname } from "next/navigation";
-import { MasterResumeActiveLink } from "./master-resume-active-link";
+import { ProfileActiveLinks } from "./profile-active-links";
 
 const projectSchema = z.object({
   projectTitle: z.string().nonempty("Project title is required."),
@@ -166,7 +165,7 @@ export const Project = () => {
 
   return (
     <>
-      <MasterResumeActiveLink activeLink={activeLink} />
+      <ProfileActiveLinks activeLink={activeLink} />
       <div className={"w-full flex flex-col lg:flex-row"}>
         <div className={"w-full lg:w-1/3"}>
           <div className={"rounded-sm overflow-hidden shadow mb-4"}>
@@ -217,6 +216,7 @@ export const Project = () => {
                               "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
                             }
                             hideAction={() => hideProjectAction(poject.id)}
+                            status={poject.visibility}
                           />
                         </AccordionContent>
                       ))}

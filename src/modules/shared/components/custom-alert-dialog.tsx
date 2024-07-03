@@ -26,8 +26,8 @@ interface Props {
     | undefined;
   buttonSize: "default" | "sm" | "lg" | "icon" | null | undefined;
   buttonText: string;
-  title: string;
-  description: string;
+  title: any;
+  description: any;
   actionButtonText: string;
   actionButtonFn: () => void;
   icon: LucideIcon;
@@ -65,7 +65,7 @@ export const CustomAlertDialog = ({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={actionButtonFn} className="gap-2">
-            <Icon className="size-4" />
+            <Icon className="size-3" />
             {actionButtonText}
           </AlertDialogAction>
         </AlertDialogFooter>

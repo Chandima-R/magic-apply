@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { CustomAlertDialog } from "@/modules/shared/components/custom-alert-dialog";
 import { format } from "date-fns";
-import { EyeOff, Pencil, Trash } from "lucide-react";
+import {Eye, EyeOff, Pencil, Trash} from "lucide-react";
+import Link from "next/link";
 
 interface Props {
   id: string;
@@ -16,6 +17,11 @@ interface Props {
   country?: string;
   fromDate?: string;
   toDate?: string;
+  unhideAction?: (id: string) => void;
+  unhideTitle?: string;
+  unhideDescription?: string;
+  status: boolean;
+  tab?:string;
 }
 
 export const ActionCard = ({
@@ -31,9 +37,14 @@ export const ActionCard = ({
   country,
   fromDate,
   toDate,
+                             unhideAction,
+unhideTitle,
+unhideDescription,
+    status,
+    tab
 }: Props) => {
   return (
-    <div className="border p-2 rounded shadow cursor-pointer">
+    <div className={`border p-2 rounded shadow cursor-pointer ${status ? 'bg-white' : 'bg-gray-200'}`}>
       <div className="mb-2">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-lg capitalize">{role}</h2>
@@ -62,34 +73,41 @@ export const ActionCard = ({
         </p>
       </div>
       <div className="flex items-between gap-4">
-        <Button
-          size={"sm"}
-          className="capitalize text-xs bg-honoluluBlue hover:bg-federalBlue gap-2"
-        >
-          <Pencil className="size-3" />
-          edit
-        </Button>
+        {
+          status && (
+              <>
+                <Link href={`/profile/${tab}/${id}/edit`}>
+                  <Button
+                      size={"sm"}
+                      className="capitalize text-sm bg-honoluluBlue hover:bg-blue-700 gap-2"
+                  >
+                    <Pencil className="size-3" />
+                    edit
+                  </Button>
+                </Link>
 
-        <CustomAlertDialog
-          buttonVariant={"destructive"}
-          buttonSize={"sm"}
-          buttonText={"delete"}
-          title={deleteTitle}
-          description={deleteDescription}
-          actionButtonText={"delete"}
-          actionButtonFn={() => deleteAction(id)}
-          icon={Trash}
-        />
+                <CustomAlertDialog
+                    buttonVariant={"destructive"}
+                    buttonSize={"sm"}
+                    buttonText={"delete"}
+                    title={deleteTitle}
+                    description={deleteDescription}
+                    actionButtonText={"delete"}
+                    actionButtonFn={() => deleteAction(id)}
+                    icon={Trash}
+                /></>
+            )
+        }
 
         <CustomAlertDialog
           buttonVariant={"outline"}
           buttonSize={"sm"}
-          buttonText={"hide"}
-          title={hideTitle}
-          description={hideDescription}
-          actionButtonText={"hide"}
-          actionButtonFn={() => hideAction(id)}
-          icon={EyeOff}
+          buttonText={status ? 'hide' : 'show'}
+          title={status ? hideTitle : unhideTitle}
+          description={status ? hideDescription : unhideDescription}
+          actionButtonText={status ? 'hide' : 'show'}
+          actionButtonFn={status ? () => hideAction(id) : () => unhideAction?.(id)}
+          icon={status ? EyeOff : Eye}
         />
       </div>
     </div>

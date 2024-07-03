@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { usePathname } from "next/navigation";
-import { MasterResumeActiveLink } from "./master-resume-active-link";
+import { ProfileActiveLinks } from "./profile-active-links";
 
 const courseworkSchema = z.object({
   courseName: z.string().nonempty("Certificate name is required."),
@@ -160,7 +160,7 @@ export const Coursework = () => {
 
   return (
     <>
-      <MasterResumeActiveLink activeLink={activeLink} />
+      <ProfileActiveLinks activeLink={activeLink} />
       <div className={"w-full flex flex-col lg:flex-row"}>
         <div className={"w-full lg:w-1/3"}>
           <div className={"rounded-sm overflow-hidden shadow mb-4"}>
@@ -215,6 +215,7 @@ export const Coursework = () => {
                             hideAction={() =>
                               hideCourseworkAction(coursework.id)
                             }
+                            status={coursework.visibility}
                           />
                         </AccordionContent>
                       ))}
