@@ -1,4 +1,4 @@
-import { Contact } from "@/modules/master-resume/components/contact";
+import { Contact } from "@/modules/profile/contact/components/contact";
 
 export default function page() {
   return (

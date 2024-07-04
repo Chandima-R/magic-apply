@@ -17,7 +17,8 @@ import {
 import { useMutation, useSubscription } from "@apollo/client";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname } from "next/navigation";
-import { ProfileActiveLinks } from "./profile-active-links";
+import { ProfileActiveLinks } from "@/modules/master-resume/components/profile-active-links";
+import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 
 const summarySchema = z.object({
   summary: z.string().nonempty("Summary is required."),
@@ -38,7 +39,7 @@ export const Summary = () => {
   const [addSummary] = useMutation(ADD_NEW_SUMMARY_BY_USER_ID);
   const [updateSummary] = useMutation(UPDATE_SUMMARY_BY_ID);
 
-  const { data: summaryData } = useSubscription(
+  const { data: summaryData, loading: summaryLoading } = useSubscription(
     SUMMARY_INFORMATION_BY_USER_ID,
     {
       variables: {
@@ -102,40 +103,44 @@ export const Summary = () => {
   return (
     <>
       <ProfileActiveLinks activeLink={activeLink} />
-      <div className="w-full flex flex-col lg:flex-row">
-        <div className="w-full lg:w-1/3">
-          <div className="rounded-sm overflow-hidden shadow">
-            <video className="w-full object-cover h-auto" controls>
-              <source src="/video/resume-builder.mp4" />
-            </video>
+      {summaryLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <div className="w-full flex flex-col lg:flex-row">
+          <div className="w-full lg:w-1/3">
+            <div className="rounded-sm overflow-hidden shadow">
+              <video className="w-full object-cover h-auto" controls>
+                <source src="/video/resume-builder.mp4" />
+              </video>
+            </div>
+          </div>
+          <div className="w-full lg:w-2/3 px-2 lg:px-6 py-4 lg:py-0">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <div className="gap-4 lg:gap-8 grid grid-cols-1 w-full">
+                  <TextArea
+                    fieldLabel="Write a professional summary"
+                    fieldName="summary"
+                    control={form.control}
+                    placeholder="Experienced in global early-stage executive with economics and mathematics degree from the University ow Wisconsin. Passion for building inspiring companies people love through industry-leading design, development, branding and making big bets."
+                    required
+                  />
+                </div>
+
+                <div className="flex justify-end w-full mt-8">
+                  <div className="w-38">
+                    {isLoading ? (
+                      <LoadingButton />
+                    ) : (
+                      <CustomButton type="submit" title="Save summary info" />
+                    )}
+                  </div>
+                </div>
+              </form>
+            </Form>
           </div>
         </div>
-        <div className="w-full lg:w-2/3 px-2 lg:px-6 py-4 lg:py-0">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="gap-4 lg:gap-8 grid grid-cols-1 w-full">
-                <TextArea
-                  fieldLabel="Write a professional summary"
-                  fieldName="summary"
-                  control={form.control}
-                  placeholder="Experienced in global early-stage executive with economics and mathematics degree from the University ow Wisconsin. Passion for building inspiring companies people love through industry-leading design, development, branding and making big bets."
-                  required
-                />
-              </div>
-
-              <div className="flex justify-end w-full mt-8">
-                <div className="w-38">
-                  {isLoading ? (
-                    <LoadingButton />
-                  ) : (
-                    <CustomButton type="submit" title="Save summary info" />
-                  )}
-                </div>
-              </div>
-            </form>
-          </Form>
-        </div>
-      </div>
+      )}
     </>
   );
 };

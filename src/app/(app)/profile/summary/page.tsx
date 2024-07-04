@@ -1,4 +1,4 @@
-import { Summary } from "@/modules/master-resume/components/summary";
+import { Summary } from "@/modules/profile/summry/components/summary";
 
 export default function page() {
   return (
