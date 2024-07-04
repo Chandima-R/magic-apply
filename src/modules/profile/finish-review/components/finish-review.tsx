@@ -2,6 +2,7 @@
 
 import { ProfileActiveLinks } from "@/modules/master-resume/components/profile-active-links";
 import { usePathname } from "next/navigation";
+import PdfPage from "./pdf";
 
 export const FinishReview = () => {
   const path = usePathname();
@@ -11,9 +12,8 @@ export const FinishReview = () => {
     <>
       <ProfileActiveLinks activeLink={activeLink} />
       <div>
-        <p>finish review</p>
-
-        <button type={"submit"}>submit</button>
+        <PdfPage />
+        <button type={"submit"}>download pdf</button>
       </div>
     </>
   );
