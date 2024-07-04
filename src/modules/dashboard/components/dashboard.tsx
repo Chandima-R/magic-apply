@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { CustomButtonCard } from "@/modules/shared/components/custom-button-card";
 import { useUser } from "@clerk/nextjs";
 import { Aperture, CircleUser, Link } from "lucide-react";
@@ -28,6 +30,16 @@ export const Dashboard = () => {
           link="master-resume"
         />
         <CustomButtonCard icon={Link} title="apply jobs" link="apply-jobs" />
+      </div>
+
+      <div>
+        <Image
+          src={"/images/dashboard-banner.png"}
+          alt="dashboard-banner"
+          width={1920}
+          height={1080}
+          className="mt-8 lg:mt-16 w-full h-auto object-cover"
+        />
       </div>
     </div>
   );
