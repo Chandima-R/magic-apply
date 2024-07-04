@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { usePathname } from "next/navigation";
-import { ProfileActiveLinks } from "./profile-active-links";
+import { ProfileActiveLinks } from "@/modules/master-resume/components/profile-active-links";
 
 const projectSchema = z.object({
   projectTitle: z.string().nonempty("Project title is required."),
@@ -72,9 +72,13 @@ export const Project = () => {
     (exp: any) => exp.visibility === true
   );
 
+  const hiddenProjects = projectData?.project?.filter(
+    (exp: any) => exp.visibility === false
+  );
+
   const allProjects = projectData?.project?.map((e: any) => e);
 
-  const hiddenProjects = allProjects?.length - visibleProjects?.length;
+  const hiddenProjectsLength = allProjects?.length - visibleProjects?.length;
 
   const [addProject] = useMutation(ADD_NEW_PROJECT_BY_USER_ID);
   async function onSubmit(values: z.infer<typeof projectSchema>) {
@@ -132,7 +136,7 @@ export const Project = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "There was an error deleting the experience.",
+        description: "There was an error deleting the project.",
       });
     }
   };
@@ -155,7 +159,29 @@ export const Project = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "There was an error deleting the experience.",
+        description: "There was an error deleting the project.",
+      });
+    }
+  };
+
+  const unhideProjectAction = async (id: string) => {
+    try {
+      await hideProject({
+        variables: {
+          id,
+          visibility: true,
+        },
+      });
+      toast({
+        variant: "default",
+        title: "Success.",
+        description: "Your project added to the project list.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "There was an error adding the project.",
       });
     }
   };
@@ -189,10 +215,10 @@ export const Project = () => {
                       <AccordionTrigger className="text-xl font-semibold capitalize">
                         your projects
                       </AccordionTrigger>
-                      {hiddenProjects ? (
+                      {hiddenProjectsLength ? (
                         <span>
-                          You have {hiddenProjects} hidden project(s) in your
-                          bucket.
+                          You have {hiddenProjectsLength} hidden project(s) in
+                          your bucket.
                         </span>
                       ) : (
                         ""
@@ -217,10 +243,60 @@ export const Project = () => {
                             }
                             hideAction={() => hideProjectAction(poject.id)}
                             status={poject.visibility}
+                            tab="project"
                           />
                         </AccordionContent>
                       ))}
                     </AccordionItem>
+
+                    {hiddenProjectsLength > 0 && (
+                      <AccordionItem value="project">
+                        <AccordionTrigger className="text-xl font-semibold capitalize">
+                          <div>
+                            hidden projects{" "}
+                            <span
+                              className={
+                                "text-sm lowercase text-slate-600 font-normal"
+                              }
+                            >
+                              ({hiddenProjectsLength} hidden project(s))
+                            </span>
+                          </div>
+                        </AccordionTrigger>
+                        {hiddenProjects?.map((poject: any) => (
+                          <AccordionContent key={poject.id}>
+                            <ActionCard
+                              id={poject.id}
+                              company={poject.project_organization}
+                              role={poject.project_name}
+                              country={""}
+                              fromDate={poject.project_start_date}
+                              toDate={poject.project_end_date}
+                              deleteTitle={"Delete your project."}
+                              deleteDescription={
+                                "Are you sure to delete this project. This action cannot be undone and it will completely remove this project from your projects."
+                              }
+                              deleteAction={() =>
+                                deleteProjectAction(poject.id)
+                              }
+                              hideTitle={"Hide your project."}
+                              hideDescription={
+                                "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
+                              }
+                              hideAction={() => hideProjectAction(poject.id)}
+                              unhideTitle={"Unhide your project."}
+                              unhideDescription={
+                                "Are you sure to unhide this project. This action cannot be undone and it will completely add this project to your projects list."
+                              }
+                              unhideAction={() =>
+                                unhideProjectAction(poject.id)
+                              }
+                              status={poject.visibility}
+                            />
+                          </AccordionContent>
+                        ))}
+                      </AccordionItem>
+                    )}
                   </Accordion>
                 )}
               </>
