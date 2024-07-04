@@ -27,16 +27,12 @@ import {
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { usePathname } from "next/navigation";
-import { ProfileActiveLinks } from "./profile-active-links";
+import { ProfileActiveLinks } from "@/modules/master-resume/components/profile-active-links";
 
 const courseworkSchema = z.object({
-  courseName: z.string().nonempty("Certificate name is required."),
-  courseInstitute: z
-    .string()
-    .nonempty("Certificate issued institute is required."),
-  courseCompletionDate: z
-    .string()
-    .nonempty("Certificate issued date is required."),
+  courseName: z.string().nonempty("Course name is required."),
+  courseInstitute: z.string().nonempty("Course issued institute is required."),
+  courseCompletionDate: z.string().nonempty("Course issued date is required."),
   courseSkill: z.string(),
   courseDescription: z.string(),
 });
@@ -69,9 +65,16 @@ export const Coursework = () => {
     (course: any) => course.visibility === true
   );
 
-  const allCoursework = courserworkData?.coursework?.map((e: any) => e);
+  const hiddenCoursework = courserworkData?.coursework?.filter(
+    (course: any) => course.visibility === false
+  );
 
-  const hiddenCoursework = allCoursework?.length - visibleCoursework?.length;
+  const allCoursework = courserworkData?.coursework?.map(
+    (course: any) => course
+  );
+
+  const hiddenCourseworkLength =
+    allCoursework?.length - visibleCoursework?.length;
 
   const [addCoursework] = useMutation(ADD_NEW_COURSEWORK_BY_USER_ID);
   async function onSubmit(values: z.infer<typeof courseworkSchema>) {
@@ -155,6 +158,28 @@ export const Coursework = () => {
     }
   };
 
+  const unhideCourseworkAction = async (id: string) => {
+    try {
+      await hdieCoursework({
+        variables: {
+          id,
+          visibility: true,
+        },
+      });
+      toast({
+        variant: "default",
+        title: "Success.",
+        description: "Your coursework was added to the coursework list.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "There was an error adding the coursework.",
+      });
+    }
+  };
+
   const path = usePathname();
   const activeLink = path.split("/")[2];
 
@@ -184,14 +209,7 @@ export const Coursework = () => {
                       <AccordionTrigger className="text-xl font-semibold capitalize">
                         your coursework
                       </AccordionTrigger>
-                      {hiddenCoursework ? (
-                        <span>
-                          You have {hiddenCoursework} hidden coursework(s) in
-                          your bucket.
-                        </span>
-                      ) : (
-                        ""
-                      )}
+
                       {visibleCoursework?.map((coursework: any) => (
                         <AccordionContent key={coursework.id}>
                           <ActionCard
@@ -214,6 +232,56 @@ export const Coursework = () => {
                             }
                             hideAction={() =>
                               hideCourseworkAction(coursework.id)
+                            }
+                            status={coursework.visibility}
+                            tab={"coursework"}
+                          />
+                        </AccordionContent>
+                      ))}
+                    </AccordionItem>
+
+                    <AccordionItem value="hidden-coursework">
+                      <AccordionTrigger className="text-xl font-semibold capitalize flex justify-between gap-2">
+                        <div>
+                          hidden coursework{" "}
+                          <span
+                            className={
+                              "text-sm lowercase text-slate-600 font-normal"
+                            }
+                          >
+                            ({hiddenCourseworkLength} hidden coursework(s))
+                          </span>
+                        </div>
+                      </AccordionTrigger>
+                      {hiddenCoursework?.map((coursework: any) => (
+                        <AccordionContent key={coursework.id}>
+                          <ActionCard
+                            id={coursework.id}
+                            company={coursework.course_institute}
+                            role={coursework.course_name}
+                            country={""}
+                            fromDate={""}
+                            toDate={coursework.course_completion_year}
+                            deleteTitle={"Delete your coursework."}
+                            deleteDescription={
+                              "Are you sure to delete this coursework. This action cannot be undone and it will completely remove this coursework from your coursework."
+                            }
+                            deleteAction={() =>
+                              deleteCourseworkAction(coursework.id)
+                            }
+                            hideTitle={"Hide your coursework."}
+                            hideDescription={
+                              "Are you sure to hide this coursework. This action cannot be undone and it will completely hide this coursework from your coursework."
+                            }
+                            hideAction={() =>
+                              hideCourseworkAction(coursework.id)
+                            }
+                            unhideTitle={"Unhide your coursework."}
+                            unhideDescription={
+                              "Are you sure to unhide this coursework. This action cannot be undone and it will completely add this coursework to your coursework list."
+                            }
+                            unhideAction={() =>
+                              unhideCourseworkAction(coursework.id)
                             }
                             status={coursework.visibility}
                           />
