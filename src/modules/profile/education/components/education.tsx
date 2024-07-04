@@ -288,7 +288,7 @@ export const Education = () => {
                               hideAction={() =>
                                 hideEducationAction(education.id)
                               }
-                              unhideTitle={"Unhide your certification."}
+                              unhideTitle={"Unhide your education."}
                               unhideDescription={
                                 "Are you sure to unhide this education. This action cannot be undone and it will completely add this education to your educations list."
                               }

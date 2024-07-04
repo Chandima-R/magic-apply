@@ -16,6 +16,22 @@ export const PROJECT_INFORMATION_BY_USER_ID = gql`
   }
 `;
 
+export const VIEW_PROJECT_BY_ID = gql`
+  subscription MySubscription($_eq: uuid!) {
+    project(where: { id: { _eq: $_eq } }) {
+      id
+      project_end_date
+      project_name
+      project_organization
+      project_role_description
+      project_start_date
+      project_url
+      user_id
+      visibility
+    }
+  }
+`;
+
 export const ADD_NEW_PROJECT_BY_USER_ID = gql`
   mutation MyMutation(
     $user_id: String
@@ -44,7 +60,6 @@ export const ADD_NEW_PROJECT_BY_USER_ID = gql`
 
 export const UPDATE_PROJECT_BY_ID = gql`
   mutation MyMutation(
-    $id: uuid!
     $project_end_date: String
     $project_name: String
     $project_organization: String
@@ -62,7 +77,6 @@ export const UPDATE_PROJECT_BY_ID = gql`
         project_role_description: $project_role_description
         project_start_date: $project_start_date
         project_url: $project_url
-        visibility: false
       }
     ) {
       affected_rows
