@@ -59,14 +59,14 @@ export const Contact = () => {
   useEffect(() => {
     if (contactDetails && Object.keys(contactDetails).length > 0) {
       form.reset({
-        fullName: contactDetails?.contact_name || "",
-        email: contactDetails?.contact_email || "",
-        phone: contactDetails?.contact_phone || "",
-        linkedin: contactDetails?.contact_linkedin || "",
-        personalWebsite: contactDetails?.contact_website || "",
-        country: contactDetails?.contact_country || "",
-        state: contactDetails?.contact_state || "",
-        city: contactDetails?.contact_city || "",
+        fullName: contactDetails.contact_name || "",
+        email: contactDetails.contact_email || "",
+        phone: contactDetails.contact_phone || "",
+        linkedin: contactDetails.contact_linkedin || "",
+        personalWebsite: contactDetails.contact_website || "",
+        country: contactDetails.contact_country || "",
+        state: contactDetails.contact_state || "",
+        city: contactDetails.contact_city || "",
       });
     }
   }, [contactDetails, form]);
