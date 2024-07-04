@@ -75,12 +75,9 @@ export const EditCertificate = () => {
   const hiddenCertificatesLength =
     allCertificates?.length - visibleCertificates?.length;
 
-  console.log(certificateData);
-
   useEffect(() => {
     if (certificateData && certificateData?.certification) {
       const certification = certificateData?.certification[0];
-      console.log(44, certification);
       form.reset({
         certificateDate: certification.certification_completion_year,
         certificateDescription: certification.certification_description,

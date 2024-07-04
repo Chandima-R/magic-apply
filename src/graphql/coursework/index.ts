@@ -15,6 +15,21 @@ export const COURSEWORK_INFORMATION_BY_USER_ID = gql`
   }
 `;
 
+export const VIEW_COURSEWORK_BY_ID = gql`
+  subscription viewCourseworkById($_eq: uuid!) {
+    coursework(where: { id: { _eq: $_eq } }) {
+      course_completion_year
+      course_institute
+      course_name
+      course_skill
+      course_skill_description
+      id
+      user_id
+      visibility
+    }
+  }
+`;
+
 export const ADD_NEW_COURSEWORK_BY_USER_ID = gql`
   mutation addNewCourseworkByUserId(
     $course_completion_year: String
