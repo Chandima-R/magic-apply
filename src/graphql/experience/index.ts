@@ -16,6 +16,22 @@ export const EXPERIENCE_INFORMATION_BY_USER_ID = gql`
   }
 `;
 
+export const VIEW_EXPERIECE_BY_ID = gql`
+  subscription viewExperienceById($_eq: uuid!) {
+    experience(where: { id: { _eq: $_eq } }) {
+      company_end_date
+      company_location
+      company_name
+      company_role
+      company_role_description
+      company_start_date
+      id
+      user_id
+      visibility
+    }
+  }
+`;
+
 export const ADD_NEW_EXPERIENCE_BY_USER_ID = gql`
   mutation addNewExperience(
     $company_end_date: String

@@ -17,7 +17,6 @@ import {
   EXPERIENCE_INFORMATION_BY_USER_ID,
   HIDE_EXPERIENCE_BY_PK,
 } from "@/graphql/experience";
-import { ActionCard } from "../../shared/components/action-card";
 import {
   Accordion,
   AccordionItem,
@@ -27,8 +26,9 @@ import {
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
-import { ProfileActiveLinks } from "./profile-active-links";
 import { usePathname } from "next/navigation";
+import { ProfileActiveLinks } from "@/modules/master-resume/components/profile-active-links";
+import { ActionCard } from "@/modules/shared/components/action-card";
 
 const experienceSchema = z.object({
   role: z.string().nonempty("Role is required."),
@@ -72,9 +72,14 @@ export const Experience = () => {
     (exp: any) => exp.visibility === true
   );
 
+  const hiddenExperience = experienceData?.experience?.filter(
+    (exp: any) => exp.visibility === false
+  );
+
   const allExperience = experienceData?.experience?.map((e: any) => e);
 
-  const hiddenExperience = allExperience?.length - visibleExperience?.length;
+  const hiddenExperienceLength =
+    allExperience?.length - visibleExperience?.length;
 
   const [addExperience] = useMutation(ADD_NEW_EXPERIENCE_BY_USER_ID);
   async function onSubmit(values: z.infer<typeof experienceSchema>) {
@@ -159,6 +164,28 @@ export const Experience = () => {
     }
   };
 
+  const unhideExperienceAction = async (id: string) => {
+    try {
+      await hideExperience({
+        variables: {
+          id,
+          visibility: true,
+        },
+      });
+      toast({
+        variant: "default",
+        title: "Success.",
+        description: "Your project was hide from the project list.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "There was an error deleting the experience.",
+      });
+    }
+  };
+
   const path = usePathname();
   const activeLink = path.split("/")[2];
 
@@ -188,10 +215,10 @@ export const Experience = () => {
                       <AccordionTrigger className="text-xl font-semibold capitalize">
                         your experience
                       </AccordionTrigger>
-                      {hiddenExperience ? (
+                      {hiddenExperienceLength ? (
                         <span>
-                          You have {hiddenExperience} hidden experiences in your
-                          bucket.
+                          You have {hiddenExperienceLength} hidden experience(s)
+                          in your bucket.
                         </span>
                       ) : (
                         ""
@@ -205,21 +232,71 @@ export const Experience = () => {
                             country={exp.company_location}
                             fromDate={exp.company_start_date}
                             toDate={exp.company_end_date}
-                            deleteTitle={"Delete your project."}
+                            deleteTitle={"Delete your experience."}
                             deleteDescription={
-                              "Are you sure to delete this project. This action cannot be undone and it will completely remove this project from your projects."
+                              "Are you sure to delete this experience. This action cannot be undone and it will completely remove this experience from your experience list."
                             }
                             deleteAction={() => deleteExperienceAction(exp.id)}
-                            hideTitle={"Hide your project."}
+                            hideTitle={"Hide your experience."}
                             hideDescription={
-                              "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
+                              "Are you sure to hide this experience. This action cannot be undone and it will completely hide this experience from your experience list."
                             }
                             hideAction={() => hideExperienceAction(exp.id)}
                             status={exp.visibility}
+                            tab={"experience"}
                           />
                         </AccordionContent>
                       ))}
                     </AccordionItem>
+
+                    {hiddenExperienceLength > 0 && (
+                      <AccordionItem value="hidden-experience">
+                        <AccordionTrigger className="text-xl font-semibold capitalize flex justify-between gap-2">
+                          <div>
+                            hidden experience{" "}
+                            <span
+                              className={
+                                "text-sm lowercase text-slate-600 font-normal"
+                              }
+                            >
+                              ({hiddenExperienceLength} hidden certificate(s))
+                            </span>
+                          </div>
+                        </AccordionTrigger>
+                        {hiddenExperience?.map((exp: any) => (
+                          <AccordionContent key={exp.id}>
+                            <ActionCard
+                              id={exp.id}
+                              company={exp.company_name}
+                              role={exp.company_role}
+                              country={exp.company_location}
+                              fromDate={exp.company_start_date}
+                              toDate={exp.company_end_date}
+                              deleteTitle={"Delete your experience."}
+                              deleteDescription={
+                                "Are you sure to delete this experience. This action cannot be undone and it will completely remove this experience from your experience list."
+                              }
+                              deleteAction={() =>
+                                deleteExperienceAction(exp.id)
+                              }
+                              hideTitle={"Hide your experience."}
+                              hideDescription={
+                                "Are you sure to hide this certificate. This action cannot be undone and it will completely hide this experience from your experience list."
+                              }
+                              hideAction={() => hideExperienceAction(exp.id)}
+                              unhideTitle={"Unhide your experience."}
+                              unhideDescription={
+                                "Are you sure to unhide this experience. This action cannot be undone and it will completely add this experience to your experience list."
+                              }
+                              unhideAction={() =>
+                                unhideExperienceAction(exp.id)
+                              }
+                              status={exp.visibility}
+                            />
+                          </AccordionContent>
+                        ))}
+                      </AccordionItem>
+                    )}
                   </Accordion>
                 )}
               </>
