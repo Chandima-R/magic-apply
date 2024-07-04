@@ -27,7 +27,7 @@ import {
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname } from "next/navigation";
-import { ProfileActiveLinks } from "./profile-active-links";
+import { ProfileActiveLinks } from "../../../master-resume/components/profile-active-links";
 
 const educationSchema = z.object({
   degree: z.string().nonempty("Degree or major required."),
@@ -71,9 +71,13 @@ export const Education = () => {
     (exp: any) => exp.visibility === true
   );
 
+  const hiddenEducation = educationData?.education?.filter(
+    (exp: any) => exp.visibility === false
+  );
+
   const allEducation = educationData?.education?.map((e: any) => e);
 
-  const hiddenEducation = allEducation?.length - visibleEducation?.length;
+  const hiddenEducationLength = allEducation?.length - visibleEducation?.length;
 
   const [addEducation] = useMutation(ADD_NEW_EDUCATION_BY_USER_ID);
 
@@ -160,6 +164,28 @@ export const Education = () => {
     }
   };
 
+  const unhideEducationAction = async (id: string) => {
+    try {
+      await hideEducation({
+        variables: {
+          id,
+          visibility: true,
+        },
+      });
+      toast({
+        variant: "default",
+        title: "Success.",
+        description: "Your education was added to the education list.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "There was an error adding education.",
+      });
+    }
+  };
+
   const path = usePathname();
   const activeLink = path.split("/")[2];
 
@@ -189,10 +215,10 @@ export const Education = () => {
                       <AccordionTrigger className="text-xl font-semibold capitalize">
                         your education
                       </AccordionTrigger>
-                      {hiddenEducation ? (
+                      {hiddenEducationLength ? (
                         <span>
-                          You have {hiddenEducation} hidden education(s) in your
-                          bucket.
+                          You have {hiddenEducationLength} hidden education(s)
+                          in your bucket.
                         </span>
                       ) : (
                         ""
@@ -218,6 +244,54 @@ export const Education = () => {
                               "Are you sure to hide this education. This action cannot be undone and it will completely hide this education from your educations."
                             }
                             hideAction={() => hideEducationAction(education.id)}
+                            status={education.visibility}
+                            tab="education"
+                          />
+                        </AccordionContent>
+                      ))}
+                    </AccordionItem>
+
+                    <AccordionItem value="hidden-education">
+                      <AccordionTrigger className="text-xl font-semibold capitalize flex justify-between gap-2">
+                        <div>
+                          hidden education{" "}
+                          <span
+                            className={
+                              "text-sm lowercase text-slate-600 font-normal"
+                            }
+                          >
+                            ({hiddenEducationLength} hidden education(s))
+                          </span>
+                        </div>
+                      </AccordionTrigger>
+                      {hiddenEducation?.map((education: any) => (
+                        <AccordionContent key={education.id}>
+                          <ActionCard
+                            id={education.id}
+                            company={education.education_institute}
+                            role={education.education_major}
+                            country={""}
+                            fromDate={""}
+                            toDate={education.education_completion_year}
+                            deleteTitle={"Delete your education."}
+                            deleteDescription={
+                              "Are you sure to delete this education. This action cannot be undone and it will completely remove this education from your educations."
+                            }
+                            deleteAction={() =>
+                              deleteEducationAction(education.id)
+                            }
+                            hideTitle={"Hide your education."}
+                            hideDescription={
+                              "Are you sure to hide this education. This action cannot be undone and it will completely hide this education from your educations."
+                            }
+                            hideAction={() => hideEducationAction(education.id)}
+                            unhideTitle={"Unhide your certification."}
+                            unhideDescription={
+                              "Are you sure to unhide this education. This action cannot be undone and it will completely add this education to your educations list."
+                            }
+                            unhideAction={() =>
+                              unhideEducationAction(education.id)
+                            }
                             status={education.visibility}
                           />
                         </AccordionContent>

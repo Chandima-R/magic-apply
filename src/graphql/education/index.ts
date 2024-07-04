@@ -17,6 +17,23 @@ export const EDUCATION_INFORMATION_BY_USER_ID = gql`
   }
 `;
 
+export const VIEW_EDUCATION_BY_ID = gql`
+  subscription viewEducationById($_eq: uuid!) {
+    education(where: { id: { _eq: $_eq } }) {
+      education_completion_year
+      education_gpa
+      education_institute
+      education_location
+      education_major
+      education_minor
+      educatoin_additional_information
+      id
+      user_id
+      visibility
+    }
+  }
+`;
+
 export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
   mutation addNewEducationByUserId(
     $education_completion_year: String
@@ -66,7 +83,6 @@ export const UPDATE_EDUCATION_BY_ID = gql`
         education_major: $education_major
         education_minor: $education_minor
         educatoin_additional_information: $educatoin_additional_information
-        visibility: $visibility
       }
     ) {
       affected_rows
