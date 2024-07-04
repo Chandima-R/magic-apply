@@ -1,7 +1,7 @@
 "use client";
 
+import { ProfileActiveLinks } from "@/modules/master-resume/components/profile-active-links";
 import { usePathname } from "next/navigation";
-import { ProfileActiveLinks } from "./profile-active-links";
 
 export const FinishReview = () => {
   const path = usePathname();

@@ -1,4 +1,4 @@
-import { FinishReview } from "@/modules/master-resume/components/finish-review";
+import { FinishReview } from "@/modules/profile/finish-review/components/finish-review";
 
 export default function page() {
   return (
