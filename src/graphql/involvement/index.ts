@@ -16,6 +16,22 @@ export const INVOLVEMENT_INFORMATION_BY_USER_ID = gql`
   }
 `;
 
+export const VIEW_INVOLVEMENT_BY_ID = gql`
+  subscription viewInvolvementById($_eq: uuid!) {
+    involvement(where: { id: { _eq: $_eq } }) {
+      id
+      involevement_organization
+      involvement_college
+      involvement_description
+      involvement_end_date
+      involvement_organization_role
+      involvement_start_date
+      user_id
+      visibility
+    }
+  }
+`;
+
 export const ADD_NEW_INVOLVEMENT_BY_USER_ID = gql`
   mutation addNewInvolvementByUserId(
     $involevement_organization: String

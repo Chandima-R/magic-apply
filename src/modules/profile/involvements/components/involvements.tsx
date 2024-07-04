@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
-import { ProfileActiveLinks } from "./profile-active-links";
+import { ProfileActiveLinks } from "../../../master-resume/components/profile-active-links";
 import { usePathname } from "next/navigation";
 
 const involvementSchema = z.object({
@@ -72,9 +72,13 @@ export const Involvements = () => {
     (inv: any) => inv.visibility === true
   );
 
+  const hiddenInvolvements = involvementData?.involvement?.filter(
+    (inv: any) => inv.visibility === false
+  );
+
   const allInvolvements = involvementData?.involvement?.map((e: any) => e);
 
-  const hiddenInvolvements =
+  const hiddenInvolvementsLength =
     allInvolvements?.length - visibleInvolvements?.length;
 
   const [addInvolvement] = useMutation(ADD_NEW_INVOLVEMENT_BY_USER_ID);
@@ -155,7 +159,29 @@ export const Involvements = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "There was an error deleting the involvement.",
+        description: "There was an error hiding the involvement.",
+      });
+    }
+  };
+
+  const unhideinvolvementAction = async (id: string) => {
+    try {
+      await hideInvolvementt({
+        variables: {
+          id,
+          visibility: true,
+        },
+      });
+      toast({
+        variant: "default",
+        title: "Success.",
+        description: "Your involvement was unhide from the involvement list.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "There was an error unhiding the involvement.",
       });
     }
   };
@@ -187,12 +213,12 @@ export const Involvements = () => {
                   >
                     <AccordionItem value="involvement">
                       <AccordionTrigger className="text-xl font-semibold capitalize">
-                        your projects
+                        your involvements
                       </AccordionTrigger>
-                      {hiddenInvolvements ? (
+                      {hiddenInvolvementsLength ? (
                         <span>
-                          You have {hiddenInvolvements} hidden project(s) in
-                          your bucket.
+                          You have {hiddenInvolvementsLength} hidden
+                          involvement(s) in your bucket.
                         </span>
                       ) : (
                         ""
@@ -221,10 +247,63 @@ export const Involvements = () => {
                               hideinvolvementAction(involvement.id)
                             }
                             status={involvement.visibility}
+                            tab="involvement"
                           />
                         </AccordionContent>
                       ))}
                     </AccordionItem>
+
+                    {hiddenInvolvementsLength > 0 && (
+                      <AccordionItem value="involvement">
+                        <AccordionTrigger className="text-xl font-semibold capitalize">
+                          <div>
+                            hidden involvements{" "}
+                            <span
+                              className={
+                                "text-sm lowercase text-slate-600 font-normal"
+                              }
+                            >
+                              ({hiddenInvolvementsLength} hidden involvement(s))
+                            </span>
+                          </div>
+                        </AccordionTrigger>
+
+                        {hiddenInvolvements?.map((involvement: any) => (
+                          <AccordionContent key={involvement.id}>
+                            <ActionCard
+                              id={involvement.id}
+                              company={involvement.involevement_organization}
+                              role={involvement.involvement_organization_role}
+                              country={involvement.involvement_college}
+                              fromDate={involvement.involvement_start_date}
+                              toDate={involvement.involvement_end_date}
+                              deleteTitle={"Delete your involvement."}
+                              deleteDescription={
+                                "Are you sure to delete this involvement. This action cannot be undone and it will completely remove this involvement from your involvements."
+                              }
+                              deleteAction={() =>
+                                deleteInvolvementAction(involvement.id)
+                              }
+                              hideTitle={"Hide your involvement."}
+                              hideDescription={
+                                "Are you sure to hide this involvement. This action cannot be undone and it will completely hide this involvement from your involvements."
+                              }
+                              hideAction={() =>
+                                hideinvolvementAction(involvement.id)
+                              }
+                              unhideTitle={"Unhide your involvelement."}
+                              unhideDescription={
+                                "Are you sure to unhide this involvement. This action cannot be undone and it will completely add this involvement to your involvements list."
+                              }
+                              unhideAction={() =>
+                                unhideinvolvementAction(involvement.id)
+                              }
+                              status={involvement.visibility}
+                            />
+                          </AccordionContent>
+                        ))}
+                      </AccordionItem>
+                    )}
                   </Accordion>
                 )}
               </>
