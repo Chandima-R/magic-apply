@@ -59,7 +59,7 @@ export const ADD_NEW_EXPERIENCE_BY_USER_ID = gql`
 `;
 
 export const UPDATE_EXPERIENCE_BY_ID = gql`
-  mutation updaateExperienceById(
+  mutation updateExperienceById(
     $company_end_date: String
     $company_location: String
     $company_name: String

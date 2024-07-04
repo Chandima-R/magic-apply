@@ -63,7 +63,7 @@ export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
 `;
 
 export const UPDATE_EDUCATION_BY_ID = gql`
-  mutation MyMutation(
+  mutation updateEducationById(
     $education_completion_year: String
     $education_gpa: String
     $education_institute: String

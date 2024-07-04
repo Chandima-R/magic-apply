@@ -121,7 +121,6 @@ export const Contact = () => {
       }
       form.reset();
     } catch (error) {
-      console.error(error);
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
