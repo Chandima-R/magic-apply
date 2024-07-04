@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { useMutation, useSubscription } from "@apollo/client";
 import {
   DELETE_EDUCATION_BY_PK,
+  EDUCATION_INFORMATION_BY_USER_ID,
   HIDE_EDUCATION_BY_PK,
   UPDATE_EDUCATION_BY_ID,
   VIEW_EDUCATION_BY_ID,
@@ -62,13 +63,19 @@ export const EditEducation = () => {
   });
 
   const { data: educationData, loading: educationLoading } = useSubscription(
-    VIEW_EDUCATION_BY_ID,
+    EDUCATION_INFORMATION_BY_USER_ID,
     {
       variables: {
-        _eq: educationId,
+        _eq: user?.id,
       },
     }
   );
+
+  const { data: editData } = useSubscription(VIEW_EDUCATION_BY_ID, {
+    variables: {
+      _eq: educationId,
+    },
+  });
 
   const visibleEducation = educationData?.education?.filter(
     (exp: any) => exp.visibility === true
@@ -83,8 +90,8 @@ export const EditEducation = () => {
   const hiddenEducationLength = allEducation?.length - visibleEducation?.length;
 
   useEffect(() => {
-    if (educationData && educationData?.education) {
-      const education = educationData?.education[0];
+    if (editData && editData?.education) {
+      const education = editData?.education[0];
       form.reset({
         degree: education.education_major,
         institute: education.education_institute,
@@ -95,7 +102,7 @@ export const EditEducation = () => {
         additionalInformation: education.educatoin_additional_information,
       });
     }
-  }, [educationData, form]);
+  }, [editData, form]);
 
   const [updateEducation] = useMutation(UPDATE_EDUCATION_BY_ID);
   async function onSubmit(values: z.infer<typeof educationSchema>) {
@@ -268,52 +275,56 @@ export const EditEducation = () => {
                       ))}
                     </AccordionItem>
 
-                    <AccordionItem value="hidden-education">
-                      <AccordionTrigger className="text-xl font-semibold capitalize flex justify-between gap-2">
-                        <div>
-                          hidden education{" "}
-                          <span
-                            className={
-                              "text-sm lowercase text-slate-600 font-normal"
-                            }
-                          >
-                            ({hiddenEducationLength} hidden education(s))
-                          </span>
-                        </div>
-                      </AccordionTrigger>
-                      {hiddenEducation?.map((education: any) => (
-                        <AccordionContent key={education.id}>
-                          <ActionCard
-                            id={education.id}
-                            company={education.education_institute}
-                            role={education.education_major}
-                            country={""}
-                            fromDate={""}
-                            toDate={education.education_completion_year}
-                            deleteTitle={"Delete your education."}
-                            deleteDescription={
-                              "Are you sure to delete this education. This action cannot be undone and it will completely remove this education from your educations."
-                            }
-                            deleteAction={() =>
-                              deleteEducationAction(education.id)
-                            }
-                            hideTitle={"Hide your education."}
-                            hideDescription={
-                              "Are you sure to hide this education. This action cannot be undone and it will completely hide this education from your educations."
-                            }
-                            hideAction={() => hideEducationAction(education.id)}
-                            unhideTitle={"Unhide your certification."}
-                            unhideDescription={
-                              "Are you sure to unhide this education. This action cannot be undone and it will completely add this education to your educations list."
-                            }
-                            unhideAction={() =>
-                              unhideEducationAction(education.id)
-                            }
-                            status={education.visibility}
-                          />
-                        </AccordionContent>
-                      ))}
-                    </AccordionItem>
+                    {hiddenEducationLength > 0 && (
+                      <AccordionItem value="hidden-education">
+                        <AccordionTrigger className="text-xl font-semibold capitalize flex justify-between gap-2">
+                          <div>
+                            hidden education{" "}
+                            <span
+                              className={
+                                "text-sm lowercase text-slate-600 font-normal"
+                              }
+                            >
+                              ({hiddenEducationLength} hidden education(s))
+                            </span>
+                          </div>
+                        </AccordionTrigger>
+                        {hiddenEducation?.map((education: any) => (
+                          <AccordionContent key={education.id}>
+                            <ActionCard
+                              id={education.id}
+                              company={education.education_institute}
+                              role={education.education_major}
+                              country={""}
+                              fromDate={""}
+                              toDate={education.education_completion_year}
+                              deleteTitle={"Delete your education."}
+                              deleteDescription={
+                                "Are you sure to delete this education. This action cannot be undone and it will completely remove this education from your educations."
+                              }
+                              deleteAction={() =>
+                                deleteEducationAction(education.id)
+                              }
+                              hideTitle={"Hide your education."}
+                              hideDescription={
+                                "Are you sure to hide this education. This action cannot be undone and it will completely hide this education from your educations."
+                              }
+                              hideAction={() =>
+                                hideEducationAction(education.id)
+                              }
+                              unhideTitle={"Unhide your certification."}
+                              unhideDescription={
+                                "Are you sure to unhide this education. This action cannot be undone and it will completely add this education to your educations list."
+                              }
+                              unhideAction={() =>
+                                unhideEducationAction(education.id)
+                              }
+                              status={education.visibility}
+                            />
+                          </AccordionContent>
+                        ))}
+                      </AccordionItem>
+                    )}
                   </Accordion>
                 )}
               </>

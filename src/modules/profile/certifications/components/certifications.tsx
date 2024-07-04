@@ -246,54 +246,40 @@ export const Certifications = () => {
                       ))}
                     </AccordionItem>
 
-                    <AccordionItem value="hidden-certification">
-                      <AccordionTrigger className="text-xl font-semibold capitalize flex justify-between gap-2">
-                        <div>
-                          hidden experience{" "}
-                          <span
-                            className={
-                              "text-sm lowercase text-slate-600 font-normal"
-                            }
-                          >
-                            ({hiddenCertificatesLength} hidden certificate(s))
-                          </span>
-                        </div>
-                      </AccordionTrigger>
-                      {hiddenCertificates?.map((certificate: any) => (
-                        <AccordionContent key={certificate.id}>
-                          <ActionCard
-                            id={certificate.id}
-                            company={certificate.certification_institute}
-                            role={certificate.certification_name}
-                            country={""}
-                            fromDate={""}
-                            toDate={certificate.certification_completion_year}
-                            deleteTitle={"Delete your certification."}
-                            deleteDescription={
-                              "Are you sure to delete this certificate. This action cannot be undone and it will completely remove this certificate from your certifications."
-                            }
-                            deleteAction={() =>
-                              deleteCertifictionAction(certificate.id)
-                            }
-                            hideTitle={"Hide your certification."}
-                            hideDescription={
-                              "Are you sure to hide this certificate. This action cannot be undone and it will completely hide this certificate from your certifications."
-                            }
-                            hideAction={() =>
-                              hideCertificationAction(certificate.id)
-                            }
-                            unhideTitle={"Unhide your certification."}
-                            unhideDescription={
-                              "Are you sure to unhide this certificate. This action cannot be undone and it will completely add this certificate to your certifications list."
-                            }
-                            unhideAction={() =>
-                              unhideCertificationAction(certificate.id)
-                            }
-                            status={certificate.visibility}
-                          />
-                        </AccordionContent>
-                      ))}
-                    </AccordionItem>
+                    {hiddenCertificates?.map((certificate: any) => (
+                      <AccordionContent key={certificate.id}>
+                        <ActionCard
+                          id={certificate.id}
+                          company={certificate.certification_institute}
+                          role={certificate.certification_name}
+                          country={""}
+                          fromDate={""}
+                          toDate={certificate.certification_completion_year}
+                          deleteTitle={"Delete your certification."}
+                          deleteDescription={
+                            "Are you sure to delete this certificate. This action cannot be undone and it will completely remove this certificate from your certifications."
+                          }
+                          deleteAction={() =>
+                            deleteCertifictionAction(certificate.id)
+                          }
+                          hideTitle={"Hide your certification."}
+                          hideDescription={
+                            "Are you sure to hide this certificate. This action cannot be undone and it will completely hide this certificate from your certifications."
+                          }
+                          hideAction={() =>
+                            hideCertificationAction(certificate.id)
+                          }
+                          unhideTitle={"Unhide your certification."}
+                          unhideDescription={
+                            "Are you sure to unhide this certificate. This action cannot be undone and it will completely add this certificate to your certifications list."
+                          }
+                          unhideAction={() =>
+                            unhideCertificationAction(certificate.id)
+                          }
+                          status={certificate.visibility}
+                        />
+                      </AccordionContent>
+                    ))}
                   </Accordion>
                 )}
               </>

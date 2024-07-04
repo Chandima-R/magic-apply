@@ -12,6 +12,7 @@ import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
 import {
+  CERTIFICATE_INFORMATION_BY_USER_ID,
   DELETE_CERTIFICATE_BY_PK,
   HIDE_CERTIFICATE_BY_PK,
   UPDATE_CERTIFICATE_BY_ID,
@@ -56,11 +57,17 @@ export const EditCertificate = () => {
   });
 
   const { data: certificateData, loading: certificateLoading } =
-    useSubscription(VIEW_CERTIFICATION_BY_ID, {
+    useSubscription(CERTIFICATE_INFORMATION_BY_USER_ID, {
       variables: {
-        _eq: certificationId,
+        _eq: user?.id,
       },
     });
+
+  const { data: editData } = useSubscription(VIEW_CERTIFICATION_BY_ID, {
+    variables: {
+      _eq: certificationId,
+    },
+  });
 
   const visibleCertificates = certificateData?.certification?.filter(
     (exp: any) => exp.visibility === true
@@ -76,8 +83,8 @@ export const EditCertificate = () => {
     allCertificates?.length - visibleCertificates?.length;
 
   useEffect(() => {
-    if (certificateData && certificateData?.certification) {
-      const certification = certificateData?.certification[0];
+    if (editData && editData?.certification) {
+      const certification = editData?.certification[0];
       form.reset({
         certificateDate: certification.certification_completion_year,
         certificateDescription: certification.certification_description,
@@ -85,7 +92,7 @@ export const EditCertificate = () => {
         certificateName: certification.certification_name,
       });
     }
-  }, [certificateData, form]);
+  }, [editData, form]);
 
   const [updateCertificate] = useMutation(UPDATE_CERTIFICATE_BY_ID);
   async function onSubmit(values: z.infer<typeof certificationSchema>) {
@@ -260,54 +267,56 @@ export const EditCertificate = () => {
                       ))}
                     </AccordionItem>
 
-                    <AccordionItem value="hidden-certification">
-                      <AccordionTrigger className="text-xl font-semibold capitalize flex justify-between gap-2">
-                        <div>
-                          hidden experience{" "}
-                          <span
-                            className={
-                              "text-sm lowercase text-slate-600 font-normal"
-                            }
-                          >
-                            ({hiddenCertificatesLength} hidden certificate(s))
-                          </span>
-                        </div>
-                      </AccordionTrigger>
-                      {hiddenCertificates?.map((certificate: any) => (
-                        <AccordionContent key={certificate.id}>
-                          <ActionCard
-                            id={certificate.id}
-                            company={certificate.certification_institute}
-                            role={certificate.certification_name}
-                            country={""}
-                            fromDate={""}
-                            toDate={certificate.certification_completion_year}
-                            deleteTitle={"Delete your certification."}
-                            deleteDescription={
-                              "Are you sure to delete this certificate. This action cannot be undone and it will completely remove this certificate from your certifications."
-                            }
-                            deleteAction={() =>
-                              deleteCertifictionAction(certificate.id)
-                            }
-                            hideTitle={"Hide your certification."}
-                            hideDescription={
-                              "Are you sure to hide this certificate. This action cannot be undone and it will completely hide this certificate from your certifications."
-                            }
-                            hideAction={() =>
-                              hideCertificationAction(certificate.id)
-                            }
-                            unhideTitle={"Unhide your certification."}
-                            unhideDescription={
-                              "Are you sure to unhide this certificate. This action cannot be undone and it will completely add this certificate to your certifications list."
-                            }
-                            unhideAction={() =>
-                              unhideCertificationAction(certificate.id)
-                            }
-                            status={certificate.visibility}
-                          />
-                        </AccordionContent>
-                      ))}
-                    </AccordionItem>
+                    {hiddenCertificatesLength > 0 && (
+                      <AccordionItem value="hidden-certification">
+                        <AccordionTrigger className="text-xl font-semibold capitalize flex justify-between gap-2">
+                          <div>
+                            hidden experience{" "}
+                            <span
+                              className={
+                                "text-sm lowercase text-slate-600 font-normal"
+                              }
+                            >
+                              ({hiddenCertificatesLength} hidden certificate(s))
+                            </span>
+                          </div>
+                        </AccordionTrigger>
+                        {hiddenCertificates?.map((certificate: any) => (
+                          <AccordionContent key={certificate.id}>
+                            <ActionCard
+                              id={certificate.id}
+                              company={certificate.certification_institute}
+                              role={certificate.certification_name}
+                              country={""}
+                              fromDate={""}
+                              toDate={certificate.certification_completion_year}
+                              deleteTitle={"Delete your certification."}
+                              deleteDescription={
+                                "Are you sure to delete this certificate. This action cannot be undone and it will completely remove this certificate from your certifications."
+                              }
+                              deleteAction={() =>
+                                deleteCertifictionAction(certificate.id)
+                              }
+                              hideTitle={"Hide your certification."}
+                              hideDescription={
+                                "Are you sure to hide this certificate. This action cannot be undone and it will completely hide this certificate from your certifications."
+                              }
+                              hideAction={() =>
+                                hideCertificationAction(certificate.id)
+                              }
+                              unhideTitle={"Unhide your certification."}
+                              unhideDescription={
+                                "Are you sure to unhide this certificate. This action cannot be undone and it will completely add this certificate to your certifications list."
+                              }
+                              unhideAction={() =>
+                                unhideCertificationAction(certificate.id)
+                              }
+                              status={certificate.visibility}
+                            />
+                          </AccordionContent>
+                        ))}
+                      </AccordionItem>
+                    )}
                   </Accordion>
                 )}
               </>

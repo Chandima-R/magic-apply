@@ -240,54 +240,56 @@ export const Coursework = () => {
                       ))}
                     </AccordionItem>
 
-                    <AccordionItem value="hidden-coursework">
-                      <AccordionTrigger className="text-xl font-semibold capitalize flex justify-between gap-2">
-                        <div>
-                          hidden coursework{" "}
-                          <span
-                            className={
-                              "text-sm lowercase text-slate-600 font-normal"
-                            }
-                          >
-                            ({hiddenCourseworkLength} hidden coursework(s))
-                          </span>
-                        </div>
-                      </AccordionTrigger>
-                      {hiddenCoursework?.map((coursework: any) => (
-                        <AccordionContent key={coursework.id}>
-                          <ActionCard
-                            id={coursework.id}
-                            company={coursework.course_institute}
-                            role={coursework.course_name}
-                            country={""}
-                            fromDate={""}
-                            toDate={coursework.course_completion_year}
-                            deleteTitle={"Delete your coursework."}
-                            deleteDescription={
-                              "Are you sure to delete this coursework. This action cannot be undone and it will completely remove this coursework from your coursework."
-                            }
-                            deleteAction={() =>
-                              deleteCourseworkAction(coursework.id)
-                            }
-                            hideTitle={"Hide your coursework."}
-                            hideDescription={
-                              "Are you sure to hide this coursework. This action cannot be undone and it will completely hide this coursework from your coursework."
-                            }
-                            hideAction={() =>
-                              hideCourseworkAction(coursework.id)
-                            }
-                            unhideTitle={"Unhide your coursework."}
-                            unhideDescription={
-                              "Are you sure to unhide this coursework. This action cannot be undone and it will completely add this coursework to your coursework list."
-                            }
-                            unhideAction={() =>
-                              unhideCourseworkAction(coursework.id)
-                            }
-                            status={coursework.visibility}
-                          />
-                        </AccordionContent>
-                      ))}
-                    </AccordionItem>
+                    {hiddenCourseworkLength > 0 && (
+                      <AccordionItem value="hidden-coursework">
+                        <AccordionTrigger className="text-xl font-semibold capitalize flex justify-between gap-2">
+                          <div>
+                            hidden coursework{" "}
+                            <span
+                              className={
+                                "text-sm lowercase text-slate-600 font-normal"
+                              }
+                            >
+                              ({hiddenCourseworkLength} hidden coursework(s))
+                            </span>
+                          </div>
+                        </AccordionTrigger>
+                        {hiddenCoursework?.map((coursework: any) => (
+                          <AccordionContent key={coursework.id}>
+                            <ActionCard
+                              id={coursework.id}
+                              company={coursework.course_institute}
+                              role={coursework.course_name}
+                              country={""}
+                              fromDate={""}
+                              toDate={coursework.course_completion_year}
+                              deleteTitle={"Delete your coursework."}
+                              deleteDescription={
+                                "Are you sure to delete this coursework. This action cannot be undone and it will completely remove this coursework from your coursework."
+                              }
+                              deleteAction={() =>
+                                deleteCourseworkAction(coursework.id)
+                              }
+                              hideTitle={"Hide your coursework."}
+                              hideDescription={
+                                "Are you sure to hide this coursework. This action cannot be undone and it will completely hide this coursework from your coursework."
+                              }
+                              hideAction={() =>
+                                hideCourseworkAction(coursework.id)
+                              }
+                              unhideTitle={"Unhide your coursework."}
+                              unhideDescription={
+                                "Are you sure to unhide this coursework. This action cannot be undone and it will completely add this coursework to your coursework list."
+                              }
+                              unhideAction={() =>
+                                unhideCourseworkAction(coursework.id)
+                              }
+                              status={coursework.visibility}
+                            />
+                          </AccordionContent>
+                        ))}
+                      </AccordionItem>
+                    )}
                   </Accordion>
                 )}
               </>
