@@ -1,4 +1,4 @@
-import { Skills } from "@/modules/master-resume/components/skills";
+import { Skills } from "@/modules/profile/skills/components/skills";
 
 export default function page() {
   return (
