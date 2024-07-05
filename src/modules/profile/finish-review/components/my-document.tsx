@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+import { Page, View, Document, StyleSheet } from "@react-pdf/renderer";
 
 interface Props {
   customComponent: ReactNode;
@@ -8,7 +8,6 @@ const MyPdfDocument = ({ customComponent }: Props) => {
   return (
     <Document>
       <Page style={styles.body}>
-        <Text style={styles.title}>My PDF Document</Text>
         <View style={styles.section}>{customComponent}</View>
       </Page>
     </Document>

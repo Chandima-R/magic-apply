@@ -17,7 +17,7 @@ import {
 import { useMutation, useSubscription } from "@apollo/client";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname } from "next/navigation";
-import { ProfileActiveLinks } from "@/modules/master-resume/components/profile-active-links";
+import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 
 const summarySchema = z.object({

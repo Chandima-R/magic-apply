@@ -16,7 +16,7 @@ import {
 } from "@/graphql/contact";
 import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { ProfileActiveLinks } from "@/modules/master-resume/components/profile-active-links";
+import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
 
@@ -36,8 +36,14 @@ export const Contact = () => {
   const { toast } = useToast();
   const { user } = useUser();
 
-  const { data: contactData, loading: contactLoading } =
-    useSubscription(CONTACT_INFORMATION);
+  const { data: contactData, loading: contactLoading } = useSubscription(
+    CONTACT_INFORMATION,
+    {
+      variables: {
+        _eq: user?.id,
+      },
+    }
+  );
 
   const contactDetails =
     contactData?.contact?.find((c: any) => c?.user_id === user?.id) || {};

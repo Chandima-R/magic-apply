@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
-import { ProfileActiveLinks } from "../../../master-resume/components/profile-active-links";
+import { ProfileActiveLinks } from "../../../shared/components/profile-active-links";
 import { usePathname } from "next/navigation";
 
 const involvementSchema = z.object({

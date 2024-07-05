@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { usePathname } from "next/navigation";
-import { ProfileActiveLinks } from "@/modules/master-resume/components/profile-active-links";
+import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 
 const courseworkSchema = z.object({
   courseName: z.string().nonempty("Course name is required."),

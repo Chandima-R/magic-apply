@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
@@ -24,7 +23,7 @@ const PdfViewer = ({ pdfBlob }: Props) => {
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   return (
-    <div style={{ height: "750px" }}>
+    <div style={{ height: "1080px" }}>
       <Worker
         workerUrl={`https://unpkg.com/pdfjs-dist@2.6.347/build/pdf.worker.min.js`}
       >
