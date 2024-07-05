@@ -28,7 +28,7 @@ import {
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname } from "next/navigation";
-import { ProfileActiveLinks } from "../../../master-resume/components/profile-active-links";
+import { ProfileActiveLinks } from "../../../shared/components/profile-active-links";
 
 const educationSchema = z.object({
   degree: z.string().nonempty("Degree or major required."),

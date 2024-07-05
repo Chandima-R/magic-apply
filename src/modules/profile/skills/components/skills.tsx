@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname } from "next/navigation";
-import { ProfileActiveLinks } from "@/modules/master-resume/components/profile-active-links";
+import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";

@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { usePathname } from "next/navigation";
-import { ProfileActiveLinks } from "@/modules/master-resume/components/profile-active-links";
+import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 
 const projectSchema = z.object({
   projectTitle: z.string().nonempty("Project title is required."),

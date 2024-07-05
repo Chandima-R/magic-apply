@@ -27,7 +27,7 @@ import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname } from "next/navigation";
-import { ProfileActiveLinks } from "@/modules/master-resume/components/profile-active-links";
+import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { ActionCard } from "@/modules/shared/components/action-card";
 
 const experienceSchema = z.object({
