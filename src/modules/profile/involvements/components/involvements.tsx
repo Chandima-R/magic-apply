@@ -30,20 +30,29 @@ import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { ProfileActiveLinks } from "../../../shared/components/profile-active-links";
 import { usePathname } from "next/navigation";
 
-const involvementSchema = z.object({
-  organizationRole: z.string().nonempty("Project title is required."),
-  organizationName: z.string().nonempty("Organization is required."),
-  organizationRoleStartDate: z.date({
-    required_error: "Start date is required.",
-  }),
-  organizationRoleEndDate: z.date({
-    required_error: "End date is required.",
-  }),
-  organizationLocation: z.string().nonempty("Company Location is required."),
-  organizationRoleDescription: z
-    .string()
-    .nonempty("Job description is required."),
-});
+const involvementSchema = z
+  .object({
+    organizationRole: z.string().nonempty("Project title is required."),
+    organizationName: z.string().nonempty("Organization is required."),
+    organizationRoleStartDate: z.date({
+      required_error: "Start date is required.",
+    }),
+    organizationRoleEndDate: z.date({
+      required_error: "End date is required.",
+    }),
+    organizationLocation: z.string().nonempty("Company Location is required."),
+    organizationRoleDescription: z
+      .string()
+      .nonempty("Job description is required."),
+  })
+  .refine(
+    (data) => data.organizationRoleStartDate < data.organizationRoleEndDate,
+    {
+      message: "Start date must be before end date",
+      path: ["organizationRoleEndDate"],
+    }
+  );
+
 export const Involvements = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -336,14 +345,12 @@ export const Involvements = () => {
                   fieldLabel={"Start date"}
                   fieldName={"organizationRoleStartDate"}
                   control={form.control}
-                  placeholder={"city"}
                   required={true}
                 />
                 <CalendarField
                   fieldLabel={"End date"}
                   fieldName={"organizationRoleEndDate"}
                   control={form.control}
-                  placeholder={"city"}
                   required={true}
                 />
                 <TextInput
