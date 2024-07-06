@@ -60,7 +60,9 @@ export const UPDATE_COURSEWORK_BY_ID = gql`
         course_institute: $course_institute
         course_name: $course_name
       }
-    )
+    ) {
+      affected_rows
+    }
   }
 `;
 
