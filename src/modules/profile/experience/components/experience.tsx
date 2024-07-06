@@ -30,18 +30,24 @@ import { usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { ActionCard } from "@/modules/shared/components/action-card";
 
-const experienceSchema = z.object({
-  role: z.string().nonempty("Role is required."),
-  company: z.string().nonempty("Company is required."),
-  startDate: z.date({
-    required_error: "Start date is required.",
-  }),
-  endDate: z.date({
-    required_error: "end date is required.",
-  }),
-  companyLocation: z.string().nonempty("Company Location is required."),
-  jobDescription: z.string().nonempty("Job description is required."),
-});
+const experienceSchema = z
+  .object({
+    role: z.string().nonempty("Role is required."),
+    company: z.string().nonempty("Company is required."),
+    startDate: z.date({
+      required_error: "Start date is required.",
+    }),
+    endDate: z.date({
+      required_error: "end date is required.",
+    }),
+    companyLocation: z.string().nonempty("Company Location is required."),
+    jobDescription: z.string().nonempty("Job description is required."),
+  })
+  .refine((data) => data.startDate < data.endDate, {
+    message: "Start date must be before end date",
+    path: ["endDate"],
+  });
+
 export const Experience = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -329,14 +335,12 @@ export const Experience = () => {
                   fieldLabel={"Start date"}
                   fieldName={"startDate"}
                   control={form.control}
-                  placeholder={"city"}
                   required={true}
                 />
                 <CalendarField
                   fieldLabel={"End date"}
                   fieldName={"endDate"}
                   control={form.control}
-                  placeholder={"city"}
                   required={true}
                 />
                 <TextInput
