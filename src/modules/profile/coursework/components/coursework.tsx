@@ -2,7 +2,6 @@
 
 import { Form } from "@/components/ui/form";
 import { TextInput } from "@/modules/shared/components/text-input";
-import { TextArea } from "@/modules/shared/components/text-area";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,8 +32,6 @@ const courseworkSchema = z.object({
   courseName: z.string().nonempty("Course name is required."),
   courseInstitute: z.string().nonempty("Course issued institute is required."),
   courseCompletionDate: z.string().nonempty("Course issued date is required."),
-  courseSkill: z.string(),
-  courseDescription: z.string(),
 });
 export const Coursework = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -47,8 +44,6 @@ export const Coursework = () => {
       courseName: "",
       courseInstitute: "",
       courseCompletionDate: "",
-      courseSkill: "",
-      courseDescription: "",
     },
   });
 
@@ -88,8 +83,6 @@ export const Coursework = () => {
             course_completion_year: values.courseCompletionDate,
             course_institute: values.courseInstitute,
             course_name: values.courseName,
-            course_skill: values.courseSkill,
-            course_skill_description: values.courseDescription,
             user_id: user?.id,
           },
         });
@@ -320,22 +313,6 @@ export const Coursework = () => {
                   control={form.control}
                   placeholder={"2024"}
                   required={true}
-                />
-                <TextInput
-                  fieldLabel={"When skill did you use?"}
-                  fieldName={"courseSkill"}
-                  control={form.control}
-                  placeholder={"Teamwork"}
-                  required={false}
-                />
-                <TextArea
-                  fieldLabel={"How was that skill applied?"}
-                  fieldName={"courseDescription"}
-                  control={form.control}
-                  placeholder={
-                    "Coordinating on code with a small group of people."
-                  }
-                  required={false}
                 />
               </div>
 

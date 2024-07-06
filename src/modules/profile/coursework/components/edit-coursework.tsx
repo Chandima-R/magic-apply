@@ -2,7 +2,6 @@
 
 import { Form } from "@/components/ui/form";
 import { TextInput } from "@/modules/shared/components/text-input";
-import { TextArea } from "@/modules/shared/components/text-area";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,8 +33,6 @@ const courseworkSchema = z.object({
   courseName: z.string().nonempty("Course name is required."),
   courseInstitute: z.string().nonempty("Course issued institute is required."),
   courseCompletionDate: z.string().nonempty("Course issued date is required."),
-  courseSkill: z.string(),
-  courseDescription: z.string(),
 });
 export const EditCoursework = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -51,8 +48,6 @@ export const EditCoursework = () => {
       courseName: "",
       courseInstitute: "",
       courseCompletionDate: "",
-      courseSkill: "",
-      courseDescription: "",
     },
   });
 
@@ -79,6 +74,7 @@ export const EditCoursework = () => {
     (course: any) => course.visibility === true
   );
 
+  console.log(hiddenCoursework);
   const allCoursework = courserworkData?.coursework?.map(
     (course: any) => course
   );
@@ -93,8 +89,6 @@ export const EditCoursework = () => {
         courseName: coursework.course_name,
         courseInstitute: coursework.course_institute,
         courseCompletionDate: coursework.course_completion_year,
-        courseSkill: coursework.course_skill,
-        courseDescription: coursework.course_skill_description,
       });
     }
   }, [editData, form]);
@@ -112,8 +106,6 @@ export const EditCoursework = () => {
             course_completion_year: values.courseCompletionDate,
             course_institute: values.courseInstitute,
             course_name: values.courseName,
-            course_skill: values.courseSkill,
-            course_skill_description: values.courseDescription,
             user_id: user?.id,
           },
         });
@@ -121,7 +113,7 @@ export const EditCoursework = () => {
         toast({
           variant: "default",
           title: "Success.",
-          description: "Your coursework was added to coursework list.",
+          description: "Your coursework was updated.",
         });
       }
       form.reset();
@@ -285,11 +277,11 @@ export const EditCoursework = () => {
                             <AccordionContent key={coursework.id}>
                               <ActionCard
                                 id={coursework.id}
-                                company={coursework.coursework_institute}
-                                role={coursework.coursework_name}
+                                company={coursework.course_institute}
+                                role={coursework.course_name}
                                 country={""}
                                 fromDate={""}
-                                toDate={coursework.coursework_completion_year}
+                                toDate={coursework.course_completion_year}
                                 deleteTitle={"Delete your coursework."}
                                 deleteDescription={
                                   "Are you sure to delete this coursework. This action cannot be undone and it will completely remove this coursework from your coursework."
@@ -347,22 +339,6 @@ export const EditCoursework = () => {
                     control={form.control}
                     placeholder={"2024"}
                     required={true}
-                  />
-                  <TextInput
-                    fieldLabel={"When skill did you use?"}
-                    fieldName={"courseSkill"}
-                    control={form.control}
-                    placeholder={"Teamwork"}
-                    required={false}
-                  />
-                  <TextArea
-                    fieldLabel={"How was that skill applied?"}
-                    fieldName={"courseDescription"}
-                    control={form.control}
-                    placeholder={
-                      "Coordinating on code with a small group of people."
-                    }
-                    required={false}
                   />
                 </div>
 

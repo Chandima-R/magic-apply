@@ -5,8 +5,6 @@ export const COURSEWORK_INFORMATION_BY_USER_ID = gql`
     coursework(where: { user_id: { _eq: $_eq } }) {
       course_institute
       course_name
-      course_skill
-      course_skill_description
       id
       user_id
       course_completion_year
@@ -21,8 +19,6 @@ export const VIEW_COURSEWORK_BY_ID = gql`
       course_completion_year
       course_institute
       course_name
-      course_skill
-      course_skill_description
       id
       user_id
       visibility
@@ -35,8 +31,6 @@ export const ADD_NEW_COURSEWORK_BY_USER_ID = gql`
     $course_completion_year: String
     $course_institute: String
     $course_name: String
-    $course_skill: String
-    $course_skill_description: String
     $user_id: String
   ) {
     insert_coursework(
@@ -44,8 +38,6 @@ export const ADD_NEW_COURSEWORK_BY_USER_ID = gql`
         course_completion_year: $course_completion_year
         course_institute: $course_institute
         course_name: $course_name
-        course_skill: $course_skill
-        course_skill_description: $course_skill_description
         user_id: $user_id
       }
     ) {
@@ -59,8 +51,6 @@ export const UPDATE_COURSEWORK_BY_ID = gql`
     $course_completion_year: String
     $course_institute: String
     $course_name: String
-    $course_skill: String
-    $course_skill_description: String
     $_eq: uuid!
   ) {
     update_coursework(
@@ -69,8 +59,6 @@ export const UPDATE_COURSEWORK_BY_ID = gql`
         course_completion_year: $course_completion_year
         course_institute: $course_institute
         course_name: $course_name
-        course_skill: $course_skill
-        course_skill_description: $course_skill_description
       }
     )
   }
@@ -82,8 +70,6 @@ export const DELETE_COURSEWORK_BY_PK = gql`
       course_completion_year
       course_institute
       course_name
-      course_skill
-      course_skill_description
       id
       user_id
     }
