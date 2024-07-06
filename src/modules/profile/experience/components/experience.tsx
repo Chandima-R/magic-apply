@@ -318,7 +318,7 @@ export const Experience = () => {
                 }
               >
                 <TextInput
-                  fieldLabel={"What was the your role at the company?"}
+                  fieldLabel={"What was your role at the company?"}
                   fieldName={"role"}
                   control={form.control}
                   placeholder={"Marketing Analyst"}
