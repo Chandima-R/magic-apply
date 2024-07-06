@@ -120,6 +120,7 @@ export const EditExperience = () => {
       } else {
         await updateExperience({
           variables: {
+            _eq: experienceId,
             company_end_date: values.endDate,
             company_location: values.companyLocation,
             company_name: values.company,
@@ -399,18 +400,7 @@ export const EditExperience = () => {
                       <LoadingButton />
                     ) : (
                       <>
-                        {experienceData?.experience?.length >= 5 ? (
-                          <CustomButton
-                            disabled
-                            type="submit"
-                            title="Save to experience list"
-                          />
-                        ) : (
-                          <CustomButton
-                            type="submit"
-                            title="Save to experience list"
-                          />
-                        )}
+                        <CustomButton type="submit" title="Update experience" />
                       </>
                     )}
                   </div>

@@ -410,18 +410,7 @@ export const EditInvolvement = () => {
                       <LoadingButton />
                     ) : (
                       <>
-                        {involvementData?.involvement?.length >= 5 ? (
-                          <CustomButton
-                            disabled
-                            type="submit"
-                            title="Save to involvement list"
-                          />
-                        ) : (
-                          <CustomButton
-                            type="submit"
-                            title="Save to involvement list"
-                          />
-                        )}
+                        <CustomButton type="submit" title="Edit involvement" />
                       </>
                     )}
                   </div>

@@ -370,7 +370,7 @@ export const EditEducation = () => {
                     required={false}
                   />
                   <TextArea
-                    fieldLabel={"additional information"}
+                    fieldLabel={"Additional information"}
                     fieldName={"additionalInformation"}
                     control={form.control}
                     placeholder={

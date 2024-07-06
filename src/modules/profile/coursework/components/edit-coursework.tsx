@@ -348,18 +348,7 @@ export const EditCoursework = () => {
                       <LoadingButton />
                     ) : (
                       <>
-                        {courserworkData?.coursework?.length >= 5 ? (
-                          <CustomButton
-                            disabled
-                            type="submit"
-                            title="Save to coursework list"
-                          />
-                        ) : (
-                          <CustomButton
-                            type="submit"
-                            title="Save to coursework list"
-                          />
-                        )}
+                        <CustomButton type="submit" title="Update coursework" />
                       </>
                     )}
                   </div>
