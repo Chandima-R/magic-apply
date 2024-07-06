@@ -40,7 +40,7 @@ export const CalendarField = ({
       name={fieldName}
       render={({ field }) => (
         <FormItem className="flex flex-col">
-          <FormLabel className={cn("capitalize gap-1 flex")}>
+          <FormLabel className={cn(" gap-1 flex")}>
             {fieldLabel}
             {required && <RequiredIndicator />}
           </FormLabel>
