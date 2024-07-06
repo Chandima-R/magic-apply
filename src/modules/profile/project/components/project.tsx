@@ -11,7 +11,7 @@ import { CalendarField } from "@/modules/shared/components/calendar-field";
 import { useMutation, useSubscription } from "@apollo/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   DELETE_PROJECT_BY_PK,
   PROJECT_INFORMATION_BY_USER_ID,
@@ -30,18 +30,24 @@ import { ActionCard } from "@/modules/shared/components/action-card";
 import { usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 
-const projectSchema = z.object({
-  projectTitle: z.string().nonempty("Project title is required."),
-  organization: z.string().nonempty("Organization is required."),
-  projectStartDate: z.date({
-    required_error: "Start date is required.",
-  }),
-  projectEndDate: z.date({
-    required_error: "end date is required.",
-  }),
-  projectUrl: z.string(),
-  projectDescription: z.string().nonempty("Job description is required."),
-});
+const projectSchema = z
+  .object({
+    projectTitle: z.string().nonempty("Project title is required."),
+    organization: z.string().nonempty("Organization is required."),
+    projectStartDate: z.date({
+      required_error: "Start date is required.",
+    }),
+    projectEndDate: z.date({
+      required_error: "End date is required.",
+    }),
+    projectUrl: z.string().optional(),
+    projectDescription: z.string().nonempty("Project description is required."),
+  })
+  .refine((data) => data.projectStartDate < data.projectEndDate, {
+    message: "Start date must be before end date",
+    path: ["projectEndDate"],
+  });
+
 export const Project = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -103,7 +109,7 @@ export const Project = () => {
         toast({
           variant: "default",
           title: "Success.",
-          description: "Your project was added to project list.",
+          description: "Your project was added to the project list.",
         });
       }
       form.reset();
@@ -153,13 +159,13 @@ export const Project = () => {
       toast({
         variant: "default",
         title: "Success.",
-        description: "Your project was hide from the project list.",
+        description: "Your project was hidden from the project list.",
       });
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "There was an error deleting the project.",
+        description: "There was an error hiding the project.",
       });
     }
   };
@@ -175,7 +181,7 @@ export const Project = () => {
       toast({
         variant: "default",
         title: "Success.",
-        description: "Your project added to the project list.",
+        description: "Your project was added to the project list.",
       });
     } catch (error) {
       toast({
@@ -188,6 +194,20 @@ export const Project = () => {
 
   const path = usePathname();
   const activeLink = path.split("/")[2];
+
+  const startDate = form.watch("projectStartDate");
+  const endDate = form.watch("projectEndDate");
+
+  useEffect(() => {
+    if (startDate && endDate && startDate >= endDate) {
+      form.setError("projectEndDate", {
+        type: "manual",
+        message: "End date must be after start date",
+      });
+    } else {
+      form.clearErrors("projectEndDate");
+    }
+  }, [startDate, endDate, form]);
 
   return (
     <>
@@ -213,7 +233,7 @@ export const Project = () => {
                   >
                     <AccordionItem value="project">
                       <AccordionTrigger className="text-xl font-semibold capitalize">
-                        your projects
+                        Your projects
                       </AccordionTrigger>
                       {hiddenProjectsLength ? (
                         <span>
@@ -253,7 +273,7 @@ export const Project = () => {
                       <AccordionItem value="project">
                         <AccordionTrigger className="text-xl font-semibold capitalize">
                           <div>
-                            hidden projects{" "}
+                            Hidden projects{" "}
                             <span
                               className={
                                 "text-sm lowercase text-slate-600 font-normal"
@@ -329,31 +349,30 @@ export const Project = () => {
                   fieldLabel={"Start date"}
                   fieldName={"projectStartDate"}
                   control={form.control}
-                  placeholder={"city"}
                   required={true}
                 />
                 <CalendarField
                   fieldLabel={"End date"}
                   fieldName={"projectEndDate"}
                   control={form.control}
-                  placeholder={"city"}
                   required={true}
                 />
                 <TextInput
                   fieldLabel={"Project URL"}
                   fieldName={"projectUrl"}
                   control={form.control}
-                  placeholder={"New York, NY"}
+                  placeholder={"https://www.myproject.com"}
                   required={false}
                 />
               </div>
+
               <div className={"mt-4 lg:mt-8 "}>
                 <TextArea
                   fieldLabel={"Now describe what you did"}
                   fieldName={"projectDescription"}
                   control={form.control}
                   placeholder={
-                    "Organized and implemented Google Analytics dta tracking campaigns to maximize the effectiveness of emil remarketing initiatives that were deployed using Salesforce&rsquo;s marketing cloud software. "
+                    "Organized and implemented Google Analytics data tracking campaigns to maximize the effectiveness of email remarketing initiatives that were deployed using Salesforce&rsquo;s marketing cloud software. "
                   }
                   required={true}
                 />
@@ -369,7 +388,7 @@ export const Project = () => {
                         <CustomButton
                           disabled
                           type="submit"
-                          title="Save to roject list"
+                          title="Save to project list"
                         />
                       ) : (
                         <CustomButton
