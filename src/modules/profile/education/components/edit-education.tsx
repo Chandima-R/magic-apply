@@ -55,7 +55,6 @@ export const EditEducation = () => {
       institute: "",
       instituteLocation: "",
       completionDate: "",
-      minorDegree: "",
       gpa: "",
       additionalInformation: "",
     },
