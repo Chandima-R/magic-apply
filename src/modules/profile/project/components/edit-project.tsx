@@ -31,18 +31,23 @@ import { ActionCard } from "@/modules/shared/components/action-card";
 import { usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 
-const projectSchema = z.object({
-  projectTitle: z.string().nonempty("Project title is required."),
-  organization: z.string().nonempty("Organization is required."),
-  projectStartDate: z.date({
-    required_error: "Start date is required.",
-  }),
-  projectEndDate: z.date({
-    required_error: "end date is required.",
-  }),
-  projectUrl: z.string(),
-  projectDescription: z.string().nonempty("Job description is required."),
-});
+const projectSchema = z
+  .object({
+    projectTitle: z.string().nonempty("Project title is required."),
+    organization: z.string().nonempty("Organization is required."),
+    projectStartDate: z.date({
+      required_error: "Start date is required.",
+    }),
+    projectEndDate: z.date({
+      required_error: "end date is required.",
+    }),
+    projectUrl: z.string(),
+    projectDescription: z.string().nonempty("Job description is required."),
+  })
+  .refine((data) => data.projectStartDate < data.projectEndDate, {
+    message: "Start date must be before end date",
+    path: ["projectEndDate"],
+  });
 export const EditProject = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -355,21 +360,19 @@ export const EditProject = () => {
                     fieldLabel={"Start date"}
                     fieldName={"projectStartDate"}
                     control={form.control}
-                    placeholder={"city"}
                     required={true}
                   />
                   <CalendarField
                     fieldLabel={"End date"}
                     fieldName={"projectEndDate"}
                     control={form.control}
-                    placeholder={"city"}
                     required={true}
                   />
                   <TextInput
                     fieldLabel={"Project URL"}
                     fieldName={"projectUrl"}
                     control={form.control}
-                    placeholder={"New York, NY"}
+                    placeholder={"https://www.myproject.com"}
                     required={false}
                   />
                 </div>
