@@ -37,7 +37,6 @@ const educationSchema = z.object({
     .string()
     .nonempty("Location of the institute is required."),
   completionDate: z.string().nonempty("Completion date is required."),
-  minorDegree: z.string().nonempty("Any minor is required."),
   gpa: z.string(),
   additionalInformation: z.string(),
 });
@@ -97,7 +96,6 @@ export const EditEducation = () => {
         institute: education.education_institute,
         instituteLocation: education.education_location,
         completionDate: education.education_completion_year,
-        minorDegree: education.education_minor,
         gpa: education.education_gpa,
         additionalInformation: education.educatoin_additional_information,
       });
@@ -119,7 +117,6 @@ export const EditEducation = () => {
             education_institute: values.institute,
             education_location: values.instituteLocation,
             education_major: values.degree,
-            education_minor: values.minorDegree,
             educatoin_additional_information: values.additionalInformation,
           },
         });
@@ -360,17 +357,10 @@ export const EditEducation = () => {
                     required={true}
                   />
                   <TextInput
-                    fieldLabel={"When did you earn our degree/ qualification?"}
+                    fieldLabel={"When did you earn your degree/ qualification?"}
                     fieldName={"completionDate"}
                     control={form.control}
                     placeholder={"2024"}
-                    required={true}
-                  />
-                  <TextInput
-                    fieldLabel={"Di you minor in anything?"}
-                    fieldName={"minorDegree"}
-                    control={form.control}
-                    placeholder={"Did you minor in anything?"}
                     required={true}
                   />
                   <TextInput
@@ -381,7 +371,7 @@ export const EditEducation = () => {
                     required={false}
                   />
                   <TextArea
-                    fieldLabel={"Open field for additional information"}
+                    fieldLabel={"additional information"}
                     fieldName={"additionalInformation"}
                     control={form.control}
                     placeholder={
