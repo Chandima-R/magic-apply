@@ -2,7 +2,7 @@
 
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { usePathname } from "next/navigation";
-import PdfPage from "./pdf";
+import PdfPage from "../../../shared/components/pdf-viewer/pdf";
 import { useUser } from "@clerk/nextjs";
 import { useSubscription } from "@apollo/client";
 import { CONTACT_INFORMATION } from "@/graphql/contact";

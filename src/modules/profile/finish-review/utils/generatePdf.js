@@ -1,4 +1,4 @@
-import MyPdfDocument from "@/modules/profile/finish-review/components/my-document";
+import MyPdfDocument from "@/modules/shared/components/pdf-viewer/my-document";
 import { pdf } from "@react-pdf/renderer";
 
 export const generatePdfBlob = async (customComponent) => {

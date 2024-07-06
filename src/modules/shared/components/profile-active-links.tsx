@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { profileLinks } from "../../master-resume/utils/profile-links";
+import { profileLinks } from "@/modules/shared/utils/profile-links";
 import Link from "next/link";
 
 interface Props {
