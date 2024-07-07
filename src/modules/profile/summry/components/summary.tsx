@@ -63,6 +63,7 @@ export const Summary = () => {
         if (existingSummary) {
           await updateSummary({
             variables: {
+              _eq: existingSummary.id,
               id: existingSummary.id,
               summary_description: values.summary,
             },
@@ -131,6 +132,8 @@ export const Summary = () => {
                   <div className="w-38">
                     {isLoading ? (
                       <LoadingButton />
+                    ) : existingSummary?.summary_description?.length > 0 ? (
+                      <CustomButton type="submit" title="Update summary" />
                     ) : (
                       <CustomButton type="submit" title="Save summary info" />
                     )}
