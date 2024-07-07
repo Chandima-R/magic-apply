@@ -7,6 +7,7 @@ export const PROJECT_INFORMATION_BY_USER_ID = gql`
       project_end_date
       project_name
       project_organization
+      project_location
       project_role_description
       project_start_date
       project_url
@@ -23,6 +24,7 @@ export const VIEW_PROJECT_BY_ID = gql`
       project_end_date
       project_name
       project_organization
+      project_location
       project_role_description
       project_start_date
       project_url
@@ -39,6 +41,7 @@ export const ADD_NEW_PROJECT_BY_USER_ID = gql`
     $project_start_date: String
     $project_role_description: String
     $project_organization: String
+    $project_location: String
     $project_name: String
     $project_end_date: String
   ) {
@@ -49,6 +52,7 @@ export const ADD_NEW_PROJECT_BY_USER_ID = gql`
         project_start_date: $project_start_date
         project_role_description: $project_role_description
         project_organization: $project_organization
+        project_location: $project_location
         project_name: $project_name
         project_end_date: $project_end_date
       }
@@ -63,6 +67,7 @@ export const UPDATE_PROJECT_BY_ID = gql`
     $project_end_date: String
     $project_name: String
     $project_organization: String
+    $project_location: String
     $project_role_description: String
     $project_start_date: String
     $project_url: String
@@ -74,6 +79,7 @@ export const UPDATE_PROJECT_BY_ID = gql`
         project_end_date: $project_end_date
         project_name: $project_name
         project_organization: $project_organization
+        project_location: $project_location
         project_role_description: $project_role_description
         project_start_date: $project_start_date
         project_url: $project_url
@@ -91,6 +97,7 @@ export const DELETE_PROJECT_BY_PK = gql`
       project_end_date
       project_name
       project_organization
+      project_location
       project_role_description
       project_start_date
       project_url
