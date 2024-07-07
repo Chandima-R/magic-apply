@@ -35,6 +35,9 @@ const projectSchema = z
   .object({
     projectTitle: z.string().nonempty("Project title is required."),
     organization: z.string().nonempty("Organization is required."),
+    organizationLocation: z
+      .string()
+      .nonempty("Organization location is required."),
     projectStartDate: z.date({
       required_error: "Start date is required.",
     }),
@@ -61,6 +64,7 @@ export const EditProject = () => {
     defaultValues: {
       projectTitle: "",
       organization: "",
+      organizationLocation: "",
       projectStartDate: new Date(),
       projectEndDate: new Date(),
       projectUrl: "",
@@ -101,6 +105,7 @@ export const EditProject = () => {
       form.reset({
         projectTitle: project.project_name,
         organization: project.project_organization,
+        organizationLocation: project.project_location,
         projectStartDate: project.project_start_date,
         projectEndDate: project.project_end_date,
         projectUrl: project.project_url,
@@ -126,6 +131,7 @@ export const EditProject = () => {
             project_name: values.projectTitle,
             project_role: values.projectDescription,
             project_organization: values.organization,
+            project_location: values.organizationLocation,
             project_role_description: values.projectDescription,
           },
         });
@@ -253,26 +259,26 @@ export const EditProject = () => {
                       ) : (
                         ""
                       )}
-                      {visibleProjects?.map((poject: any) => (
-                        <AccordionContent key={poject.id}>
+                      {visibleProjects?.map((project: any) => (
+                        <AccordionContent key={project.id}>
                           <ActionCard
-                            id={poject.id}
-                            company={poject.project_organization}
-                            role={poject.project_name}
-                            country={""}
-                            fromDate={poject.project_start_date}
-                            toDate={poject.project_end_date}
+                            id={project.id}
+                            company={project.project_organization}
+                            role={project.project_name}
+                            country={project.project_location}
+                            fromDate={project.project_start_date}
+                            toDate={project.project_end_date}
                             deleteTitle={"Delete your project."}
                             deleteDescription={
                               "Are you sure to delete this project. This action cannot be undone and it will completely remove this project from your projects."
                             }
-                            deleteAction={() => deleteProjectAction(poject.id)}
+                            deleteAction={() => deleteProjectAction(project.id)}
                             hideTitle={"Hide your project."}
                             hideDescription={
                               "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
                             }
-                            hideAction={() => hideProjectAction(poject.id)}
-                            status={poject.visibility}
+                            hideAction={() => hideProjectAction(project.id)}
+                            status={project.visibility}
                             tab="project"
                           />
                         </AccordionContent>
@@ -293,35 +299,35 @@ export const EditProject = () => {
                             </span>
                           </div>
                         </AccordionTrigger>
-                        {hiddenProjects?.map((poject: any) => (
-                          <AccordionContent key={poject.id}>
+                        {hiddenProjects?.map((project: any) => (
+                          <AccordionContent key={project.id}>
                             <ActionCard
-                              id={poject.id}
-                              company={poject.project_organization}
-                              role={poject.project_name}
-                              country={""}
-                              fromDate={poject.project_start_date}
-                              toDate={poject.project_end_date}
+                              id={project.id}
+                              company={project.project_organization}
+                              role={project.project_name}
+                              country={project.project_location}
+                              fromDate={project.project_start_date}
+                              toDate={project.project_end_date}
                               deleteTitle={"Delete your project."}
                               deleteDescription={
                                 "Are you sure to delete this project. This action cannot be undone and it will completely remove this project from your projects."
                               }
                               deleteAction={() =>
-                                deleteProjectAction(poject.id)
+                                deleteProjectAction(project.id)
                               }
                               hideTitle={"Hide your project."}
                               hideDescription={
                                 "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
                               }
-                              hideAction={() => hideProjectAction(poject.id)}
+                              hideAction={() => hideProjectAction(project.id)}
                               unhideTitle={"Unhide your project."}
                               unhideDescription={
                                 "Are you sure to unhide this project. This action cannot be undone and it will completely add this project to your projects list."
                               }
                               unhideAction={() =>
-                                unhideProjectAction(poject.id)
+                                unhideProjectAction(project.id)
                               }
-                              status={poject.visibility}
+                              status={project.visibility}
                             />
                           </AccordionContent>
                         ))}
@@ -354,6 +360,13 @@ export const EditProject = () => {
                     fieldName={"organization"}
                     control={form.control}
                     placeholder={"Habitat for Humanity"}
+                    required={true}
+                  />
+                  <TextInput
+                    fieldLabel={"Where is the organization located?"}
+                    fieldName={"organizationLocation"}
+                    control={form.control}
+                    placeholder={"New York, NY"}
                     required={true}
                   />
                   <CalendarField
