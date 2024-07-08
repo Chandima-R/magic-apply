@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput } from "@/modules/shared/components/text-input";
 import { TextArea } from "@/modules/shared/components/text-area";
 import { CustomButton } from "@/modules/shared/components/custom-button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useSubscription } from "@apollo/client";
@@ -29,6 +29,7 @@ import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { ActionCard } from "@/modules/shared/components/action-card";
+import { CheckboxField } from "@/modules/shared/components/checkbox-input";
 
 const experienceSchema = z
   .object({
@@ -37,13 +38,16 @@ const experienceSchema = z
     startDate: z.date({
       required_error: "Start date is required.",
     }),
-    endDate: z.date({
-      required_error: "end date is required.",
-    }),
+    endDate: z
+      .date({
+        required_error: "End date is required.",
+      })
+      .optional(),
     companyLocation: z.string().nonempty("Company Location is required."),
     jobDescription: z.string().nonempty("Job description is required."),
+    isCurrent: z.boolean().default(false).optional(),
   })
-  .refine((data) => data.startDate < data.endDate, {
+  .refine((data) => !data.endDate || data.startDate < data.endDate, {
     message: "Start date must be before end date",
     path: ["endDate"],
   });
@@ -62,8 +66,18 @@ export const Experience = () => {
       endDate: new Date(),
       companyLocation: "",
       jobDescription: "",
+      isCurrent: false,
     },
   });
+
+  const { watch, setValue } = form;
+  const isCurrent = watch("isCurrent");
+
+  useEffect(() => {
+    if (isCurrent) {
+      setValue("endDate", new Date());
+    }
+  }, [isCurrent, setValue]);
 
   const { data: experienceData, loading: expoerienceLoading } = useSubscription(
     EXPERIENCE_INFORMATION_BY_USER_ID,
@@ -96,13 +110,14 @@ export const Experience = () => {
       } else {
         await addExperience({
           variables: {
-            company_end_date: values.endDate,
+            company_end_date: values.isCurrent ? new Date() : values.endDate,
             company_location: values.companyLocation,
             company_name: values.company,
             company_role: values.role,
             company_role_description: values.jobDescription,
             company_start_date: values.startDate,
             user_id: user?.id,
+            isCurrent: isCurrent,
           },
         });
 
@@ -250,6 +265,7 @@ export const Experience = () => {
                             hideAction={() => hideExperienceAction(exp.id)}
                             status={exp.visibility}
                             tab={"experience"}
+                            isCurrent={isCurrent}
                           />
                         </AccordionContent>
                       ))}
@@ -298,6 +314,7 @@ export const Experience = () => {
                                 unhideExperienceAction(exp.id)
                               }
                               status={exp.visibility}
+                              isCurrent={isCurrent}
                             />
                           </AccordionContent>
                         ))}
@@ -331,18 +348,27 @@ export const Experience = () => {
                   placeholder={"Google"}
                   required={true}
                 />
-                <CalendarField
-                  fieldLabel={"Start date"}
-                  fieldName={"startDate"}
-                  control={form.control}
-                  required={true}
-                />
-                <CalendarField
-                  fieldLabel={"End date"}
-                  fieldName={"endDate"}
-                  control={form.control}
-                  required={true}
-                />
+                <div className="flex flex-col gap-2">
+                  <CalendarField
+                    fieldLabel={"Start date"}
+                    fieldName={"startDate"}
+                    control={form.control}
+                    required={true}
+                  />
+                  <CheckboxField
+                    fieldLabel="Is this your current job?"
+                    fieldName="isCurrent"
+                    control={form.control}
+                  />
+                </div>
+                {!isCurrent && (
+                  <CalendarField
+                    fieldLabel={"End date"}
+                    fieldName={"endDate"}
+                    control={form.control}
+                    required={!isCurrent}
+                  />
+                )}
                 <TextInput
                   fieldLabel={"Where is the company located?"}
                   fieldName={"companyLocation"}
@@ -357,7 +383,7 @@ export const Experience = () => {
                   fieldName={"jobDescription"}
                   control={form.control}
                   placeholder={
-                    "Organized and implemented Google Analytics dta tracking campaigns to maximize the effectiveness of emil remarketing initiatives that were deployed using Salesforce&rsquo;s marketing cloud software. "
+                    "Organized and implemented Google Analytics data tracking campaigns to maximize the effectiveness of email remarketing initiatives that were deployed using Salesforce’s marketing cloud software."
                   }
                   required={true}
                 />

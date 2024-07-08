@@ -30,6 +30,7 @@ import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { ActionCard } from "@/modules/shared/components/action-card";
+import { CheckboxField } from "@/modules/shared/components/checkbox-input";
 
 const experienceSchema = z
   .object({
@@ -43,6 +44,7 @@ const experienceSchema = z
     }),
     companyLocation: z.string().nonempty("Company Location is required."),
     jobDescription: z.string().nonempty("Job description is required."),
+    isCurrent: z.boolean().default(false).optional(),
   })
   .refine((data) => data.startDate < data.endDate, {
     message: "Start date must be before end date",
@@ -66,8 +68,18 @@ export const EditExperience = () => {
       endDate: new Date(),
       companyLocation: "",
       jobDescription: "",
+      isCurrent: false,
     },
   });
+
+  const { watch, setValue } = form;
+  const isCurrent = watch("isCurrent");
+
+  useEffect(() => {
+    if (isCurrent) {
+      setValue("endDate", new Date());
+    }
+  }, [isCurrent, setValue]);
 
   const { data: experienceData, loading: expoerienceLoading } = useSubscription(
     EXPERIENCE_INFORMATION_BY_USER_ID,
@@ -107,6 +119,7 @@ export const EditExperience = () => {
         endDate: experience.company_end_date,
         companyLocation: experience.company_location,
         jobDescription: experience.company_role_description,
+        isCurrent: experience.isCurrent,
       });
     }
   }, [editData, form]);
@@ -121,13 +134,14 @@ export const EditExperience = () => {
         await updateExperience({
           variables: {
             _eq: experienceId,
-            company_end_date: values.endDate,
+            company_end_date: values.isCurrent ? new Date() : values.endDate,
             company_location: values.companyLocation,
             company_name: values.company,
             company_role: values.role,
             company_role_description: values.jobDescription,
             company_start_date: values.startDate,
             user_id: user?.id,
+            isCurrent: isCurrent,
           },
         });
 
@@ -281,6 +295,7 @@ export const EditExperience = () => {
                               hideAction={() => hideExperienceAction(exp.id)}
                               status={exp.visibility}
                               tab={"experience"}
+                              isCurrent={isCurrent}
                             />
                           </AccordionContent>
                         ))}
@@ -329,6 +344,7 @@ export const EditExperience = () => {
                                   unhideExperienceAction(exp.id)
                                 }
                                 status={exp.visibility}
+                                isCurrent={isCurrent}
                               />
                             </AccordionContent>
                           ))}
@@ -362,18 +378,27 @@ export const EditExperience = () => {
                     placeholder={"Google"}
                     required={true}
                   />
-                  <CalendarField
-                    fieldLabel={"Start date"}
-                    fieldName={"startDate"}
-                    control={form.control}
-                    required={true}
-                  />
-                  <CalendarField
-                    fieldLabel={"End date"}
-                    fieldName={"endDate"}
-                    control={form.control}
-                    required={true}
-                  />
+                  <div className="flex flex-col gap-2">
+                    <CalendarField
+                      fieldLabel={"Start date"}
+                      fieldName={"startDate"}
+                      control={form.control}
+                      required={true}
+                    />
+                    <CheckboxField
+                      fieldLabel="Is this your current job?"
+                      fieldName="isCurrent"
+                      control={form.control}
+                    />
+                  </div>
+                  {!isCurrent && (
+                    <CalendarField
+                      fieldLabel={"End date"}
+                      fieldName={"endDate"}
+                      control={form.control}
+                      required={!isCurrent}
+                    />
+                  )}
                   <TextInput
                     fieldLabel={"Where is the company located?"}
                     fieldName={"companyLocation"}
