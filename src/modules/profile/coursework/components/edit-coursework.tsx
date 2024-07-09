@@ -74,7 +74,6 @@ export const EditCoursework = () => {
     (course: any) => course.visibility === true
   );
 
-  console.log(hiddenCoursework);
   const allCoursework = courserworkData?.coursework?.map(
     (course: any) => course
   );

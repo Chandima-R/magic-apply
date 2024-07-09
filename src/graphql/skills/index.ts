@@ -1,28 +1,56 @@
-import { gql } from "@apollo/client";
+import {gql} from "@apollo/client";
 
 export const SKILLS_INFORMATION_BY_USER_ID = gql`
   subscription skillsInformationByUserId($_eq: String) {
     skill(where: { user_id: { _eq: $_eq } }) {
       id
-      skill_name
+      interests
+      language_skills
+      other_skills
+      technical_skills
       user_id
     }
   }
 `;
 
 export const ADD_NEW_SKILL_BY_USER_ID = gql`
-  mutation addNeSkillByUserId($skill_name: String, $user_id: String) {
-    insert_skill(objects: { skill_name: $skill_name, user_id: $user_id }) {
+  mutation addNeSkillByUserId(
+    $interests: String
+    $language_skills: String
+    $other_skills: String
+    $technical_skills: String
+    $user_id: String
+  ) {
+    insert_skill(
+      objects: {
+        interests: $interests
+        language_skills: $language_skills
+        other_skills: $other_skills
+        technical_skills: $technical_skills
+        user_id: $user_id
+      }
+    ) {
       affected_rows
     }
   }
 `;
 
 export const UPDATE_SKILL_BY_ID = gql`
-  mutation updateSummaryById($skill_name: String, $_eq: uuid!) {
+  mutation updateSummaryById(
+    $_eq: uuid!
+    $interests: String
+    $language_skills: String
+    $other_skills: String
+    $technical_skills: String
+  ) {
     update_skill(
       where: { id: { _eq: $_eq } }
-      _set: { skill_name: $skill_name }
+      _set: {
+        interests: $interests
+        language_skills: $language_skills
+        other_skills: $other_skills
+        technical_skills: $technical_skills
+      }
     ) {
       affected_rows
     }
