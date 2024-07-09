@@ -29,7 +29,7 @@ export const profileLinks = [
   },
   {
     href: "/profile/skills",
-    label: "skills",
+    label: "skills and languages",
   },
   {
     href: "/profile/summary",

@@ -25,17 +25,11 @@ const CustomComponent = ({
   skills,
   summary,
 }: Props) => {
-  console.log(
-    certificate,
-    contact,
-    coursework,
-    education,
-    experience,
-    involvement,
-    project,
-    skills,
-    summary
-  );
+
+  const technicalSkills = skills?.technical_skills?.split(',').map((skill: string) => skill.trim());
+  const otherSkills = skills?.technical_skills?.split(',').map((skill: string) => skill.trim());
+  const lnguageSkills = skills?.technical_skills?.split(',').map((skill: string) => skill.trim());
+  const interests = skills?.technical_skills?.split(',').map((skill: string) => skill.trim());
 
   return (
     <View style={styles.container}>
@@ -146,7 +140,7 @@ const CustomComponent = ({
             <View key={pro.id} style={styles.sectionItem}>
               <View style={styles.sectionItemTitle}>
                 <View style={styles.sectionItemTitle}>
-                  <Text style={styles.sectionItemTitleText}>{pro?.project_role}</Text>
+                  <Text style={styles.sectionItemTitleText}>{pro?.project_name}</Text>
                   <Text style={styles.sectionItemTitleSpan}>, {pro?.project_organization}</Text>
                 </View>
                 <View style={styles.sectionItemContentBlock}>
@@ -190,7 +184,7 @@ const CustomComponent = ({
               <View>
                 <View style={styles.sectionItemContent}>
                   <Text style={styles.sectionItemContentHeader}>
-                    Coursework: {inv?.involvement_college}
+                    {inv?.involvement_college}
                   </Text>
 
                 </View>
@@ -206,36 +200,75 @@ const CustomComponent = ({
       </View>
 
       <View style={styles.sectionContainer}>
-        <Text style={styles.sectionContainerTitle}>Skills, Lanugages and Interests</Text>
-        {education?.map((edu: any) => (
-            <View key={edu.id} style={styles.sectionItem}>
-              <View style={styles.sectionItemTitle}>
-                <View style={styles.sectionItemTitle}>
-                  <Text style={styles.sectionItemTitleText}>{edu?.education_institute}</Text>
-                  <Text style={styles.sectionItemTitleSpan}>, {edu?.education_location}</Text>
-                </View>
-                <View style={styles.sectionItemContentBlock}>
-                  <Text style={styles.sectionItemContentBlockText}>
-                    {format(edu?.education_completion_year, "yyyy")}
-                  </Text>
-                </View>
-              </View>
-              <View>
-                <View style={styles.sectionItemContent}>
-                  <Text style={styles.sectionItemContentHeader}>
-                    Coursework: {edu?.education_major}
-                  </Text>
+        <Text style={styles.sectionContainerTitle}>Skills, Languages and Interests</Text>
 
-                </View>
-                <View style={styles.sectionItemDescription}>
-                  <View style={styles.sectionItemDescriptionDot}/>
-                  <Text style={styles.sectionItemDescriptionText}>
-                    {edu?.educatoin_additional_information.length > 0 ? edu?.educatoin_additional_information : ''}
+        <View style={styles.sectionItem}>
+          <View style={styles.sectionItemTitle}>
+            <View style={styles.sectionItemTitle}>
+              <Text style={styles.sectionItemTitleText}>Technical Skills</Text>
+            </View>
+          </View>
+          <View>
+            {technicalSkills?.map((skill: any, index: number) => (
+                <View key={index} style={styles.sectionItemContentGrid}>
+                  <Text style={styles.sectionItemContentHeader}>
+                    {skill}
                   </Text>
                 </View>
-              </View>
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.sectionItem}>
+          <View style={styles.sectionItemTitle}>
+            <View style={styles.sectionItemTitle}>
+              <Text style={styles.sectionItemTitleText}>Other Skills</Text>
             </View>
-        ))}
+          </View>
+          <View>
+            {otherSkills?.map((skill: any, index: number) => (
+                <View key={index} style={styles.sectionItemContentGrid}>
+                  <Text style={styles.sectionItemContentHeader}>
+                    {skill}
+                  </Text>
+                </View>
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.sectionItem}>
+          <View style={styles.sectionItemTitle}>
+            <View style={styles.sectionItemTitle}>
+              <Text style={styles.sectionItemTitleText}>Languages</Text>
+            </View>
+          </View>
+          <View>
+            {lnguageSkills?.map((skill: any, index: number) => (
+                <View key={index} style={styles.sectionItemContentGrid}>
+                  <Text style={styles.sectionItemContentHeader}>
+                    {skill}
+                  </Text>
+                </View>
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.sectionItem}>
+          <View style={styles.sectionItemTitle}>
+            <View style={styles.sectionItemTitle}>
+              <Text style={styles.sectionItemTitleText}>Interests</Text>
+            </View>
+          </View>
+          <View>
+            {interests?.map((skill: any, index: number) => (
+                <View key={index} style={styles.sectionItemContentGrid}>
+                  <Text style={styles.sectionItemContentHeader}>
+                    {skill}
+                  </Text>
+                </View>
+            ))}
+          </View>
+        </View>
       </View>
 
     </View>
@@ -338,9 +371,17 @@ const styles = StyleSheet.create({
     marginBottom: "5px",
   },
 
+  sectionItemContentGrid:{
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+
   sectionItemContentHeader: {
     fontSize: "10px",
     fontWeight: 500,
+    textTransform: 'capitalize'
   },
 
   sectionItemContentBlock: {
