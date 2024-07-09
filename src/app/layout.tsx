@@ -2,7 +2,7 @@ import './globals.css'
 import {Source_Sans_3} from "next/font/google";
 import React from "react";
 import {ClerkProvider} from "@clerk/nextjs";
-import {Toaster} from "@/components/ui/sonner";
+import {Toaster} from "@/components/ui/toaster";
 import {Navigation} from "@/modules/shared/components/navigation";
 import {GraphqlProvider} from "@/modules/shared/components/graphql-provider";
 

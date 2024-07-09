@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const CONTACT_INFORMATION = gql`
-  subscription contactInformation {
-    contact {
+  subscription contactInformation($_eq: String) {
+    contact(where: { user_id: { _eq: $_eq } }) {
       contact_city
       contact_country
       contact_email

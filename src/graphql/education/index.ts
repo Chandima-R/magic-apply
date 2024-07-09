@@ -8,11 +8,26 @@ export const EDUCATION_INFORMATION_BY_USER_ID = gql`
       education_institute
       education_location
       education_major
-      education_minor
       educatoin_additional_information
       id
       visibility
       user_id
+    }
+  }
+`;
+
+export const VIEW_EDUCATION_BY_ID = gql`
+  subscription viewEducationById($_eq: uuid!) {
+    education(where: { id: { _eq: $_eq } }) {
+      education_completion_year
+      education_gpa
+      education_institute
+      education_location
+      education_major
+      educatoin_additional_information
+      id
+      user_id
+      visibility
     }
   }
 `;
@@ -24,7 +39,6 @@ export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
     $education_institute: String
     $education_location: String
     $education_major: String
-    $education_minor: String
     $educatoin_additional_information: String
     $user_id: String
   ) {
@@ -35,7 +49,6 @@ export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
         education_institute: $education_institute
         education_location: $education_location
         education_major: $education_major
-        education_minor: $education_minor
         educatoin_additional_information: $educatoin_additional_information
         user_id: $user_id
       }
@@ -46,13 +59,12 @@ export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
 `;
 
 export const UPDATE_EDUCATION_BY_ID = gql`
-  mutation MyMutation(
+  mutation updateEducationById(
     $education_completion_year: String
     $education_gpa: String
     $education_institute: String
     $education_location: String
     $education_major: String
-    $education_minor: String
     $educatoin_additional_information: String
     $_eq: uuid!
   ) {
@@ -64,9 +76,7 @@ export const UPDATE_EDUCATION_BY_ID = gql`
         education_institute: $education_institute
         education_location: $education_location
         education_major: $education_major
-        education_minor: $education_minor
         educatoin_additional_information: $educatoin_additional_information
-        visibility: $visibility
       }
     ) {
       affected_rows
@@ -82,7 +92,6 @@ export const DELETE_EDUCATION_BY_PK = gql`
       education_institute
       education_location
       education_major
-      education_minor
       educatoin_additional_information
       user_id
       id
