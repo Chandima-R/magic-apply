@@ -25,22 +25,6 @@ const CustomComponent = ({
   skills,
   summary,
 }: Props) => {
-  console.log(
-    certificate,
-    contact,
-    coursework,
-    education,
-    experience,
-    involvement,
-    project,
-    skills,
-    summary
-  );
-
-  console.log(12, project);
-
-  const skillArr = skills?.skill_name?.split(",");
-
   return (
     <View style={styles.container}>
       <View style={styles.headerSection}>
