@@ -118,7 +118,7 @@ export const ApplyJobs = () => {
   );
 
   useEffect(() => {
-    if (jobsData) {
+    if (jobsData && jobsData.apply_jobs.length > 0) {
       const formattedData = jobsData.apply_jobs.map(
         (job: {
           id: any;
@@ -143,6 +143,21 @@ export const ApplyJobs = () => {
         })
       );
       reset({ items: formattedData });
+    } else {
+      reset({
+        items: [
+          {
+            jobDescription: "",
+            masterResume: "",
+            companyDescription: "",
+            additionalInfo: "",
+            question1: "",
+            question2: "",
+            question3: "",
+            coverLetter: false,
+          },
+        ],
+      });
     }
   }, [jobsData, reset]);
 
@@ -220,6 +235,15 @@ export const ApplyJobs = () => {
         title: "Error",
         description: "There was an error deleting the row.",
       });
+    }
+  };
+
+  const handleDelete = (index: number) => {
+    const item = fields[index];
+    if (item.id) {
+      deleteApplyJobsRowAction(item.id);
+    } else {
+      handleDeleteItem(index);
     }
   };
 
@@ -337,7 +361,7 @@ export const ApplyJobs = () => {
                           <Button
                             type="button"
                             onClick={() => {
-                              handleDeleteItem(index);
+                              handleDelete(index);
                             }}
                             className="rounded-full w-9 h-9 bg-red-400/20 hover:bg-red-400/40 border-red-400/20 p-2"
                             size="sm"
