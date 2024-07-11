@@ -5,16 +5,18 @@ interface Props {
   onSubmit?: () => void;
   type: any;
   disabled?: boolean;
+  size?: "default" | "sm" | "lg" | "icon" | null | undefined;
 }
 
-export const CustomButton = ({ title, onSubmit, type, disabled }: Props) => {
+export const CustomButton = ({ title, onSubmit, type, disabled, size }: Props) => {
   return (
     <Button
       disabled={disabled}
       onSubmit={onSubmit}
       type={type}
+      size={size}
       className={
-        "w-full h-10 uppercase bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue"
+        "w-full uppercase bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue"
       }
     >
       {title}
