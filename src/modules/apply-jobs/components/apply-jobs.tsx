@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, ReactNode, useState } from "react";
+import React, { FC, ReactNode, useState, useEffect } from "react";
 import { Form } from "@/components/ui/form";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -13,13 +13,19 @@ import { CheckboxField } from "@/modules/shared/components/checkbox-input";
 import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
-import { useMutation } from "@apollo/client";
-import { ADD_NEW_APPLY_JOBS_ROW_BY_USER_ID } from "@/graphql/apply-jobs";
+import { useMutation, useSubscription } from "@apollo/client";
+import {
+  ADD_NEW_APPLY_JOBS_ROW_BY_USER_ID,
+  APPLY_JOBS_INFORMATION_BY_USER_ID,
+  UPDATE_APPLY_JOBS_ROW_BY_USER_ID,
+} from "@/graphql/apply-jobs";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
+import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 
 const applyJobSchema = z.object({
   items: z.array(
     z.object({
+      id: z.string().optional(), // Add id field for existing items
       jobDescription: z.string().min(2, {
         message: "Job Description is required",
       }),
@@ -73,6 +79,7 @@ export const ApplyJobs = () => {
     control,
     formState: {},
     handleSubmit,
+    reset,
   } = form;
 
   const { fields, append, remove } = useFieldArray({
@@ -98,28 +105,83 @@ export const ApplyJobs = () => {
   };
 
   const [addApplyJobs] = useMutation(ADD_NEW_APPLY_JOBS_ROW_BY_USER_ID);
+  const [updateApplyJobs] = useMutation(UPDATE_APPLY_JOBS_ROW_BY_USER_ID);
+
+  const { data: jobsData, loading: jobsLoading } = useSubscription(
+    APPLY_JOBS_INFORMATION_BY_USER_ID,
+    {
+      variables: {
+        _eq: user?.id,
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (jobsData) {
+      const formattedData = jobsData.apply_jobs.map(
+        (job: {
+          id: any;
+          job_description: any;
+          master_resume: any;
+          company_description: any;
+          additional_information: any;
+          additional_question_one: any;
+          additional_question_two: any;
+          additional_question_three: any;
+          cover_letter: any;
+        }) => ({
+          id: job.id,
+          jobDescription: job.job_description,
+          masterResume: job.master_resume,
+          companyDescription: job.company_description,
+          additionalInfo: job.additional_information,
+          question1: job.additional_question_one,
+          question2: job.additional_question_two,
+          question3: job.additional_question_three,
+          coverLetter: job.cover_letter,
+        })
+      );
+      reset({ items: formattedData });
+    }
+  }, [jobsData, reset]);
 
   async function onSubmit(data: z.infer<typeof applyJobSchema>) {
-    console.log(data);
     try {
       setIsLoading(true);
       if (!user?.id) {
         throw new Error("User is not authenticated");
       } else {
         for (const item of data.items) {
-          await addApplyJobs({
-            variables: {
-              job_description: item.jobDescription,
-              master_resume: item.masterResume,
-              company_description: item.companyDescription,
-              additional_information: item.additionalInfo,
-              additional_question_one: item.question1,
-              additional_question_two: item.question2,
-              additional_question_three: item.question3,
-              cover_letter: item.coverLetter,
-              user_id: user?.id,
-            },
-          });
+          if (item.id) {
+            await updateApplyJobs({
+              variables: {
+                id: item.id,
+                job_description: item.jobDescription,
+                master_resume: item.masterResume,
+                company_description: item.companyDescription,
+                additional_information: item.additionalInfo,
+                additional_question_one: item.question1,
+                additional_question_two: item.question2,
+                additional_question_three: item.question3,
+                cover_letter: item.coverLetter,
+                user_id: user?.id,
+              },
+            });
+          } else {
+            await addApplyJobs({
+              variables: {
+                job_description: item.jobDescription,
+                master_resume: item.masterResume,
+                company_description: item.companyDescription,
+                additional_information: item.additionalInfo,
+                additional_question_one: item.question1,
+                additional_question_two: item.question2,
+                additional_question_three: item.question3,
+                cover_letter: item.coverLetter,
+                user_id: user?.id,
+              },
+            });
+          }
         }
         toast({
           variant: "default",
@@ -139,143 +201,155 @@ export const ApplyJobs = () => {
   }
 
   return (
-    <div>
-      <div className={"mb-8"}>
-        <p className={"text-2xl font-semibold"}>Apply Jobs</p>
-      </div>
-      <Form {...form}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <ScrollBar>
-            <div className={"grid grid-cols-9 gap-4"}>
-              <p className={"text-sm font-semibold"}>
-                Job Description (Paste or Link)
-                <RequiredIndicator />
-              </p>
-              <p className={"text-sm font-semibold"}>
-                Master Resume Or Manual (Input or Paste)
-                <RequiredIndicator />
-              </p>
-              <p className={"text-sm font-semibold"}>
-                Description of the Company
-                <RequiredIndicator />
-              </p>
-              <p className={"text-sm font-semibold"}>
-                Additional Information (Highlight any recent projects or
-                experience)
-              </p>
-              <p className={"text-sm font-semibold"}>
-                Additional Questions Asked 1
-              </p>
-              <p className={"text-sm font-semibold"}>
-                Additional Questions Asked 2
-              </p>
-              <p className={"text-sm font-semibold"}>
-                Additional Questions Asked 3
-              </p>
-              <p className={"text-sm font-semibold"}>Cover Letter Needed</p>
+    <>
+      {jobsLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          <div>
+            <div className={"mb-8"}>
+              <p className={"text-2xl font-semibold"}>Apply Jobs</p>
             </div>
-            {fields.map((item, index) => (
-              <div
-                key={item.id}
-                className="grid grid-cols-9 gap-4 items-center"
-              >
-                <TextInput
-                  fieldLabel={""}
-                  fieldName={`items[${index}].jobDescription`}
-                  control={control}
-                  placeholder={"Paste the JD (or link of JD here)"}
-                />
-                <TextInput
-                  fieldLabel={""}
-                  fieldName={`items[${index}].masterResume`}
-                  control={control}
-                  placeholder={"Keep blank if master resume is up to date"}
-                />
-                <TextInput
-                  fieldLabel={""}
-                  fieldName={`items[${index}].companyDescription`}
-                  control={control}
-                  placeholder={
-                    "Describe in few sentences or paste the link of home page"
-                  }
-                />
-                <TextInput
-                  fieldLabel={""}
-                  fieldName={`items[${index}].additionalInfo`}
-                  control={control}
-                  placeholder={"Describe if any"}
-                />
-                <TextInput
-                  fieldLabel={""}
-                  fieldName={`items[${index}].question1`}
-                  control={control}
-                  placeholder={"Write / Paste the Q here"}
-                />
-                <TextInput
-                  fieldLabel={""}
-                  fieldName={`items[${index}].question2`}
-                  control={control}
-                  placeholder={"Write / Paste the Q here"}
-                />
-                <TextInput
-                  fieldLabel={""}
-                  fieldName={`items[${index}].question3`}
-                  control={control}
-                  placeholder={"Write / Paste the Q here"}
-                />
-                <CheckboxField
-                  fieldLabel={""}
-                  fieldName={`items[${index}].coverLetter`}
-                  control={control}
-                />
-
-                <div className="flex gap-4 cursor-pointer items-center justify-center">
-                  <Button
-                    type="button"
-                    onClick={handleAddItem}
-                    className="rounded-full w-9 h-9 bg-blue-400/20 hover:bg-blue-400/40 border-blue-400/20 p-2"
-                    size="sm"
-                    variant={"outline"}
-                  >
-                    <PlusCircle className="size-4" />
-                  </Button>
-                  {fields.length > 1 && (
-                    <Button
-                      type="button"
-                      onClick={() => handleDeleteItem(index)}
-                      className="rounded-full w-9 h-9 bg-red-400/20 hover:bg-red-400/40 border-red-400/20 p-2"
-                      size="sm"
-                      variant="destructive"
+            <Form {...form}>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <ScrollBar>
+                  <div className={"grid grid-cols-9 gap-4"}>
+                    <p className={"text-sm font-semibold"}>
+                      Job Description (Paste or Link)
+                      <RequiredIndicator />
+                    </p>
+                    <p className={"text-sm font-semibold"}>
+                      Master Resume Or Manual (Input or Paste)
+                      <RequiredIndicator />
+                    </p>
+                    <p className={"text-sm font-semibold"}>
+                      Description of the Company
+                      <RequiredIndicator />
+                    </p>
+                    <p className={"text-sm font-semibold"}>
+                      Additional Information (Highlight any recent projects or
+                      experience)
+                    </p>
+                    <p className={"text-sm font-semibold"}>
+                      Additional Questions Asked 1
+                    </p>
+                    <p className={"text-sm font-semibold"}>
+                      Additional Questions Asked 2
+                    </p>
+                    <p className={"text-sm font-semibold"}>
+                      Additional Questions Asked 3
+                    </p>
+                    <p className={"text-sm font-semibold"}>
+                      Cover Letter Needed
+                    </p>
+                  </div>
+                  {fields.map((item, index) => (
+                    <div
+                      key={item.id}
+                      className="grid grid-cols-9 gap-4 items-center"
                     >
-                      <Trash2 className="size-4 text-black" />
-                    </Button>
-                  )}
+                      <TextInput
+                        fieldLabel={""}
+                        fieldName={`items[${index}].jobDescription`}
+                        control={control}
+                        placeholder={"Paste the JD (or link of JD here)"}
+                      />
+                      <TextInput
+                        fieldLabel={""}
+                        fieldName={`items[${index}].masterResume`}
+                        control={control}
+                        placeholder={
+                          "Keep blank if master resume is up to date"
+                        }
+                      />
+                      <TextInput
+                        fieldLabel={""}
+                        fieldName={`items[${index}].companyDescription`}
+                        control={control}
+                        placeholder={
+                          "Describe in few sentences or paste the link of home page"
+                        }
+                      />
+                      <TextInput
+                        fieldLabel={""}
+                        fieldName={`items[${index}].additionalInfo`}
+                        control={control}
+                        placeholder={"Describe if any"}
+                      />
+                      <TextInput
+                        fieldLabel={""}
+                        fieldName={`items[${index}].question1`}
+                        control={control}
+                        placeholder={"Write / Paste the Q here"}
+                      />
+                      <TextInput
+                        fieldLabel={""}
+                        fieldName={`items[${index}].question2`}
+                        control={control}
+                        placeholder={"Write / Paste the Q here"}
+                      />
+                      <TextInput
+                        fieldLabel={""}
+                        fieldName={`items[${index}].question3`}
+                        control={control}
+                        placeholder={"Write / Paste the Q here"}
+                      />
+                      <CheckboxField
+                        fieldLabel={""}
+                        fieldName={`items[${index}].coverLetter`}
+                        control={control}
+                      />
+
+                      <div className="flex gap-4 cursor-pointer items-center justify-center">
+                        <Button
+                          type="button"
+                          onClick={handleAddItem}
+                          className="rounded-full w-9 h-9 bg-blue-400/20 hover:bg-blue-400/40 border-blue-400/20 p-2"
+                          size="sm"
+                          variant={"outline"}
+                        >
+                          <PlusCircle className="size-4" />
+                        </Button>
+                        {fields.length > 1 && (
+                          <Button
+                            type="button"
+                            onClick={() => handleDeleteItem(index)}
+                            className="rounded-full w-9 h-9 bg-red-400/20 hover:bg-red-400/40 border-red-400/20 p-2"
+                            size="sm"
+                            variant={"outline"}
+                          >
+                            <Trash2 className="size-4" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </ScrollBar>
+
+                <div className="flex justify-end w-full mt-8">
+                  <div className="w-38">
+                    {isLoading ? (
+                      <LoadingButton />
+                    ) : (
+                      <>
+                        <CustomButton
+                          type="submit"
+                          size={"sm"}
+                          title="Apply / Bulk Apply"
+                        />
+                      </>
+                    )}
+                  </div>
+
+                  {/*<div className="w-38">*/}
+                  {/*    <Button type="button" variant="outline" size={'sm'}>Excel Upload</Button>*/}
+                  {/*</div>*/}
                 </div>
-              </div>
-            ))}
-          </ScrollBar>
-
-          <div className="flex justify-end w-full mt-8">
-            <div className="w-38">
-              {isLoading ? (
-                <LoadingButton />
-              ) : (
-                <>
-                  <CustomButton
-                    type="submit"
-                    size={"sm"}
-                    title="Apply / Bulk Apply"
-                  />
-                </>
-              )}
-            </div>
-
-            {/*<div className="w-38">*/}
-            {/*    <Button type="button" variant="outline" size={'sm'}>Excel Upload</Button>*/}
-            {/*</div>*/}
+              </form>
+            </Form>
           </div>
-        </form>
-      </Form>
-    </div>
+        </>
+      )}
+    </>
   );
 };
