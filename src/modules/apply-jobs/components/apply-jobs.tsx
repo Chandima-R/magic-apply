@@ -1,16 +1,16 @@
 'use client'
 
-import React, { FC, ReactNode } from "react";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
-import { PlusCircle, Trash2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {TextArea} from "@/modules/shared/components/text-area";
+import React, {FC, ReactNode} from "react";
+import {Form} from "@/components/ui/form";
+import {PlusCircle, Trash2} from "lucide-react";
+import {useFieldArray, useForm} from "react-hook-form";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Button} from "@/components/ui/button";
+import {CustomButton} from "@/modules/shared/components/custom-button";
+import {TextInput} from "@/modules/shared/components/text-input";
+import {CheckboxField} from "@/modules/shared/components/checkbox-input";
+import {RequiredIndicator} from "@/modules/shared/components/required-indicator";
 
 const applyJobSchema = z.object({
     items: z.array(
@@ -45,7 +45,7 @@ interface ScrollBarProps {
     children: ReactNode;
 }
 
-const ScrollBar: FC<ScrollBarProps> = ({ children }) => (
+const ScrollBar: FC<ScrollBarProps> = ({children}) => (
     <div className="overflow-auto h-auto p-4 rounded">
         {children}
     </div>
@@ -70,11 +70,11 @@ export const ApplyJobs = () => {
 
     const {
         control,
-        formState: { errors },
+        formState: {},
         handleSubmit,
     } = form;
 
-    const { fields, append, remove } = useFieldArray({
+    const {fields, append, remove} = useFieldArray({
         control,
         name: "items",
     });
@@ -108,186 +108,125 @@ export const ApplyJobs = () => {
             <Form {...form}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <ScrollBar>
+                        <div className={'grid grid-cols-9 gap-4'}>
+                            <p className={'text-sm font-semibold'}>
+                                Job Description (Paste or Link)
+                                <RequiredIndicator />
+                            </p>
+                            <p className={'text-sm font-semibold'}>
+                                Master Resume Or Manual (Input or Paste)
+                                <RequiredIndicator />
+                            </p>
+                            <p className={'text-sm font-semibold'}>
+                                Description of the Company
+                                <RequiredIndicator />
+                            </p>
+                            <p className={'text-sm font-semibold'}>
+                                Additional Information (Highlight any recent projects or experience)
+                            </p>
+                            <p className={'text-sm font-semibold'}>
+                                Additional Questions Asked 1
+                            </p>
+                            <p className={'text-sm font-semibold'}>
+                                Additional Questions Asked 2
+                            </p>
+                            <p className={'text-sm font-semibold'}>
+                                Additional Questions Asked 3
+                            </p>
+                            <p className={'text-sm font-semibold'}>
+                                Cover Letter Needed
+                            </p>
+                        </div>
                         {fields.map((item, index) => (
                             <div
                                 key={item.id}
                                 className="grid grid-cols-9 gap-4 items-center"
                             >
-                                <FormField
+                                <TextInput
+                                    fieldLabel={''}
+                                    fieldName={`items[${index}].jobDescription`}
                                     control={control}
-                                    name={`items[${index}].jobDescription`}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Job Description (Paste or Link) <RequiredIndicator />
-                                            </FormLabel>
-                                            <FormControl>
-                                                <TextArea fieldLabel={""} fieldName={""} control={undefined}
-                                                          required={false}
-                                                          placeholder="Paste the JD (or link of JD here)" {...field} />
-                                            </FormControl>
-                                            <FormMessage>
-                                                {errors?.items?.[index]?.jobDescription?.message}
-                                            </FormMessage>
-                                        </FormItem>
-                                    )}
+                                    placeholder={"Paste the JD (or link of JD here)"}/>
+                                <TextInput
+                                    fieldLabel={''}
+                                    fieldName={`items[${index}].masterResume`}
+                                    control={control}
+                                    placeholder={"Keep black if master resume is up to date"}
+                                />
+                                <TextInput
+                                    fieldLabel={''}
+                                    fieldName={`items[${index}].companyDescription`}
+                                    control={control}
+                                    placeholder={"Describe in few sentences or paste the link of home page"}
+                                />
+                                <TextInput
+                                    fieldLabel={''}
+                                    fieldName={`items[${index}].jobDescription`}
+                                    control={control}
+                                    placeholder={"Describe if any"}
+                                />
+                                <TextInput
+                                    fieldLabel={''}
+                                    fieldName={`items[${index}].question1`}
+                                    control={control}
+                                    placeholder={"Write / Paste the Q here"}
+                                />
+                                <TextInput
+                                    fieldLabel={''}
+                                    fieldName={`items[${index}].question2`}
+                                    control={control}
+                                    placeholder={"Write / Paste the Q here"}
+                                />
+                                <TextInput
+                                    fieldLabel={''}
+                                    fieldName={`items[${index}].question3`}
+                                    control={control}
+                                    placeholder={"Write / Paste the Q here"}
+                                />
+                                <CheckboxField
+                                    fieldLabel={''}
+                                    fieldName={`items[${index}].coverLetter`}
+                                    control={control}
                                 />
 
-                                <FormField
-                                    control={control}
-                                    name={`items[${index}].masterResume`}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Master Resume Or Manual (Input or Paste) <RequiredIndicator />
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Keep black if master resume is up to date" {...field} />
-                                            </FormControl>
-                                            <FormMessage>
-                                                {errors?.items?.[index]?.masterResume?.message}
-                                            </FormMessage>
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={control}
-                                    name={`items[${index}].companyDescription`}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Description of the Company <RequiredIndicator />
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Describe in few sentences or paste the link of home page" {...field} />
-                                            </FormControl>
-                                            <FormMessage>
-                                                {errors?.items?.[index]?.companyDescription?.message}
-                                            </FormMessage>
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={control}
-                                    name={`items[${index}].additionalInfo`}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Additional Information (Highlight any recent projects or experience) <RequiredIndicator />
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Describe if any" {...field} />
-                                            </FormControl>
-                                            <FormMessage>
-                                                {errors?.items?.[index]?.additionalInfo?.message}
-                                            </FormMessage>
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={control}
-                                    name={`items[${index}].question1`}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Additional Questions Asked 1 <RequiredIndicator />
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Write / Paste the Q here" {...field} />
-                                            </FormControl>
-                                            <FormMessage>
-                                                {errors?.items?.[index]?.question1?.message}
-                                            </FormMessage>
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={control}
-                                    name={`items[${index}].question2`}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Additional Questions Asked 2 <RequiredIndicator />
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Write / Paste the Q here" {...field} />
-                                            </FormControl>
-                                            <FormMessage>
-                                                {errors?.items?.[index]?.question2?.message}
-                                            </FormMessage>
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={control}
-                                    name={`items[${index}].question3`}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Additional Questions Asked 3 <RequiredIndicator />
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Write / Paste the Q here" {...field} />
-                                            </FormControl>
-                                            <FormMessage>
-                                                {errors?.items?.[index]?.question3?.message}
-                                            </FormMessage>
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={control}
-                                    name={`items[${index}].coverLetter`}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Cover Letter Needed <RequiredIndicator />
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Checkbox {...field} />
-                                            </FormControl>
-                                            <FormMessage>
-                                                {errors?.items?.[index]?.coverLetter?.message}
-                                            </FormMessage>
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <div className="flex gap-4 cursor-pointer mt-8">
+                                <div className="flex gap-4 cursor-pointer items-center justify-center">
                                     <Button
                                         type="button"
                                         onClick={handleAddItem}
-                                        className="gap-2"
+                                        className="rounded-full w-9 h-9 bg-blue-400/20 hover:bg-blue-400/40 border-blue-400/20 p-2"
                                         size="sm"
+                                        variant={'outline'}
                                     >
-                                        <PlusCircle className="size-4" />
-                                        <p className="text-sm">Add</p>
+                                        <PlusCircle className="size-4"/>
                                     </Button>
                                     {fields.length > 1 && (
                                         <Button
                                             type="button"
                                             onClick={() => handleDeleteItem(index)}
-                                            className="gap-2"
+                                            className="rounded-full w-9 h-9 bg-red-400/20 hover:bg-red-400/40 border-red-400/20 p-2"
                                             size="sm"
                                             variant="destructive"
                                         >
-                                            <Trash2 className="size-4" />
-                                            <p className="text-sm">Remove</p>
+                                            <Trash2 className="size-4 text-black"/>
                                         </Button>
                                     )}
                                 </div>
                             </div>
                         ))}
                     </ScrollBar>
-                    <div className="w-full flex items-center justify-end gap-4 mt-4">
-                        <Button type="submit">Apply / Bulk Apply</Button>
-                        <Button type="button" variant="outline">Excel Upload</Button>
+
+                    <div className="flex justify-end w-full mt-8 gap-4">
+                        <div className="w-38">
+                            <CustomButton
+                                type="submit"
+                                size={'sm'}
+                                title="Apply / Bulk Apply"
+                            />
+                        </div>
+
+                        {/*<div className="w-38">*/}
+                        {/*    <Button type="button" variant="outline" size={'sm'}>Excel Upload</Button>*/}
+                        {/*</div>*/}
                     </div>
                 </form>
             </Form>
