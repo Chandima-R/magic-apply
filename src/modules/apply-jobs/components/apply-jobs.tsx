@@ -17,6 +17,7 @@ import { useMutation, useSubscription } from "@apollo/client";
 import {
   ADD_NEW_APPLY_JOBS_ROW_BY_USER_ID,
   APPLY_JOBS_INFORMATION_BY_USER_ID,
+  DELETE_APPLY_JOBS_ROW_BY_PK,
   UPDATE_APPLY_JOBS_ROW_BY_USER_ID,
 } from "@/graphql/apply-jobs";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
@@ -200,6 +201,28 @@ export const ApplyJobs = () => {
     }
   }
 
+  const [deleteApplyJobsRow] = useMutation(DELETE_APPLY_JOBS_ROW_BY_PK);
+  const deleteApplyJobsRowAction = async (id: string) => {
+    try {
+      await deleteApplyJobsRow({
+        variables: {
+          id,
+        },
+      });
+      toast({
+        variant: "default",
+        title: "Success.",
+        description: "Row deleted successfully.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "There was an error deleting the row.",
+      });
+    }
+  };
+
   return (
     <>
       {jobsLoading ? (
@@ -313,7 +336,9 @@ export const ApplyJobs = () => {
                         {fields.length > 1 && (
                           <Button
                             type="button"
-                            onClick={() => handleDeleteItem(index)}
+                            onClick={() => {
+                              handleDeleteItem(index);
+                            }}
                             className="rounded-full w-9 h-9 bg-red-400/20 hover:bg-red-400/40 border-red-400/20 p-2"
                             size="sm"
                             variant={"outline"}

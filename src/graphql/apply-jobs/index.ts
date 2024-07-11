@@ -48,7 +48,7 @@ export const ADD_NEW_APPLY_JOBS_ROW_BY_USER_ID = gql`
 `;
 
 export const UPDATE_APPLY_JOBS_ROW_BY_USER_ID = gql`
-  mutation MyMutation(
+  mutation updateApplyJobsRowByUserId(
     $additional_information: String
     $additional_question_one: String
     $additional_question_three: String
@@ -73,6 +73,26 @@ export const UPDATE_APPLY_JOBS_ROW_BY_USER_ID = gql`
       }
     ) {
       affected_rows
+    }
+  }
+`;
+
+export const DELETE_APPLY_JOBS_ROW_BY_PK = gql`
+  mutation deleteApplyJobsRowByPk($_eq: uuid!) {
+    delete_apply_jobs(where: { id: { _eq: $_eq } }) {
+      affected_rows
+      returning {
+        additional_information
+        additional_question_one
+        additional_question_three
+        additional_question_two
+        company_description
+        cover_letter
+        id
+        job_description
+        master_resume
+        user_id
+      }
     }
   }
 `;
