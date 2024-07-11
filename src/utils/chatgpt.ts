@@ -1,5 +1,4 @@
-const OPENAI_KEY = "sk-proj-yRZ2q9k9wGVxGU7Goxg0T3BlbkFJDcDoe4ME01rjQjw9I4eb";
-
+const OPENAI_KEY = process.env.NEXT_PUBLIC_OPENAI_PI_KEY
 export async function generateResponse(message: string) {
   const response = await fetch(
     "https://api.openai.com/v1/chat/completions", // Use the chat completions endpoint
