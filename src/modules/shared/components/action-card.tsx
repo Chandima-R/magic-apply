@@ -52,50 +52,54 @@ export const ActionCard = ({
       }`}
     >
       <div className="mb-2">
-        <div className="flex items-center justify-between">
-          <h2 className="font-semibold text-lg capitalize">{role}</h2>
-          <p className="font-semibold">
-            {fromDate && (
-              <span>
+        <div className="flex items-start justify-between mb-2">
+          <div className={'w-full'}>
+            <h2 className="font-semibold text-lg capitalize leading-4">{role}</h2>
+          </div>
+          <div className={'w-full flex justify-end'}>
+            <p className="font-semibold">
+              {fromDate && (
+                  <span>
                 {fromDate?.length > 4 ? (
-                  <>
-                    {format(fromDate, "dd MMMM, yyyy")} {" - "}
-                  </>
+                    <>
+                      {format(fromDate, "dd MMMM, yyyy")} {" - "}
+                    </>
                 ) : (
-                  <>{fromDate}</>
+                    <>{fromDate}</>
                 )}
               </span>
-            )}
+              )}
 
-            {toDate ? (
-              <>
-                <span>{format(toDate, "dd MMMM, yyyy")}</span>
-              </>
-            ) : (
-              ""
-            )}
+              {toDate ? (
+                  <>
+                    <span>{format(toDate, "dd MMMM, yyyy")}</span>
+                  </>
+              ) : (
+                  ""
+              )}
 
-            {isCurrent === true && <>Present</>}
-          </p>
+              {isCurrent === true && <>Present</>}
+            </p>
+          </div>
         </div>
         <p className="font-semibold capitalize flex gap-2">
           {company}
           {country && (
-            <>
-              , <span className="font-normal"> {country}</span>
-            </>
+              <>
+                , <span className="font-normal"> {country}</span>
+              </>
           )}
         </p>
       </div>
       <div className="flex items-between gap-4">
         {status && (
-          <>
-            <Link href={`/profile/${tab}/${id}/edit`}>
-              <Button
-                size={"sm"}
-                className="capitalize text-sm bg-honoluluBlue hover:bg-blue-700 gap-2"
-              >
-                <Pencil className="size-3" />
+            <>
+              <Link href={`/profile/${tab}/${id}/edit`}>
+                <Button
+                    size={"sm"}
+                    className="capitalize text-sm bg-honoluluBlue hover:bg-blue-700 gap-2"
+                >
+                  <Pencil className="size-3" />
                 edit
               </Button>
             </Link>
