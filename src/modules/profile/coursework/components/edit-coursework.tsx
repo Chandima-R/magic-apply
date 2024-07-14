@@ -26,7 +26,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
-import { usePathname } from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 
 const courseworkSchema = z.object({
@@ -93,6 +93,7 @@ export const EditCoursework = () => {
   }, [editData, form]);
 
   const [updateCoursework] = useMutation(UPDATE_COURSEWORK_BY_ID);
+  const router = useRouter()
   async function onSubmit(values: z.infer<typeof courseworkSchema>) {
     try {
       setIsLoading(true);
@@ -116,6 +117,7 @@ export const EditCoursework = () => {
         });
       }
       form.reset();
+      router.push('/profile/coursework')
     } catch (error) {
       console.error(error);
       toast({

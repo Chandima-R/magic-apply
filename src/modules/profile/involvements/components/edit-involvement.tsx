@@ -29,7 +29,7 @@ import {
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { ProfileActiveLinks } from "../../../shared/components/profile-active-links";
-import { usePathname } from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 
 const involvementSchema = z
   .object({
@@ -115,6 +115,7 @@ export const EditInvolvement = () => {
   }, [editData, form]);
 
   const [editInvolvement] = useMutation(UPDATE_INVOLVEMENT_BY_ID);
+  const router = useRouter()
   async function onSubmit(values: z.infer<typeof involvementSchema>) {
     try {
       setIsLoading(true);
@@ -141,6 +142,7 @@ export const EditInvolvement = () => {
         });
       }
       form.reset();
+      router.push('/profile/involvement')
     } catch (error) {
       console.error(error);
       toast({
