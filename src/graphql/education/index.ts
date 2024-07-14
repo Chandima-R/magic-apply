@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const EDUCATION_INFORMATION_BY_USER_ID = gql`
   subscription educationInformation($_eq: String) {
-    education(where: { user_id: { _eq: $_eq } }) {
+    education(where: { user_id: { _eq: $_eq } }, order_by: {education_completion_year: desc}) {
       education_completion_year
       education_gpa
       education_institute

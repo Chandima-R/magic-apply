@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const PROJECT_INFORMATION_BY_USER_ID = gql`
   subscription projectInformation($_eq: String) {
-    project(where: { user_id: { _eq: $_eq } }) {
+    project(where: { user_id: { _eq: $_eq } }, order_by: { project_end_date: desc }) {
       id
       project_end_date
       project_name

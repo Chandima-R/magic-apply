@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const CERTIFICATE_INFORMATION_BY_USER_ID = gql`
   subscription certificateInformation($_eq: String) {
-    certification(where: { user_id: { _eq: $_eq } }) {
+    certification(where: { user_id: { _eq: $_eq } }, order_by: {certification_completion_year: desc}) {
       certification_completion_year
       certification_description
       visibility

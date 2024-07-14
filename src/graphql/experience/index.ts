@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const EXPERIENCE_INFORMATION_BY_USER_ID = gql`
   subscription experienceInformation($_eq: String) {
-    experience(where: { user_id: { _eq: $_eq } }) {
+    experience(where: { user_id: { _eq: $_eq } }, order_by: { company_end_date: desc }) {
       company_end_date
       company_location
       company_name
@@ -17,7 +17,7 @@ export const EXPERIENCE_INFORMATION_BY_USER_ID = gql`
   }
 `;
 
-export const VIEW_EXPERIECE_BY_ID = gql`
+export const VIEW_EXPERIENCE_BY_ID = gql`
   subscription viewExperienceById($_eq: uuid!) {
     experience(where: { id: { _eq: $_eq } }) {
       company_end_date
@@ -91,7 +91,7 @@ export const UPDATE_EXPERIENCE_BY_ID = gql`
 `;
 
 export const DELETE_EXPERIENCE_BY_PK = gql`
-  mutation deleteEperienceByPk($id: uuid!) {
+  mutation deleteExperienceByPk($id: uuid!) {
     delete_experience_by_pk(id: $id) {
       company_end_date
       company_location

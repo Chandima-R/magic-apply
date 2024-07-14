@@ -16,7 +16,7 @@ import {
   EXPERIENCE_INFORMATION_BY_USER_ID,
   HIDE_EXPERIENCE_BY_PK,
   UPDATE_EXPERIENCE_BY_ID,
-  VIEW_EXPERIECE_BY_ID,
+  VIEW_EXPERIENCE_BY_ID,
 } from "@/graphql/experience";
 import {
   Accordion,
@@ -90,7 +90,7 @@ export const EditExperience = () => {
     }
   );
 
-  const { data: editData } = useSubscription(VIEW_EXPERIECE_BY_ID, {
+  const { data: editData } = useSubscription(VIEW_EXPERIENCE_BY_ID, {
     variables: {
       _eq: experienceId,
     },
