@@ -45,6 +45,8 @@ export const ActionCard = ({
   tab,
   isCurrent,
 }: Props) => {
+
+  const currentDate = new Date()
   return (
     <div
       className={`border p-2 rounded shadow cursor-pointer ${
@@ -57,7 +59,7 @@ export const ActionCard = ({
             <h2 className="font-semibold text-lg capitalize leading-4">{role}</h2>
           </div>
           <div className={'w-full flex justify-end'}>
-            <p className="font-semibold">
+            <p className="font-semibold text-right">
               {fromDate && (
                   <span>
                 {fromDate?.length > 4 ? (
@@ -72,7 +74,16 @@ export const ActionCard = ({
 
               {toDate ? (
                   <>
-                    <span>{format(toDate, "dd MMMM, yyyy")}</span>
+                    {format(toDate, "dd MMMM, yyyy") === format(currentDate, "dd MMMM, yyyy") ? (
+                        <span>current</span>
+                    ) : (
+                        <>
+                          {toDate?.length > 4 ? (
+                              <span>{format(toDate, "dd MMMM, yyyy")}</span>
+                          ) : (
+                              <span>{format(toDate, "yyyy")}</span>
+                          )}</>
+                    )}
                   </>
               ) : (
                   ""
