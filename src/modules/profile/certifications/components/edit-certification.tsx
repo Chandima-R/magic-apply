@@ -27,7 +27,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
-import { usePathname } from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import { ProfileActiveLinks } from "../../../shared/components/profile-active-links";
 
 const certificationSchema = z.object({
@@ -95,6 +95,7 @@ export const EditCertificate = () => {
   }, [editData, form]);
 
   const [updateCertificate] = useMutation(UPDATE_CERTIFICATE_BY_ID);
+  const router = useRouter()
   async function onSubmit(values: z.infer<typeof certificationSchema>) {
     try {
       setIsLoading(true);
@@ -119,6 +120,7 @@ export const EditCertificate = () => {
         });
       }
       form.reset();
+      router.push('/profile/certification')
     } catch (error) {
       console.error(error);
       toast({

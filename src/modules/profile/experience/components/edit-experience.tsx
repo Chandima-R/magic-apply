@@ -27,7 +27,7 @@ import {
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
-import { usePathname } from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { CheckboxField } from "@/modules/shared/components/checkbox-input";
@@ -125,6 +125,7 @@ export const EditExperience = () => {
   }, [editData, form]);
 
   const [updateExperience] = useMutation(UPDATE_EXPERIENCE_BY_ID);
+  const router = useRouter()
   async function onSubmit(values: z.infer<typeof experienceSchema>) {
     try {
       setIsLoading(true);
@@ -152,6 +153,7 @@ export const EditExperience = () => {
         });
       }
       form.reset();
+      router.push('/profile/experience')
     } catch (error) {
       console.error(error);
       toast({

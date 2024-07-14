@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
-import { usePathname } from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import { ProfileActiveLinks } from "../../../shared/components/profile-active-links";
 
 const educationSchema = z.object({
@@ -102,6 +102,7 @@ export const EditEducation = () => {
   }, [editData, form]);
 
   const [updateEducation] = useMutation(UPDATE_EDUCATION_BY_ID);
+  const router = useRouter()
   async function onSubmit(values: z.infer<typeof educationSchema>) {
     try {
       setIsLoading(true);
@@ -127,6 +128,7 @@ export const EditEducation = () => {
         });
       }
       form.reset();
+      router.push('/profile/education')
     } catch (error) {
       console.error(error);
       toast({
