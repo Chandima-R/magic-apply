@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const INVOLVEMENT_INFORMATION_BY_USER_ID = gql`
   subscription involvementInformationByUserId($_eq: String) {
-    involvement(where: { user_id: { _eq: $_eq } }) {
+    involvement(where: { user_id: { _eq: $_eq } }, order_by: {involvement_end_date: desc}) {
       involevement_organization
       id
       involvement_college

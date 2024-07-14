@@ -117,7 +117,7 @@ const CustomComponent = ({
               <View>
                 <View style={styles.sectionItemContent}>
                   <Text style={styles.sectionItemContentHeader}>
-                    Coursework: {edu?.education_major}
+                    Specialization: {edu?.education_major}
                   </Text>
 
                 </View>
