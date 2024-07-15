@@ -27,12 +27,17 @@ import {
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
+import { SelectInput } from "@/modules/shared/components/select-input";
+import { EDUCATION_INFORMATION_BY_USER_ID } from "@/graphql/education";
+import { CheckboxField } from "@/modules/shared/components/checkbox-input";
 
 const courseworkSchema = z.object({
   courseName: z.string().nonempty("Course name is required."),
   courseInstitute: z.string().nonempty("Course issued institute is required."),
   courseCompletionDate: z.string().nonempty("Course issued date is required."),
+  isExistingEducation: z.boolean().default(false).optional(),
 });
+
 export const Coursework = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -44,6 +49,7 @@ export const Coursework = () => {
       courseName: "",
       courseInstitute: "",
       courseCompletionDate: "",
+      isExistingEducation: false,
     },
   });
 
@@ -84,6 +90,7 @@ export const Coursework = () => {
             course_institute: values.courseInstitute,
             course_name: values.courseName,
             user_id: user?.id,
+            isExistingEducation: values.isExistingEducation,
           },
         });
 
@@ -128,10 +135,10 @@ export const Coursework = () => {
     }
   };
 
-  const [hdieCoursework] = useMutation(HIDE_COURSEWORK_BY_PK);
+  const [hideCoursework] = useMutation(HIDE_COURSEWORK_BY_PK);
   const hideCourseworkAction = async (id: string) => {
     try {
-      await hdieCoursework({
+      await hideCoursework({
         variables: {
           id,
           visibility: false,
@@ -140,7 +147,7 @@ export const Coursework = () => {
       toast({
         variant: "default",
         title: "Success.",
-        description: "Your coursework was hide from the coursework list.",
+        description: "Your coursework was hidden from the coursework list.",
       });
     } catch (error) {
       toast({
@@ -153,7 +160,7 @@ export const Coursework = () => {
 
   const unhideCourseworkAction = async (id: string) => {
     try {
-      await hdieCoursework({
+      await hideCoursework({
         variables: {
           id,
           visibility: true,
@@ -175,6 +182,15 @@ export const Coursework = () => {
 
   const path = usePathname();
   const activeLink = path.split("/")[2];
+
+  const { data: educationData } = useSubscription(
+    EDUCATION_INFORMATION_BY_USER_ID,
+    {
+      variables: {
+        _eq: user?.id,
+      },
+    }
+  );
 
   return (
     <>
@@ -272,12 +288,13 @@ export const Coursework = () => {
                               }
                               unhideTitle={"Unhide your coursework."}
                               unhideDescription={
-                                "Are you sure to unhide this coursework. This action cannot be undone and it will completely add this coursework to your coursework list."
+                                "Are you sure to unhide this coursework. This action cannot be undone and it will completely add this coursework from your coursework."
                               }
                               unhideAction={() =>
                                 unhideCourseworkAction(coursework.id)
                               }
                               status={coursework.visibility}
+                              tab={"hidden-coursework"}
                             />
                           </AccordionContent>
                         ))}
@@ -289,33 +306,54 @@ export const Coursework = () => {
             )}
           </div>
         </div>
-        <div className={"w-full lg:w-2/3 px-2 lg:px-6 py-4 lg:py-0"}>
+        <div className={"w-full lg:w-2/3 lg:ml-4"}>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className={"gap-4 lg:gap-8 grid grid-cols-1 w-full"}>
-                <TextInput
-                  fieldLabel={"What was the course name?"}
-                  fieldName={"courseName"}
-                  control={form.control}
-                  placeholder={"Introduction to Computer Science"}
-                  required={true}
-                />
-                <TextInput
-                  fieldLabel={"Where did you take the course?"}
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-8 w-full"
+            >
+              <TextInput
+                fieldName={"courseName"}
+                fieldLabel={"What was the course name?"}
+                placeholder={"Introduction to Engineering Design"}
+                control={form.control}
+                required={true}
+              />
+              <CheckboxField
+                fieldName={"isExistingEducation"}
+                fieldLabel={"Use your existing educational institution?"}
+                control={form.control}
+              />
+              {form.watch("isExistingEducation") ? (
+                <SelectInput
                   fieldName={"courseInstitute"}
+                  fieldLabel={"Select Institute"}
+                  placeholder={"Select your institution"}
                   control={form.control}
-                  placeholder={"University of Wisconsin, Madison"}
+                  options={
+                    educationData?.education?.map((education: any) => ({
+                      label: education.education_institute,
+                      value: education.education_institute,
+                    })) || []
+                  }
                   required={true}
                 />
+              ) : (
                 <TextInput
-                  fieldLabel={"When did you take the course?"}
-                  fieldName={"courseCompletionDate"}
+                  fieldName={"courseInstitute"}
+                  fieldLabel={"Where did you take the course?"}
+                  placeholder={"Massachusetts Institute of Technology"}
                   control={form.control}
-                  placeholder={"2024"}
                   required={true}
                 />
-              </div>
-
+              )}
+              <TextInput
+                fieldName={"courseCompletionDate"}
+                fieldLabel={"When did you take the course?"}
+                placeholder={"2024"}
+                control={form.control}
+                required={true}
+              />
               <div className="flex justify-end w-full mt-8">
                 <div className="w-38">
                   {isLoading ? (

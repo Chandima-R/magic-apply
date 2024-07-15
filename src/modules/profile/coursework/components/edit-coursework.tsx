@@ -26,14 +26,19 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
-import {usePathname, useRouter} from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
+import { CheckboxField } from "@/modules/shared/components/checkbox-input";
+import { SelectInput } from "@/modules/shared/components/select-input";
+import { EDUCATION_INFORMATION_BY_USER_ID } from "@/graphql/education";
 
 const courseworkSchema = z.object({
   courseName: z.string().nonempty("Course name is required."),
   courseInstitute: z.string().nonempty("Course issued institute is required."),
   courseCompletionDate: z.string().nonempty("Course issued date is required."),
+  isExistingEducation: z.boolean().default(false).optional(),
 });
+
 export const EditCoursework = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -48,6 +53,7 @@ export const EditCoursework = () => {
       courseName: "",
       courseInstitute: "",
       courseCompletionDate: "",
+      isExistingEducation: false,
     },
   });
 
@@ -88,12 +94,13 @@ export const EditCoursework = () => {
         courseName: coursework.course_name,
         courseInstitute: coursework.course_institute,
         courseCompletionDate: coursework.course_completion_year,
+        isExistingEducation: coursework.isExistingEducation,
       });
     }
   }, [editData, form]);
 
   const [updateCoursework] = useMutation(UPDATE_COURSEWORK_BY_ID);
-  const router = useRouter()
+  const router = useRouter();
   async function onSubmit(values: z.infer<typeof courseworkSchema>) {
     try {
       setIsLoading(true);
@@ -107,6 +114,7 @@ export const EditCoursework = () => {
             course_institute: values.courseInstitute,
             course_name: values.courseName,
             user_id: user?.id,
+            isExistingEducation: values.isExistingEducation,
           },
         });
 
@@ -117,7 +125,7 @@ export const EditCoursework = () => {
         });
       }
       form.reset();
-      router.push('/profile/coursework')
+      router.push("/profile/coursework");
     } catch (error) {
       console.error(error);
       toast({
@@ -199,6 +207,15 @@ export const EditCoursework = () => {
 
   const path = usePathname();
   const activeLink = path.split("/")[2];
+
+  const { data: educationData } = useSubscription(
+    EDUCATION_INFORMATION_BY_USER_ID,
+    {
+      variables: {
+        _eq: user?.id,
+      },
+    }
+  );
 
   return (
     <>
@@ -327,13 +344,34 @@ export const EditCoursework = () => {
                     placeholder={"Introduction to Computer Science"}
                     required={true}
                   />
-                  <TextInput
-                    fieldLabel={"Where did you take the course?"}
-                    fieldName={"courseInstitute"}
+                  <CheckboxField
+                    fieldName={"isExistingEducation"}
+                    fieldLabel={"Use your existing educational institution?"}
                     control={form.control}
-                    placeholder={"University of Wisconsin, Madison"}
-                    required={true}
                   />
+                  {form.watch("isExistingEducation") ? (
+                    <SelectInput
+                      fieldName={"courseInstitute"}
+                      fieldLabel={"Select Institute"}
+                      placeholder={"Select your institution"}
+                      control={form.control}
+                      options={
+                        educationData?.education?.map((education: any) => ({
+                          label: education.education_institute,
+                          value: education.education_institute,
+                        })) || []
+                      }
+                      required={true}
+                    />
+                  ) : (
+                    <TextInput
+                      fieldName={"courseInstitute"}
+                      fieldLabel={"Where did you take the course?"}
+                      placeholder={"Massachusetts Institute of Technology"}
+                      control={form.control}
+                      required={true}
+                    />
+                  )}
                   <TextInput
                     fieldLabel={"When did you take the course?"}
                     fieldName={"courseCompletionDate"}

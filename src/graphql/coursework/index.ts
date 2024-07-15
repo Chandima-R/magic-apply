@@ -2,13 +2,17 @@ import { gql } from "@apollo/client";
 
 export const COURSEWORK_INFORMATION_BY_USER_ID = gql`
   subscription courseworkInformationByUser_id($_eq: String) {
-    coursework(where: { user_id: { _eq: $_eq } }, order_by: {course_completion_year: desc}) {
+    coursework(
+      where: { user_id: { _eq: $_eq } }
+      order_by: { course_completion_year: desc }
+    ) {
       course_institute
       course_name
       id
       user_id
       course_completion_year
       visibility
+      isExistingEducation
     }
   }
 `;
@@ -22,6 +26,7 @@ export const VIEW_COURSEWORK_BY_ID = gql`
       id
       user_id
       visibility
+      isExistingEducation
     }
   }
 `;
@@ -32,6 +37,7 @@ export const ADD_NEW_COURSEWORK_BY_USER_ID = gql`
     $course_institute: String
     $course_name: String
     $user_id: String
+    $isExistingEducation: Boolean = false
   ) {
     insert_coursework(
       objects: {
@@ -39,6 +45,7 @@ export const ADD_NEW_COURSEWORK_BY_USER_ID = gql`
         course_institute: $course_institute
         course_name: $course_name
         user_id: $user_id
+        isExistingEducation: $isExistingEducation
       }
     ) {
       affected_rows
@@ -52,6 +59,7 @@ export const UPDATE_COURSEWORK_BY_ID = gql`
     $course_institute: String
     $course_name: String
     $_eq: uuid!
+    $isExistingEducation: Boolean = false
   ) {
     update_coursework(
       where: { id: { _eq: $_eq } }
@@ -59,6 +67,7 @@ export const UPDATE_COURSEWORK_BY_ID = gql`
         course_completion_year: $course_completion_year
         course_institute: $course_institute
         course_name: $course_name
+        isExistingEducation: $isExistingEducation
       }
     ) {
       affected_rows
