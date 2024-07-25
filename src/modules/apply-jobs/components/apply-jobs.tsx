@@ -1,27 +1,28 @@
 "use client";
 
-import React, { FC, ReactNode, useState, useEffect } from "react";
-import { Form } from "@/components/ui/form";
-import { PlusCircle, Trash2 } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { CustomButton } from "@/modules/shared/components/custom-button";
-import { TextInput } from "@/modules/shared/components/text-input";
-import { CheckboxField } from "@/modules/shared/components/checkbox-input";
-import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
-import { useToast } from "@/components/ui/use-toast";
-import { useUser } from "@clerk/nextjs";
-import { useMutation, useSubscription } from "@apollo/client";
+import React, {FC, ReactNode, useEffect, useState} from "react";
+import {Form} from "@/components/ui/form";
+import {PlusCircle, Trash2} from "lucide-react";
+import {useFieldArray, useForm} from "react-hook-form";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Button} from "@/components/ui/button";
+import {CustomButton} from "@/modules/shared/components/custom-button";
+import {TextInput} from "@/modules/shared/components/text-input";
+import {CheckboxField} from "@/modules/shared/components/checkbox-input";
+import {RequiredIndicator} from "@/modules/shared/components/required-indicator";
+import {useToast} from "@/components/ui/use-toast";
+import {useUser} from "@clerk/nextjs";
+import {useMutation, useSubscription} from "@apollo/client";
 import {
   ADD_NEW_APPLY_JOBS_ROW_BY_USER_ID,
   APPLY_JOBS_INFORMATION_BY_USER_ID,
   DELETE_APPLY_JOBS_ROW_BY_PK,
   UPDATE_APPLY_JOBS_ROW_BY_USER_ID,
 } from "@/graphql/apply-jobs";
-import { LoadingButton } from "@/modules/shared/components/loading-button";
-import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
+import {LoadingButton} from "@/modules/shared/components/loading-button";
+import {LoadingSpinner} from "@/modules/shared/components/loading-spinner";
+import {generateResponse} from "@/utils/chatgpt";
 
 const applyJobSchema = z.object({
   items: z.array(
@@ -57,6 +58,8 @@ export const ApplyJobs = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { user } = useUser();
+
+  const [chatGptResponse, setChatGptResponse] = useState<string>("");
 
   const form = useForm<z.infer<typeof applyJobSchema>>({
     resolver: zodResolver(applyJobSchema),
@@ -181,6 +184,7 @@ export const ApplyJobs = () => {
                 additional_question_three: item.question3,
                 cover_letter: item.coverLetter,
                 user_id: user?.id,
+                _eq: item.id
               },
             });
           } else {
@@ -198,7 +202,33 @@ export const ApplyJobs = () => {
               },
             });
           }
+          
         }
+
+
+        const message = `
+          Act as a professional hiring manager with 15+ years of experience in recruiting [JOB ROLE
+          APPLIED]. You are receiving several bits of data which I want you to merely digest.
+          Here is the info:
+          1. Job Description: ${data.items.map(item => item.jobDescription).join(", ")}
+          2. Master Resume Or Manual: ${data.items.map(item => item.masterResume).join(", ")}
+          3. Description of the company: ${data.items.map(item => item.companyDescription).join(", ")}
+          4. Additional Information: ${data.items.map(item => item.additionalInfo).join(", ")}
+          5. (a) Additional Questions Asked – 1: ${data.items.map(item => item.question1).join(", ")}
+             (b) Additional Questions Asked – 2: ${data.items.map(item => item.question2).join(", ")}
+             (c) Additional Questions Asked – 3: ${data.items.map(item => item.question3).join(", ")}
+          Now that you have all the information you need, use a straightforward and no-bullshit tone to modify my resume. Here’s how I need you to approach this.
+          First, give me an initial percentage match of the job description and my resume. I need a number.
+          Next, rewrite the experience portions of the resume to ensure that the total percentage match is greater than 90%. Use data to describe outcomes wherever possible. If there is insufficient data/numbers, then try to rephrase the sentence to increase the match %. Do not invent data here.
+          Ensure that the descriptions are Applicant Tracking System optimized.
+          At last, in the same writing style, in not more than 300 words, write me a cover letter for this role. It should be highly readable, and should not be a mere paraphrasing of my resume.
+        `;
+
+        const gptResponse = await generateResponse(message);
+        setChatGptResponse(gptResponse);
+
+        console.log(12, gptResponse)
+
         toast({
           variant: "default",
           title: "Success.",
@@ -396,6 +426,9 @@ export const ApplyJobs = () => {
                 </div>
               </form>
             </Form>
+          </div>
+          <div>
+            <p>{chatGptResponse}</p>
           </div>
         </>
       )}
