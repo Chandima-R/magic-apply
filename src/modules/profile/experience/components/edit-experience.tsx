@@ -27,7 +27,7 @@ import {
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
-import {usePathname, useRouter} from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { CheckboxField } from "@/modules/shared/components/checkbox-input";
@@ -39,14 +39,17 @@ const experienceSchema = z
     startDate: z.date({
       required_error: "Start date is required.",
     }),
-    endDate: z.date({
-      required_error: "end date is required.",
-    }),
+    endDate: z
+      .union([z.date().optional(), z.literal("").optional()])
+      .refine((val) => val === "" || val instanceof Date, {
+        message: "End date is required.",
+      })
+      .optional(),
     companyLocation: z.string().nonempty("Company Location is required."),
     jobDescription: z.string().nonempty("Job description is required."),
     isCurrent: z.boolean().default(false).optional(),
   })
-  .refine((data) => data.startDate < data.endDate, {
+  .refine((data) => !data.endDate || data.startDate < data.endDate, {
     message: "Start date must be before end date",
     path: ["endDate"],
   });
@@ -65,7 +68,7 @@ export const EditExperience = () => {
       role: "",
       company: "",
       startDate: new Date(),
-      endDate: new Date(),
+      endDate: "",
       companyLocation: "",
       jobDescription: "",
       isCurrent: false,
@@ -100,6 +103,12 @@ export const EditExperience = () => {
     (exp: any) => exp.visibility === true
   );
 
+  const sortedExperience = visibleExperience?.sort((a: any, b: any) => {
+    if (a.isCurrent && !b.isCurrent) return -1;
+    if (!a.isCurrent && b.isCurrent) return 1;
+    return 0;
+  });
+
   const hiddenExperience = experienceData?.experience?.filter(
     (exp: any) => exp.visibility === false
   );
@@ -115,8 +124,12 @@ export const EditExperience = () => {
       form.reset({
         role: experience.company_role,
         company: experience.company_name,
-        startDate: experience.company_start_date,
-        endDate: experience.company_end_date,
+        startDate: experience.company_start_date
+          ? new Date(experience.company_start_date)
+          : new Date(),
+        endDate: experience.company_end_date
+          ? new Date(experience.company_end_date)
+          : "",
         companyLocation: experience.company_location,
         jobDescription: experience.company_role_description,
         isCurrent: experience.isCurrent,
@@ -125,7 +138,7 @@ export const EditExperience = () => {
   }, [editData, form]);
 
   const [updateExperience] = useMutation(UPDATE_EXPERIENCE_BY_ID);
-  const router = useRouter()
+  const router = useRouter();
   async function onSubmit(values: z.infer<typeof experienceSchema>) {
     try {
       setIsLoading(true);
@@ -135,7 +148,11 @@ export const EditExperience = () => {
         await updateExperience({
           variables: {
             _eq: experienceId,
-            company_end_date: values.isCurrent ? new Date() : values.endDate,
+            company_end_date: values.isCurrent
+              ? ""
+              : values.endDate
+              ? new Date(values.endDate)
+              : null,
             company_location: values.companyLocation,
             company_name: values.company,
             company_role: values.role,
@@ -149,11 +166,11 @@ export const EditExperience = () => {
         toast({
           variant: "default",
           title: "Success.",
-          description: "Your project was added to project list.",
+          description: "Your experience was updated.",
         });
       }
       form.reset();
-      router.push('/profile/experience')
+      router.push("/profile/experience");
     } catch (error) {
       console.error(error);
       toast({
@@ -177,7 +194,7 @@ export const EditExperience = () => {
       toast({
         variant: "default",
         title: "Success.",
-        description: "Your project was deleted from the project list.",
+        description: "Your experience was deleted from your profile.",
       });
     } catch (error) {
       toast({
@@ -200,13 +217,13 @@ export const EditExperience = () => {
       toast({
         variant: "default",
         title: "Success.",
-        description: "Your project was hide from the project list.",
+        description: "Your experience was hidden from your profile.",
       });
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "There was an error deleting the experience.",
+        description: "There was an error hiding the experience.",
       });
     }
   };
@@ -274,7 +291,7 @@ export const EditExperience = () => {
                         ) : (
                           ""
                         )}
-                        {visibleExperience?.map((exp: any) => (
+                        {sortedExperience?.map((exp: any) => (
                           <AccordionContent key={exp.id}>
                             <ActionCard
                               id={exp.id}

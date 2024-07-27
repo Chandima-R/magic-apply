@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput } from "@/modules/shared/components/text-input";
 import { TextArea } from "@/modules/shared/components/text-area";
 import { CustomButton } from "@/modules/shared/components/custom-button";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useSubscription } from "@apollo/client";
@@ -19,9 +19,9 @@ import {
 } from "@/graphql/experience";
 import {
   Accordion,
+  AccordionContent,
   AccordionItem,
   AccordionTrigger,
-  AccordionContent,
 } from "@/components/ui/accordion";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
@@ -39,8 +39,9 @@ const experienceSchema = z
       required_error: "Start date is required.",
     }),
     endDate: z
-      .date({
-        required_error: "End date is required.",
+      .union([z.date().optional(), z.literal("").optional()])
+      .refine((val) => val === "" || val instanceof Date, {
+        message: "End date is required.",
       })
       .optional(),
     companyLocation: z.string().nonempty("Company Location is required."),
@@ -63,7 +64,7 @@ export const Experience = () => {
       role: "",
       company: "",
       startDate: new Date(),
-      endDate: new Date(),
+      endDate: "",
       companyLocation: "",
       jobDescription: "",
       isCurrent: false,
@@ -92,6 +93,12 @@ export const Experience = () => {
     (exp: any) => exp.visibility === true
   );
 
+  const sortedExperience = visibleExperience?.sort((a: any, b: any) => {
+    if (a.isCurrent && !b.isCurrent) return -1;
+    if (!a.isCurrent && b.isCurrent) return 1;
+    return 0;
+  });
+
   const hiddenExperience = experienceData?.experience?.filter(
     (exp: any) => exp.visibility === false
   );
@@ -110,7 +117,11 @@ export const Experience = () => {
       } else {
         await addExperience({
           variables: {
-            company_end_date: values.isCurrent ? new Date() : values.endDate,
+            company_end_date: values.isCurrent
+              ? ""
+              : values.endDate
+              ? new Date(values.endDate)
+              : null,
             company_location: values.companyLocation,
             company_name: values.company,
             company_role: values.role,
@@ -124,7 +135,7 @@ export const Experience = () => {
         toast({
           variant: "default",
           title: "Success.",
-          description: "Your project was added to project list.",
+          description: "Your experience was added to your profile.",
         });
       }
       form.reset();
@@ -151,7 +162,7 @@ export const Experience = () => {
       toast({
         variant: "default",
         title: "Success.",
-        description: "Your project was deleted from the project list.",
+        description: "Your experience was deleted from your profile.",
       });
     } catch (error) {
       toast({
@@ -174,13 +185,13 @@ export const Experience = () => {
       toast({
         variant: "default",
         title: "Success.",
-        description: "Your project was hide from the project list.",
+        description: "Your experience was hidden from your profile.",
       });
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "There was an error deleting the experience.",
+        description: "There was an error hiding the experience.",
       });
     }
   };
@@ -244,7 +255,7 @@ export const Experience = () => {
                       ) : (
                         ""
                       )}
-                      {visibleExperience?.map((exp: any) => (
+                      {sortedExperience?.map((exp: any) => (
                         <AccordionContent key={exp.id}>
                           <ActionCard
                             id={exp.id}
