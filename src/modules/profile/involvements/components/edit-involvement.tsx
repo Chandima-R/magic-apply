@@ -106,8 +106,12 @@ export const EditInvolvement = () => {
       form.reset({
         organizationRole: involvement.involvement_organization_role,
         organizationName: involvement.involevement_organization,
-        organizationRoleStartDate: involvement.involvement_start_date,
-        organizationRoleEndDate: involvement.involvement_end_date,
+        organizationRoleStartDate: involvement.involvement_start_date
+          ? new Date(involvement.involvement_start_date)
+          : new Date(),
+        organizationRoleEndDate: involvement.involvement_end_date
+          ? new Date(involvement.involvement_end_date)
+          : new Date(),
         organizationLocation: involvement.involvement_college,
         organizationRoleDescription: involvement.involvement_description,
       });
