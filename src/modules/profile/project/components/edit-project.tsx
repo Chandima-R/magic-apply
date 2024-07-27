@@ -28,7 +28,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
-import {usePathname, useRouter} from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 
 const projectSchema = z
@@ -106,8 +106,12 @@ export const EditProject = () => {
         projectTitle: project.project_name,
         organization: project.project_organization,
         organizationLocation: project.project_location,
-        projectStartDate: project.project_start_date,
-        projectEndDate: project.project_end_date,
+        projectStartDate: project.project_start_date
+          ? new Date(project.project_start_date)
+          : new Date(),
+        projectEndDate: project.project_end_date
+          ? new Date(project.project_end_date)
+          : new Date(),
         projectUrl: project.project_url,
         projectDescription: project.project_role_description,
       });
@@ -115,7 +119,7 @@ export const EditProject = () => {
   }, [editData, form]);
 
   const [editProject] = useMutation(UPDATE_PROJECT_BY_ID);
-  const router = useRouter()
+  const router = useRouter();
   async function onSubmit(values: z.infer<typeof projectSchema>) {
     try {
       setIsLoading(true);
@@ -144,7 +148,7 @@ export const EditProject = () => {
         });
       }
       form.reset();
-      router.push('/profile/project')
+      router.push("/profile/project");
     } catch (error) {
       console.error(error);
       toast({
