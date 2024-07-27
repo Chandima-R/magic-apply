@@ -43,10 +43,7 @@ export const ActionCard = ({
   unhideDescription,
   status,
   tab,
-  isCurrent,
 }: Props) => {
-
-  const currentDate = new Date()
   return (
     <div
       className={`border p-2 rounded shadow cursor-pointer ${
@@ -55,62 +52,57 @@ export const ActionCard = ({
     >
       <div className="mb-2">
         <div className="flex items-start justify-between mb-2">
-          <div className={'w-full'}>
-            <h2 className="font-semibold text-lg capitalize leading-4">{role}</h2>
+          <div className={"w-full"}>
+            <h2 className="font-semibold text-lg capitalize leading-4">
+              {role}
+            </h2>
           </div>
-          <div className={'w-full flex justify-end'}>
+          <div className={"w-full flex justify-end"}>
             <p className="font-semibold text-right">
               {fromDate && (
-                  <span>
-                {fromDate?.length > 4 ? (
+                <span>
+                  {fromDate?.length > 4 ? (
                     <>
                       {format(fromDate, "dd MMMM, yyyy")} {" - "}
                     </>
-                ) : (
+                  ) : (
                     <>{fromDate}</>
-                )}
-              </span>
+                  )}
+                </span>
               )}
 
-              {toDate ? (
-                  <>
-                    {format(toDate, "dd MMMM, yyyy") === format(currentDate, "dd MMMM, yyyy") ? (
-                        <span>current</span>
-                    ) : (
-                        <>
-                          {toDate?.length > 4 ? (
-                              <span>{format(toDate, "dd MMMM, yyyy")}</span>
-                          ) : (
-                              <span>{format(toDate, "yyyy")}</span>
-                          )}</>
-                    )}
-                  </>
+              {toDate?.length > 0 ? (
+                <>
+                  {toDate?.length > 4 ? (
+                    <span>{format(toDate, "dd MMMM, yyyy")}</span>
+                  ) : (
+                    <span>{format(toDate, "yyyy")}</span>
+                  )}
+                </>
               ) : (
-                  ""
+                <span>Current</span>
               )}
-
-              {isCurrent === true && <>Present</>}
             </p>
           </div>
         </div>
         <p className="font-semibold capitalize flex gap-2">
           {company}
           {country && (
-              <>
-                , <span className="font-normal"> {country}</span>
-              </>
+            <>
+              , <span className="font-normal"> {country}</span>
+            </>
           )}
         </p>
       </div>
       <div className="flex items-between gap-4">
         {status && (
-            <>
-              <Link href={`/profile/${tab}/${id}/edit`}>
-                <Button
-                    size={"sm"}
-                    className="capitalize text-sm bg-honoluluBlue hover:bg-blue-700 gap-2"
-                >
-                  <Pencil className="size-3" />
+          <>
+            <Link href={`/profile/${tab}/${id}/edit`}>
+              <Button
+                size={"sm"}
+                className="capitalize text-sm bg-honoluluBlue hover:bg-blue-700 gap-2"
+              >
+                <Pencil className="size-3" />
                 edit
               </Button>
             </Link>
