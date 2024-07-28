@@ -25,11 +25,18 @@ const CustomComponent = ({
   skills,
   summary,
 }: Props) => {
-
-  const technicalSkills = skills?.technical_skills?.split(',').map((skill: string) => skill.trim());
-  const otherSkills = skills?.technical_skills?.split(',').map((skill: string) => skill.trim());
-  const lnguageSkills = skills?.technical_skills?.split(',').map((skill: string) => skill.trim());
-  const interests = skills?.technical_skills?.split(',').map((skill: string) => skill.trim());
+  const technicalSkills = skills?.technical_skills
+    ?.split(",")
+    .map((skill: string) => skill.trim());
+  const otherSkills = skills?.technical_skills
+    ?.split(",")
+    .map((skill: string) => skill.trim());
+  const lnguageSkills = skills?.technical_skills
+    ?.split(",")
+    .map((skill: string) => skill.trim());
+  const interests = skills?.technical_skills
+    ?.split(",")
+    .map((skill: string) => skill.trim());
 
   return (
     <View style={styles.container}>
@@ -40,10 +47,10 @@ const CustomComponent = ({
             Telephone: {contact?.contact_phone} |
           </Text>
           <Text style={styles.headerContentText}>
-            Email: {contact?.contact_email}
+            Email: {contact?.contact_email} |
           </Text>
           <Text style={styles.headerContentText}>
-            Location: {contact?.contact_city} |
+            Location: {contact?.contact_city}
           </Text>
         </View>
         <View style={styles.headerContent}>
@@ -68,28 +75,32 @@ const CustomComponent = ({
           <View key={exp.id} style={styles.sectionItem}>
             <View style={styles.sectionItemTitle}>
               <View style={styles.sectionItemTitle}>
-                <Text style={styles.sectionItemTitleText}>{exp?.company_role}</Text>
-                <Text style={styles.sectionItemTitleSpan}>, {exp?.company_location}</Text>
+                <Text style={styles.sectionItemTitleText}>
+                  {exp?.company_role}
+                </Text>
+                <Text style={styles.sectionItemContentHeader}>
+                  , {exp?.company_name}{" "}
+                </Text>
+                <Text style={styles.sectionItemTitleSpan}>
+                  - {exp?.company_location}
+                </Text>
               </View>
               <View style={styles.sectionItemContentBlock}>
                 <Text style={styles.sectionItemContentBlockText}>
                   {format(exp?.company_start_date, "MMMM, yyyy")}
                 </Text>
-                <Text style={styles.sectionItemContentBlockText}> {" - "} </Text>
+                <Text style={styles.sectionItemContentBlockText}>
+                  {" "}
+                  {" - "}{" "}
+                </Text>
                 <Text style={styles.sectionItemContentBlockText}>
                   {format(exp?.company_end_date, "MMMM, yyyy")}
                 </Text>
               </View>
             </View>
             <View>
-              <View style={styles.sectionItemContent}>
-                <Text style={styles.sectionItemContentHeader}>
-                  {exp?.company_name}
-                </Text>
-
-              </View>
               <View style={styles.sectionItemDescription}>
-                <View style={styles.sectionItemDescriptionDot}/>
+                <View style={styles.sectionItemDescriptionDot} />
                 <Text style={styles.sectionItemDescriptionText}>
                   {exp?.company_role_description}
                 </Text>
@@ -102,33 +113,38 @@ const CustomComponent = ({
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionContainerTitle}>Education</Text>
         {education?.map((edu: any) => (
-            <View key={edu.id} style={styles.sectionItem}>
+          <View key={edu.id} style={styles.sectionItem}>
+            <View style={styles.sectionItemTitle}>
               <View style={styles.sectionItemTitle}>
-                <View style={styles.sectionItemTitle}>
-                  <Text style={styles.sectionItemTitleText}>{edu?.education_institute}</Text>
-                  <Text style={styles.sectionItemTitleSpan}>, {edu?.education_location}</Text>
-                </View>
-                <View style={styles.sectionItemContentBlock}>
-                  <Text style={styles.sectionItemContentBlockText}>
-                    {format(edu?.education_completion_year, "yyyy")}
-                  </Text>
-                </View>
+                <Text style={styles.sectionItemTitleText}>
+                  {edu?.education_institute}
+                </Text>
+                <Text style={styles.sectionItemTitleSpan}>
+                  , {edu?.education_location}
+                </Text>
               </View>
-              <View>
-                <View style={styles.sectionItemContent}>
-                  <Text style={styles.sectionItemContentHeader}>
-                    Specialization: {edu?.education_major}
-                  </Text>
-
-                </View>
-                <View style={styles.sectionItemDescription}>
-                  <View style={styles.sectionItemDescriptionDot}/>
-                  <Text style={styles.sectionItemDescriptionText}>
-                    {edu?.educatoin_additional_information.length > 0 ? edu?.educatoin_additional_information : ''}
-                  </Text>
-                </View>
+              <View style={styles.sectionItemContentBlock}>
+                <Text style={styles.sectionItemContentBlockText}>
+                  {format(edu?.education_completion_year, "yyyy")}
+                </Text>
               </View>
             </View>
+            <View>
+              <View style={styles.sectionItemContent}>
+                <Text style={styles.sectionItemContentHeader}>
+                  Specialization: {edu?.education_major}
+                </Text>
+              </View>
+              <View style={styles.sectionItemDescription}>
+                <View style={styles.sectionItemDescriptionDot} />
+                <Text style={styles.sectionItemDescriptionText}>
+                  {edu?.educatoin_additional_information.length > 0
+                    ? edu?.educatoin_additional_information
+                    : ""}
+                </Text>
+              </View>
+            </View>
+          </View>
         ))}
       </View>
 
@@ -137,70 +153,89 @@ const CustomComponent = ({
           Additional Experience and Achievements (Projects and Involvements)
         </Text>
         {project?.map((pro: any) => (
-            <View key={pro.id} style={styles.sectionItem}>
+          <View key={pro.id} style={styles.sectionItem}>
+            <View style={styles.sectionItemTitle}>
               <View style={styles.sectionItemTitle}>
-                <View style={styles.sectionItemTitle}>
-                  <Text style={styles.sectionItemTitleText}>{pro?.project_name}</Text>
-                  <Text style={styles.sectionItemTitleSpan}>, {pro?.project_organization}</Text>
-                </View>
-                <View style={styles.sectionItemContentBlock}>
-                  <Text style={styles.sectionItemContentBlockText}>
-                    {format(pro?.project_start_date, "MMMM, yyyy")}
-                  </Text>
-                  <Text style={styles.sectionItemContentBlockText}> {" - "} </Text>
-                  <Text style={styles.sectionItemContentBlockText}>
-                    {format(pro?.project_end_date, "MMMM, yyyy")}
-                  </Text>
-                </View>
+                <Text style={styles.sectionItemTitleText}>
+                  {pro?.project_name}
+                </Text>
+                <Text style={styles.sectionItemTitleSpan}>
+                  , {pro?.project_organization}
+                </Text>
               </View>
-              <View>
-                <View style={styles.sectionItemDescription}>
-                  <View style={styles.sectionItemDescriptionDot}/>
-                  <Text style={styles.sectionItemDescriptionText}>
-                    {pro?.project_role_description.length > 0 ? pro?.project_role_description : ''}
-                  </Text>
-                </View>
+              <View style={styles.sectionItemContentBlock}>
+                <Text style={styles.sectionItemContentBlockText}>
+                  {format(pro?.project_start_date, "MMMM, yyyy")}
+                </Text>
+                <Text style={styles.sectionItemContentBlockText}>
+                  {" "}
+                  {" - "}{" "}
+                </Text>
+                <Text style={styles.sectionItemContentBlockText}>
+                  {format(pro?.project_end_date, "MMMM, yyyy")}
+                </Text>
               </View>
             </View>
+            <View>
+              <View style={styles.sectionItemDescription}>
+                <View style={styles.sectionItemDescriptionDot} />
+                <Text style={styles.sectionItemDescriptionText}>
+                  {pro?.project_role_description.length > 0
+                    ? pro?.project_role_description
+                    : ""}
+                </Text>
+              </View>
+            </View>
+          </View>
         ))}
 
         {involvement?.map((inv: any) => (
-            <View key={inv.id} style={styles.sectionItem}>
+          <View key={inv.id} style={styles.sectionItem}>
+            <View style={styles.sectionItemTitle}>
               <View style={styles.sectionItemTitle}>
-                <View style={styles.sectionItemTitle}>
-                  <Text style={styles.sectionItemTitleText}>{inv?.involvement_organization_role}</Text>
-                  <Text style={styles.sectionItemTitleSpan}>, {inv?.involevement_organization}</Text>
-                </View>
-                <View style={styles.sectionItemContentBlock}>
-                  <Text style={styles.sectionItemContentBlockText}>
-                    {format(inv?.involvement_start_date, "MMMM, yyyy")}
-                  </Text>
-                  <Text style={styles.sectionItemContentBlockText}> {" - "} </Text>
-                  <Text style={styles.sectionItemContentBlockText}>
-                    {format(inv?.involvement_end_date, "MMMM, yyyy")}
-                  </Text>
-                </View>
+                <Text style={styles.sectionItemTitleText}>
+                  {inv?.involvement_organization_role}
+                </Text>
+                <Text style={styles.sectionItemTitleSpan}>
+                  , {inv?.involevement_organization}
+                </Text>
               </View>
-              <View>
-                <View style={styles.sectionItemContent}>
-                  <Text style={styles.sectionItemContentHeader}>
-                    {inv?.involvement_college}
-                  </Text>
-
-                </View>
-                <View style={styles.sectionItemDescription}>
-                  <View style={styles.sectionItemDescriptionDot}/>
-                  <Text style={styles.sectionItemDescriptionText}>
-                    {inv?.involvement_description.length > 0 ? inv?.involvement_description : ''}
-                  </Text>
-                </View>
+              <View style={styles.sectionItemContentBlock}>
+                <Text style={styles.sectionItemContentBlockText}>
+                  {format(inv?.involvement_start_date, "MMMM, yyyy")}
+                </Text>
+                <Text style={styles.sectionItemContentBlockText}>
+                  {" "}
+                  {" - "}{" "}
+                </Text>
+                <Text style={styles.sectionItemContentBlockText}>
+                  {format(inv?.involvement_end_date, "MMMM, yyyy")}
+                </Text>
               </View>
             </View>
+            <View>
+              <View style={styles.sectionItemContent}>
+                <Text style={styles.sectionItemContentHeader}>
+                  {inv?.involvement_college}
+                </Text>
+              </View>
+              <View style={styles.sectionItemDescription}>
+                <View style={styles.sectionItemDescriptionDot} />
+                <Text style={styles.sectionItemDescriptionText}>
+                  {inv?.involvement_description.length > 0
+                    ? inv?.involvement_description
+                    : ""}
+                </Text>
+              </View>
+            </View>
+          </View>
         ))}
       </View>
 
       <View style={styles.sectionContainer}>
-        <Text style={styles.sectionContainerTitle}>Skills, Languages and Interests</Text>
+        <Text style={styles.sectionContainerTitle}>
+          Skills, Languages and Interests
+        </Text>
 
         <View style={styles.sectionItem}>
           <View style={styles.sectionItemTitle}>
@@ -210,11 +245,9 @@ const CustomComponent = ({
           </View>
           <View>
             {technicalSkills?.map((skill: any, index: number) => (
-                <View key={index} style={styles.sectionItemContentGrid}>
-                  <Text style={styles.sectionItemContentHeader}>
-                    {skill}
-                  </Text>
-                </View>
+              <View key={index} style={styles.sectionItemContentGrid}>
+                <Text style={styles.sectionItemContentHeader}>{skill}</Text>
+              </View>
             ))}
           </View>
         </View>
@@ -227,11 +260,9 @@ const CustomComponent = ({
           </View>
           <View>
             {otherSkills?.map((skill: any, index: number) => (
-                <View key={index} style={styles.sectionItemContentGrid}>
-                  <Text style={styles.sectionItemContentHeader}>
-                    {skill}
-                  </Text>
-                </View>
+              <View key={index} style={styles.sectionItemContentGrid}>
+                <Text style={styles.sectionItemContentHeader}>{skill}</Text>
+              </View>
             ))}
           </View>
         </View>
@@ -244,11 +275,9 @@ const CustomComponent = ({
           </View>
           <View>
             {lnguageSkills?.map((skill: any, index: number) => (
-                <View key={index} style={styles.sectionItemContentGrid}>
-                  <Text style={styles.sectionItemContentHeader}>
-                    {skill}
-                  </Text>
-                </View>
+              <View key={index} style={styles.sectionItemContentGrid}>
+                <Text style={styles.sectionItemContentHeader}>{skill}</Text>
+              </View>
             ))}
           </View>
         </View>
@@ -261,16 +290,13 @@ const CustomComponent = ({
           </View>
           <View>
             {interests?.map((skill: any, index: number) => (
-                <View key={index} style={styles.sectionItemContentGrid}>
-                  <Text style={styles.sectionItemContentHeader}>
-                    {skill}
-                  </Text>
-                </View>
+              <View key={index} style={styles.sectionItemContentGrid}>
+                <Text style={styles.sectionItemContentHeader}>{skill}</Text>
+              </View>
             ))}
           </View>
         </View>
       </View>
-
     </View>
   );
 };
@@ -284,25 +310,26 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    paddingBottom: "10px",
+    paddingBottom: "6px",
   },
 
   headerTitle: {
-    fontSize: "16px",
+    fontSize: "14px",
     fontWeight: 700,
     marginBottom: "5px",
+    textTransform: "uppercase",
   },
 
   headerContent: {
     display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    gap: "4px",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "8px",
     flexDirection: "row",
   },
 
   headerContentText: {
-    fontWeight: 300,
+    fontWeight: "normal",
     fontSize: "10px",
   },
 
@@ -311,8 +338,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "center",
-    paddingVertical: "10px",
-    paddingBottom: "10px",
+    paddingVertical: "3px",
   },
 
   sectionHeader: {
@@ -322,9 +348,9 @@ const styles = StyleSheet.create({
   },
 
   sectionContainerTitle: {
-    fontSize: "14px",
-    textTransform: "capitalize",
-    fontWeight: 400,
+    fontSize: "12px",
+    textTransform: "uppercase",
+    fontWeight: "bold",
     marginBottom: "2px",
     borderBottom: "0.5px",
     borderColor: "#0077BB",
@@ -339,19 +365,19 @@ const styles = StyleSheet.create({
   },
 
   sectionItem: {
-    marginBottom: '10px'
+    marginBottom: "3px",
   },
 
   sectionItemTitle: {
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 
   sectionItemTitleText: {
-    fontSize: "12px",
-    fontWeight: 300,
+    fontSize: "11px",
+    fontWeight: 500,
     textTransform: "capitalize",
     marginVertical: "5px",
   },
@@ -371,17 +397,17 @@ const styles = StyleSheet.create({
     marginBottom: "5px",
   },
 
-  sectionItemContentGrid:{
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+  sectionItemContentGrid: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 
   sectionItemContentHeader: {
     fontSize: "10px",
     fontWeight: 500,
-    textTransform: 'capitalize'
+    textTransform: "capitalize",
   },
 
   sectionItemContentBlock: {
@@ -395,20 +421,20 @@ const styles = StyleSheet.create({
     fontSize: "10px",
   },
 
-  sectionItemDescription:{
+  sectionItemDescription: {
     display: "flex",
     alignItems: "flex-start",
     flexDirection: "row",
     justifyContent: "flex-start",
   },
 
-  sectionItemDescriptionDot:{
+  sectionItemDescriptionDot: {
     width: "5px",
-    height: '5px',
-    borderRadius: '10px',
+    height: "5px",
+    borderRadius: "10px",
     marginRight: "4px",
-    backgroundColor: '#0077BB',
-    marginTop: '3px'
+    backgroundColor: "#0077BB",
+    marginTop: "3px",
   },
 
   sectionItemDescriptionText: {
