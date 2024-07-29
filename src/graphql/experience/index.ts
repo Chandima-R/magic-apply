@@ -2,7 +2,10 @@ import { gql } from "@apollo/client";
 
 export const EXPERIENCE_INFORMATION_BY_USER_ID = gql`
   subscription experienceInformation($_eq: String) {
-    experience(where: { user_id: { _eq: $_eq } }, order_by: { company_end_date: desc }) {
+    experience(
+      where: { user_id: { _eq: $_eq } }
+      order_by: { company_end_date: desc }
+    ) {
       company_end_date
       company_location
       company_name

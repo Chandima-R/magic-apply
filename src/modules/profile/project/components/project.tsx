@@ -43,7 +43,7 @@ const projectSchema = z
     projectEndDate: z.date({
       required_error: "End date is required.",
     }),
-    projectUrl: z.string().url("Invalid URL format").optional(),
+    projectUrl: z.string().optional(),
     projectDescription: z.string().nonempty("Project description is required."),
   })
   .refine((data) => data.projectStartDate < data.projectEndDate, {
