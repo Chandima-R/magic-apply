@@ -1,32 +1,32 @@
 "use client";
 
-import React, { FC, ReactNode, useState, useEffect } from "react";
-import { Form } from "@/components/ui/form";
-import { PlusCircle, Trash2 } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { CustomButton } from "@/modules/shared/components/custom-button";
-import { TextInput } from "@/modules/shared/components/text-input";
-import { CheckboxField } from "@/modules/shared/components/checkbox-input";
-import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
-import { useToast } from "@/components/ui/use-toast";
-import { useUser } from "@clerk/nextjs";
-import { useMutation, useSubscription } from "@apollo/client";
+import React, {FC, ReactNode, useEffect, useState} from "react";
+import {Form} from "@/components/ui/form";
+import {PlusCircle, Trash2} from "lucide-react";
+import {useFieldArray, useForm} from "react-hook-form";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Button} from "@/components/ui/button";
+import {CustomButton} from "@/modules/shared/components/custom-button";
+import {TextInput} from "@/modules/shared/components/text-input";
+import {CheckboxField} from "@/modules/shared/components/checkbox-input";
+import {RequiredIndicator} from "@/modules/shared/components/required-indicator";
+import {useToast} from "@/components/ui/use-toast";
+import {useUser} from "@clerk/nextjs";
+import {useMutation, useSubscription} from "@apollo/client";
 import {
   ADD_NEW_APPLY_JOBS_ROW_BY_USER_ID,
   APPLY_JOBS_INFORMATION_BY_USER_ID,
   DELETE_APPLY_JOBS_ROW_BY_PK,
   UPDATE_APPLY_JOBS_ROW_BY_USER_ID,
 } from "@/graphql/apply-jobs";
-import { LoadingButton } from "@/modules/shared/components/loading-button";
-import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
+import {LoadingButton} from "@/modules/shared/components/loading-button";
+import {LoadingSpinner} from "@/modules/shared/components/loading-spinner";
 
 const applyJobSchema = z.object({
   items: z.array(
     z.object({
-      id: z.string().optional(), // Add id field for existing items
+      id: z.string().optional(),
       jobDescription: z.string().min(2, {
         message: "Job Description is required",
       }),
@@ -172,6 +172,7 @@ export const ApplyJobs = () => {
             await updateApplyJobs({
               variables: {
                 id: item.id,
+                _eq: item?.id,
                 job_description: item.jobDescription,
                 master_resume: item.masterResume,
                 company_description: item.companyDescription,
@@ -181,6 +182,7 @@ export const ApplyJobs = () => {
                 additional_question_three: item.question3,
                 cover_letter: item.coverLetter,
                 user_id: user?.id,
+
               },
             });
           } else {
