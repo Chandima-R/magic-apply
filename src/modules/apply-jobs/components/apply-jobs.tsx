@@ -450,7 +450,7 @@ export const ApplyJobs = () => {
                             onClick={() => handleApply(item)}
                           >
                             <Send className="size-4 mr-2" />
-                            Generate
+                            Apply
                           </Button>
                           <Button
                             type="button"
