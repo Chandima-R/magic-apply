@@ -13,6 +13,9 @@ export const APPLY_JOBS_INFORMATION_BY_USER_ID = gql`
       additional_question_three
       additional_question_one
       additional_information
+      cover_letters {
+        letter
+      }
     }
   }
 `;
