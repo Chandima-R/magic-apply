@@ -30,7 +30,7 @@ import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { generateResponse } from "@/utils/chatgpt";
 import { ADD_NEW_COVER_LETTER_BY_USER_ID } from "@/graphql/cover-letter";
 import Link from "next/link";
-import { FileInput } from "@/modules/shared/components/file-input";
+import { MultiInputField } from "@/modules/shared/mult-input-field";
 
 const applyJobSchema = z.object({
   items: z.array(
@@ -39,9 +39,13 @@ const applyJobSchema = z.object({
       jobDescription: z.string().min(2, {
         message: "Job Description is required",
       }),
-      masterResume: z.string().min(2, {
-        message: "Master Resume is required",
-      }),
+      masterResume: z.union([
+        z.string().min(2, {
+          message: "Master Resume is required",
+        }),
+        z.boolean(),
+        z.instanceof(File),
+      ]),
       companyDescription: z.string().min(2, {
         message: "Company Description is required",
       }),
@@ -53,6 +57,8 @@ const applyJobSchema = z.object({
     })
   ),
 });
+
+export { applyJobSchema };
 
 interface ScrollBarProps {
   children: ReactNode;
@@ -340,7 +346,11 @@ export const ApplyJobs = () => {
                     <p className={"text-sm font-semibold"}>
                       Additional Questions Asked 3
                     </p>
-                    <p className={"text-sm font-semibold"}>
+                    <p
+                      className={
+                        "text-sm font-semibold w-full flex justify-end"
+                      }
+                    >
                       Cover Letter Needed
                     </p>
                   </div>
@@ -355,29 +365,11 @@ export const ApplyJobs = () => {
                         control={control}
                         placeholder={"Paste the JD (or link of JD here)"}
                       />
-                      <div className="flex items-center gap-1">
-                        <CheckboxField
-                          fieldLabel={""}
-                          fieldName={`items[${index}].masterResume`}
-                          control={control}
-                        />
-                        <TextInput
-                          fieldLabel={""}
-                          fieldName={`items[${index}].masterResume`}
-                          control={control}
-                          placeholder={
-                            "Keep blank if master resume is up to date"
-                          }
-                        />
-                        <FileInput
-                          fieldLabel={""}
-                          fieldName={`items[${index}].masterResume`}
-                          control={control}
-                          placeholder={
-                            "Keep blank if master resume is up to date"
-                          }
-                        />
-                      </div>
+                      <MultiInputField
+                        fieldLabel={""}
+                        fieldName={"masterResume"}
+                        control={control}
+                      />
                       <TextInput
                         fieldLabel={""}
                         fieldName={`items[${index}].companyDescription`}

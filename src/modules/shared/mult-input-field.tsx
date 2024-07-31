@@ -14,7 +14,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -24,20 +23,16 @@ interface Props {
   fieldLabel: string;
   fieldName: string;
   control: any;
-  placeholder: string;
   required?: boolean;
-  fieldLabelColor?: string;
   description?: string;
 }
 
 export const MultiInputField = ({
   control,
   description,
-  placeholder,
   required,
   fieldName,
   fieldLabel,
-  fieldLabelColor,
 }: Props) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(
     "master_resume"
@@ -50,11 +45,7 @@ export const MultiInputField = ({
       render={({ field }) => (
         <FormItem>
           {fieldLabel && (
-            <FormLabel
-              className={`gap-1 flex text-${
-                fieldLabelColor ? fieldLabelColor : "black"
-              }`}
-            >
+            <FormLabel className="gap-1 flex text-black">
               {fieldLabel}
               {required && <RequiredIndicator />}
             </FormLabel>
@@ -64,7 +55,6 @@ export const MultiInputField = ({
               <div className="w-3/5">
                 {selectedOption === "upload" && (
                   <Input
-                    placeholder={placeholder}
                     type="file"
                     className="border-none h-auto p-0 pl-3 focus:ring-0 focus:outline-none focus:border-none"
                   />
