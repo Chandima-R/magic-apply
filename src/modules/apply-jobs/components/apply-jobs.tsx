@@ -1,27 +1,36 @@
 "use client";
 
-import React, {FC, ReactNode, useEffect, useState} from "react";
-import {Form} from "@/components/ui/form";
-import {PlusCircle, Trash2} from "lucide-react";
-import {useFieldArray, useForm} from "react-hook-form";
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {Button} from "@/components/ui/button";
-import {CustomButton} from "@/modules/shared/components/custom-button";
-import {TextInput} from "@/modules/shared/components/text-input";
-import {CheckboxField} from "@/modules/shared/components/checkbox-input";
-import {RequiredIndicator} from "@/modules/shared/components/required-indicator";
-import {useToast} from "@/components/ui/use-toast";
-import {useUser} from "@clerk/nextjs";
-import {useMutation, useSubscription} from "@apollo/client";
+import React, { FC, ReactNode, useEffect, useState } from "react";
+import { Form } from "@/components/ui/form";
+import {
+  Eye,
+  FileDown,
+  MailPlus,
+  PlusCircle,
+  Send,
+  Trash2,
+} from "lucide-react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { TextInput } from "@/modules/shared/components/text-input";
+import { CheckboxField } from "@/modules/shared/components/checkbox-input";
+import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
+import { useToast } from "@/components/ui/use-toast";
+import { useUser } from "@clerk/nextjs";
+import { useMutation, useSubscription } from "@apollo/client";
 import {
   ADD_NEW_APPLY_JOBS_ROW_BY_USER_ID,
   APPLY_JOBS_INFORMATION_BY_USER_ID,
   DELETE_APPLY_JOBS_ROW_BY_PK,
   UPDATE_APPLY_JOBS_ROW_BY_USER_ID,
 } from "@/graphql/apply-jobs";
-import {LoadingButton} from "@/modules/shared/components/loading-button";
-import {LoadingSpinner} from "@/modules/shared/components/loading-spinner";
+import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
+import { generateResponse } from "@/utils/chatgpt";
+import { ADD_NEW_COVER_LETTER_BY_USER_ID } from "@/graphql/cover-letter";
+import Link from "next/link";
+import { FileInput } from "@/modules/shared/components/file-input";
 
 const applyJobSchema = z.object({
   items: z.array(
@@ -102,11 +111,13 @@ export const ApplyJobs = () => {
   };
 
   const handleDeleteItem = (index: number) => {
+    console.log(11, index);
     remove(index);
   };
 
   const [addApplyJobs] = useMutation(ADD_NEW_APPLY_JOBS_ROW_BY_USER_ID);
   const [updateApplyJobs] = useMutation(UPDATE_APPLY_JOBS_ROW_BY_USER_ID);
+  const [addCoverLetter] = useMutation(ADD_NEW_COVER_LETTER_BY_USER_ID);
 
   const { data: jobsData, loading: jobsLoading } = useSubscription(
     APPLY_JOBS_INFORMATION_BY_USER_ID,
@@ -130,6 +141,7 @@ export const ApplyJobs = () => {
           additional_question_two: any;
           additional_question_three: any;
           cover_letter: any;
+          cover_letters: any;
         }) => ({
           id: job.id,
           jobDescription: job.job_description,
@@ -182,7 +194,6 @@ export const ApplyJobs = () => {
                 additional_question_three: item.question3,
                 cover_letter: item.coverLetter,
                 user_id: user?.id,
-
               },
             });
           } else {
@@ -200,7 +211,24 @@ export const ApplyJobs = () => {
               },
             });
           }
+
+          // if (item.coverLetter) {
+          //   const openAIResponse = await generateResponse(
+          //     `Job Description: ${item.jobDescription}`
+          //   );
+
+          //   await addCoverLetter({
+          //     variables: {
+          //       letter: openAIResponse,
+          //       user_id: user?.id,
+          //       apply_jobs_id: item.id,
+          //     },
+          //   });
+
+          //   console.log("Cover Letter Response:", openAIResponse);
+          // }
         }
+
         toast({
           variant: "default",
           title: "Success.",
@@ -220,10 +248,11 @@ export const ApplyJobs = () => {
 
   const [deleteApplyJobsRow] = useMutation(DELETE_APPLY_JOBS_ROW_BY_PK);
   const deleteApplyJobsRowAction = async (id: string) => {
+    console.log(12, id);
     try {
       await deleteApplyJobsRow({
         variables: {
-          id,
+          _eq: id,
         },
       });
       toast({
@@ -236,6 +265,29 @@ export const ApplyJobs = () => {
         variant: "destructive",
         title: "Error",
         description: "There was an error deleting the row.",
+      });
+    }
+  };
+
+  const handleApply = async (item: any) => {
+    try {
+      if (!user?.id) {
+        throw new Error("User is not authenticated");
+      }
+      const response = await generateResponse(
+        `Job Description: ${item.jobDescription}`
+      );
+      console.log("Apply Response:", response);
+      toast({
+        variant: "default",
+        title: "Applied Successfully.",
+        description: "Your application has been submitted.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Application Error",
+        description: "There was a problem applying for the job.",
       });
     }
   };
@@ -262,7 +314,7 @@ export const ApplyJobs = () => {
             <Form {...form}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <ScrollBar>
-                  <div className={"grid grid-cols-9 gap-4"}>
+                  <div className={"grid grid-cols-8 gap-4"}>
                     <p className={"text-sm font-semibold"}>
                       Job Description (Paste or Link)
                       <RequiredIndicator />
@@ -295,7 +347,7 @@ export const ApplyJobs = () => {
                   {fields.map((item, index) => (
                     <div
                       key={item.id}
-                      className="grid grid-cols-9 gap-4 items-center"
+                      className="grid grid-cols-8 gap-4 items-center"
                     >
                       <TextInput
                         fieldLabel={""}
@@ -303,14 +355,29 @@ export const ApplyJobs = () => {
                         control={control}
                         placeholder={"Paste the JD (or link of JD here)"}
                       />
-                      <TextInput
-                        fieldLabel={""}
-                        fieldName={`items[${index}].masterResume`}
-                        control={control}
-                        placeholder={
-                          "Keep blank if master resume is up to date"
-                        }
-                      />
+                      <div className="flex items-center gap-1">
+                        <CheckboxField
+                          fieldLabel={""}
+                          fieldName={`items[${index}].masterResume`}
+                          control={control}
+                        />
+                        <TextInput
+                          fieldLabel={""}
+                          fieldName={`items[${index}].masterResume`}
+                          control={control}
+                          placeholder={
+                            "Keep blank if master resume is up to date"
+                          }
+                        />
+                        <FileInput
+                          fieldLabel={""}
+                          fieldName={`items[${index}].masterResume`}
+                          control={control}
+                          placeholder={
+                            "Keep blank if master resume is up to date"
+                          }
+                        />
+                      </div>
                       <TextInput
                         fieldLabel={""}
                         fieldName={`items[${index}].companyDescription`}
@@ -343,54 +410,92 @@ export const ApplyJobs = () => {
                         control={control}
                         placeholder={"Write / Paste the Q here"}
                       />
-                      <CheckboxField
-                        fieldLabel={""}
-                        fieldName={`items[${index}].coverLetter`}
-                        control={control}
-                      />
+                      <div className="flex items-center justify-end">
+                        <CheckboxField
+                          fieldLabel={""}
+                          fieldName={`items[${index}].coverLetter`}
+                          control={control}
+                        />
+                      </div>
 
-                      <div className="flex gap-4 cursor-pointer items-center justify-center">
-                        <Button
-                          type="button"
-                          onClick={handleAddItem}
-                          className="rounded-full w-9 h-9 bg-blue-400/20 hover:bg-blue-400/40 border-blue-400/20 p-2"
-                          size="sm"
-                          variant={"outline"}
-                        >
-                          <PlusCircle className="size-4" />
-                        </Button>
-                        {fields.length > 1 && (
+                      <div className="col-span-8 mb-4">
+                        <div className="flex items-center justify-end w-full gap-4">
                           <Button
                             type="button"
-                            onClick={() => {
-                              handleDelete(index);
-                            }}
-                            className="rounded-full w-9 h-9 bg-red-400/20 hover:bg-red-400/40 border-red-400/20 p-2"
+                            size="sm"
+                            className="bg-honoluluBlue hover:bg-blue-400/90 border-blue-400/20 p-2"
+                          >
+                            <FileDown className="size-4 mr-2" />
+                            Download PDF
+                          </Button>
+                          <div>
+                            <Link href={"/apply-jobs/cover-letter/123"}>
+                              {/* {item.coverLetterText && ( */}
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                size="sm"
+                                className="bg-federalBlue hover:bg-blue-900/90 border-blue-900/20 p-2 text-white"
+                              >
+                                <MailPlus className="size-4 mr-2" />
+                                Download cover letter
+                              </Button>
+                              {/* )} */}
+                            </Link>
+                          </div>
+                          <Button
+                            type="submit"
+                            size="sm"
+                            className=" bg-blue-500 hover:bg-blue-600 text-white hover:text-white  border-blue-600"
+                            onClick={() => handleApply(item)}
+                          >
+                            <Send className="size-4 mr-2" />
+                            Generate
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={handleAddItem}
+                            className=" bg-blue-700 hover:bg-blue-800 text-white hover:text-white  border-blue-700"
                             size="sm"
                             variant={"outline"}
                           >
-                            <Trash2 className="size-4" />
+                            <PlusCircle className="size-4 mr-2" />
+                            Add
                           </Button>
-                        )}
+                          {fields.length > 1 && (
+                            <Button
+                              type="button"
+                              onClick={() => {
+                                handleDelete(index);
+                              }}
+                              className=" bg-red-500 text-white hover:bg-red-600 border-red-600 hover:text-white"
+                              size="sm"
+                              variant={"outline"}
+                            >
+                              <Trash2 className="size-4 mr-2" />
+                              Remove
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
                 </ScrollBar>
 
                 <div className="flex justify-end w-full mt-8">
-                  <div className="w-38">
-                    {isLoading ? (
-                      <LoadingButton />
-                    ) : (
-                      <>
-                        <CustomButton
-                          type="submit"
-                          size={"sm"}
-                          title="Apply / Bulk Apply"
-                        />
-                      </>
-                    )}
-                  </div>
+                  {/*<div className="w-38">*/}
+                  {/*  {isLoading ? (*/}
+                  {/*    <LoadingButton />*/}
+                  {/*  ) : (*/}
+                  {/*    <>*/}
+                  {/*      <CustomButton*/}
+                  {/*        type="submit"*/}
+                  {/*        size={"sm"}*/}
+                  {/*        title="Apply / Bulk Apply"*/}
+                  {/*      />*/}
+                  {/*    </>*/}
+                  {/*  )}*/}
+                  {/*</div>*/}
 
                   {/*<div className="w-38">*/}
                   {/*    <Button type="button" variant="outline" size={'sm'}>Excel Upload</Button>*/}

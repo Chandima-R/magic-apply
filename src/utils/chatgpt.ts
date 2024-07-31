@@ -1,7 +1,7 @@
-const OPENAI_KEY = process.env.NEXT_PUBLIC_OPENAI_PI_KEY
+const OPENAI_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY
 export async function generateResponse(message: string) {
   const response = await fetch(
-    "https://api.openai.com/v1/chat/completions", // Use the chat completions endpoint
+    "https://api.openai.com/v1/chat/completions",
     {
       method: "POST",
       headers: {
