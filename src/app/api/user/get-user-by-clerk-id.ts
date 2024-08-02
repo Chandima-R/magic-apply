@@ -1,4 +1,4 @@
-import prisma from "@/utils/prisma-client";
+import prisma from "@/server/prisma-client";
 import { User, UserClerkId } from "@/utils/types";
 
 export async function getUserByClerkId(

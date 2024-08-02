@@ -1,6 +1,6 @@
 "use client";
 
-import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
+// import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
 import { Loader2, Menu } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -90,14 +90,14 @@ export const Navigation = () => {
           </Link>
         </div>
 
-        <div>
+        {/* <div>
           <ClerkLoaded>
             <UserButton afterSignOutUrl="/sign-in" />
           </ClerkLoaded>
           <ClerkLoading>
             <Loader2 className="animate-spin size-8 text-slate-400" />
           </ClerkLoading>
-        </div>
+        </div> */}
       </div>
     );
   }
@@ -122,12 +122,12 @@ export const Navigation = () => {
                 ))}
               </nav>
             </div>
-            <ClerkLoaded>
+            {/* <ClerkLoaded>
               <UserButton afterSignOutUrl="/sign-in" />
             </ClerkLoaded>
             <ClerkLoading>
               <Loader2 className="animate-spin size-8 text-slate-400" />
-            </ClerkLoading>
+            </ClerkLoading> */}
           </div>
         </div>
       </header>
