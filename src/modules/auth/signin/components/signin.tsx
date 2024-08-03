@@ -53,7 +53,7 @@ export const SignIn = () => {
         });
       } else {
         setIsLoading(true);
-        router.push("/dashboard");
+        router.push("/");
       }
     } catch (error) {
       toast({

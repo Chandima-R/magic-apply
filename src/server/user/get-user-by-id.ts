@@ -1,18 +1,17 @@
 import { TRPCError } from "@trpc/server";
-import { User, UserClerkId } from "@/utils/types";
+import { z } from "zod"; // Ensure you have zod installed for schema validation
+import { User } from "@/utils/types";
 import { protectedProcedure } from "../trpc";
 import prisma from "../prisma-client";
 
-export const getUserByClerkId = protectedProcedure.query(
-  async ({
-    user_clerk_id,
-  }: {
-    user_clerk_id: UserClerkId;
-  }): Promise<User | null> => {
+export const getUserById = protectedProcedure
+  .input(z.object({ id: z.string() }))
+  .query(async ({ input }): Promise<User | null> => {
+    const { id } = input;
     try {
       const user = await prisma.user.findUnique({
         where: {
-          user_clerk_id,
+          id,
         },
       });
       return user;
@@ -22,5 +21,4 @@ export const getUserByClerkId = protectedProcedure.query(
         message: "Something went wrong while fetching the user.",
       });
     }
-  }
-);
+  });

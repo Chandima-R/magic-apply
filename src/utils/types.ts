@@ -10,7 +10,7 @@ export interface User {
   firstname: string;
   lastname: string;
   email: string;
-  email_verified?: Date;
-  image?: string;
-  hashedPassword?: string;
+  email_verified?: Date | null;
+  image?: string | null;
+  hashedPassword?: string | null;
 }
