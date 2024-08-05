@@ -5,6 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { CustomButton } from "@/modules/shared/components/custom-button";
 import { SessionHeader } from "@/modules/shared/components/session-header";
 import { TextInput } from "@/modules/shared/components/text-input";
+import { trpc } from "@/modules/shared/utils/trpc";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -26,6 +27,24 @@ export const SignUp = () => {
   const router = useRouter();
   const { toast } = useToast();
 
+  const addUserMutation = trpc.addUser.useMutation({
+    onSuccess: () => {
+      toast({
+        variant: "default",
+        title: "Success",
+        description: "Registration successful.",
+      });
+      router.push("/");
+    },
+    onError: (error: any) => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message || "Registration failed.",
+      });
+    },
+  });
+
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -39,37 +58,9 @@ export const SignUp = () => {
   const onSubmit = async (values: z.infer<typeof schema>) => {
     setIsLoading(true);
     try {
-      // Your registration logic here, e.g., API call
-      // For example:
-      const response = await fetch("/api/user/add-user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        toast({
-          variant: "default",
-          title: "Success.",
-          description: "Registration successful.",
-        });
-        router.push("/dashboard"); // Redirect after successful registration
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Error.",
-          description: result.message || "Registration failed.",
-        });
-      }
+      await addUserMutation.mutateAsync(values);
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error.",
-        description: "An error occurred. Please try again later.",
-      });
+      // Error handling is managed by onError in mutation
     } finally {
       setIsLoading(false);
     }
