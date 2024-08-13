@@ -31,6 +31,8 @@ import { generateResponse } from "@/utils/chatgpt";
 import { ADD_NEW_COVER_LETTER_BY_USER_ID } from "@/graphql/cover-letter";
 import Link from "next/link";
 import { MultiInputField } from "@/modules/shared/mult-input-field";
+import { CONTACT_INFORMATION } from "@/graphql/contact";
+import { LoadingButton } from "@/modules/shared/components/loading-button";
 
 const applyJobSchema = z.object({
   items: z.array(
@@ -133,6 +135,17 @@ export const ApplyJobs = () => {
       },
     }
   );
+
+  const { data: contactData, loading: contactLoading } = useSubscription(
+    CONTACT_INFORMATION,
+    {
+      variables: {
+        _eq: user?.id,
+      },
+    }
+  );
+
+  const signedUserData = contactData?.contact[0];
 
   useEffect(() => {
     if (jobsData && jobsData.apply_jobs.length > 0) {
@@ -276,14 +289,27 @@ export const ApplyJobs = () => {
   };
 
   const handleApply = async (item: any) => {
+    const message = {
+      jobDescription: item.jobDescription,
+      companyDescription: item.companyDescription,
+      masterResume: item.masterResume,
+      name: signedUserData?.contact_name,
+      email: signedUserData?.contact_email,
+      city: signedUserData?.contact_city,
+    };
+
+    const promptType = "coverLetter";
+
     try {
       if (!user?.id) {
         throw new Error("User is not authenticated");
       }
-      const response = await generateResponse(
-        `Job Description: ${item.jobDescription}`
+      const openAIResponse = await generateResponse(promptType, message).then(
+        (response) => {
+          console.log(response);
+        }
       );
-      console.log("Apply Response:", response);
+      console.log("Apply Response:", openAIResponse);
       toast({
         variant: "default",
         title: "Applied Successfully.",
@@ -320,58 +346,24 @@ export const ApplyJobs = () => {
             <Form {...form}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <ScrollBar>
-                  <div className={"grid grid-cols-8 gap-4"}>
-                    <p className={"text-sm font-semibold"}>
-                      Job Description (Paste or Link)
-                      <RequiredIndicator />
-                    </p>
-                    <p className={"text-sm font-semibold"}>
-                      Master Resume Or Manual (Input or Paste)
-                      <RequiredIndicator />
-                    </p>
-                    <p className={"text-sm font-semibold"}>
-                      Description of the Company
-                      <RequiredIndicator />
-                    </p>
-                    <p className={"text-sm font-semibold"}>
-                      Additional Information (Highlight any recent projects or
-                      experience)
-                    </p>
-                    <p className={"text-sm font-semibold"}>
-                      Additional Questions Asked 1
-                    </p>
-                    <p className={"text-sm font-semibold"}>
-                      Additional Questions Asked 2
-                    </p>
-                    <p className={"text-sm font-semibold"}>
-                      Additional Questions Asked 3
-                    </p>
-                    <p
-                      className={
-                        "text-sm font-semibold w-full flex justify-end"
-                      }
-                    >
-                      Cover Letter Needed
-                    </p>
-                  </div>
                   {fields.map((item, index) => (
                     <div
                       key={item.id}
-                      className="grid grid-cols-8 gap-4 items-center"
+                      className="grid grid-cols-4 gap-4 items-center border rounded-md p-4 mb-4"
                     >
                       <TextInput
-                        fieldLabel={""}
+                        fieldLabel={"Job Description (Paste or Link)"}
                         fieldName={`items[${index}].jobDescription`}
                         control={control}
                         placeholder={"Paste the JD (or link of JD here)"}
                       />
                       <MultiInputField
-                        fieldLabel={""}
-                        fieldName={"masterResume"}
+                        fieldLabel={"Master Resume Or Manual (Input or Paste)"}
+                        fieldName={`items[${index}].masterResume`}
                         control={control}
                       />
                       <TextInput
-                        fieldLabel={""}
+                        fieldLabel={"Description of the Company"}
                         fieldName={`items[${index}].companyDescription`}
                         control={control}
                         placeholder={
@@ -379,38 +371,40 @@ export const ApplyJobs = () => {
                         }
                       />
                       <TextInput
-                        fieldLabel={""}
+                        fieldLabel={
+                          "Additional Information (Highlight any recent projects or experience)"
+                        }
                         fieldName={`items[${index}].additionalInfo`}
                         control={control}
                         placeholder={"Describe if any"}
                       />
                       <TextInput
-                        fieldLabel={""}
+                        fieldLabel={" Additional Questions Asked 1"}
                         fieldName={`items[${index}].question1`}
                         control={control}
                         placeholder={"Write / Paste the Q here"}
                       />
                       <TextInput
-                        fieldLabel={""}
+                        fieldLabel={" Additional Questions Asked 2"}
                         fieldName={`items[${index}].question2`}
                         control={control}
                         placeholder={"Write / Paste the Q here"}
                       />
                       <TextInput
-                        fieldLabel={""}
+                        fieldLabel={" Additional Questions Asked 3"}
                         fieldName={`items[${index}].question3`}
                         control={control}
                         placeholder={"Write / Paste the Q here"}
                       />
                       <div className="flex items-center justify-end">
                         <CheckboxField
-                          fieldLabel={""}
+                          fieldLabel={" Cover Letter Needed"}
                           fieldName={`items[${index}].coverLetter`}
                           control={control}
                         />
                       </div>
 
-                      <div className="col-span-8 mb-4">
+                      <div className="col-span-4 mb-4">
                         <div className="flex items-center justify-end w-full gap-4">
                           <Button
                             type="button"
@@ -435,15 +429,21 @@ export const ApplyJobs = () => {
                               {/* )} */}
                             </Link>
                           </div>
-                          <Button
-                            type="submit"
-                            size="sm"
-                            className=" bg-blue-500 hover:bg-blue-600 text-white hover:text-white  border-blue-600"
-                            onClick={() => handleApply(item)}
-                          >
-                            <Send className="size-4 mr-2" />
-                            Apply
-                          </Button>
+                          {isLoading ? (
+                            <div className="w-18">
+                              <LoadingButton />
+                            </div>
+                          ) : (
+                            <Button
+                              type="submit"
+                              size="sm"
+                              className=" bg-blue-500 hover:bg-blue-600 text-white hover:text-white  border-blue-600"
+                              onClick={() => handleApply(item)}
+                            >
+                              <Send className="size-4 mr-2" />
+                              Apply
+                            </Button>
+                          )}
                           <Button
                             type="button"
                             onClick={handleAddItem}
