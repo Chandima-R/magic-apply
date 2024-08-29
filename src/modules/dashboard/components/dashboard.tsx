@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-
 import { CustomButtonCard } from "@/modules/shared/components/custom-button-card";
 import { useUser } from "@clerk/nextjs";
 import { Aperture, CircleUser, Link } from "lucide-react";
@@ -38,7 +37,7 @@ export const Dashboard = () => {
     <div>
       <div className="mb-8">
         <p className="capitalize text-2xl font-semibold">
-          hello, {user?.fullName} 👋
+          hello, {user && user?.fullName + "👋"}
         </p>
         <p className="text-lg font-semibold">Welcome back!</p>
         <hr />

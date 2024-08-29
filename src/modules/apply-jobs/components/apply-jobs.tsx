@@ -254,7 +254,6 @@ export const ApplyJobs = () => {
 
   const [deleteApplyJobsRow] = useMutation(DELETE_APPLY_JOBS_ROW_BY_PK);
   const deleteApplyJobsRowAction = async (id: string) => {
-    console.log(12, id);
     try {
       await deleteApplyJobsRow({
         variables: {
