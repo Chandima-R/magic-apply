@@ -11,14 +11,14 @@ export const sidebarLinks = [
     label: "apply jobs",
     icon: AppWindow,
   },
-  {
-    href: "/sample-library",
-    label: "sample library",
-    icon: FileText,
-  },
-  {
-    href: "/ai-interview",
-    label: "AI interview",
-    icon: FolderCog,
-  },
+  // {
+  //   href: "/sample-library",
+  //   label: "sample library",
+  //   icon: FileText,
+  // },
+  // {
+  //   href: "/ai-interview",
+  //   label: "AI interview",
+  //   icon: FolderCog,
+  // },
 ];
