@@ -21,7 +21,7 @@ export const Navigation = () => {
 
   if (isMobile) {
     return (
-      <div className={"flex items-center justify-between p-4 border-b"}>
+      <div className={"flex items-center justify-between p-4 border-b z-40"}>
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger>
             <Button
@@ -105,7 +105,7 @@ export const Navigation = () => {
   return (
     <div
       className={
-        "w-full flex items-center justify-between shadow-md border sticky top-0 left-0 right-0 bg-white"
+        "w-full flex items-center justify-between shadow-md border sticky top-0 left-0 right-0 bg-white z-40"
       }
     >
       <header className="w-full px-4 py-8 lg:px-14">
