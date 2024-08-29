@@ -1,9 +1,4 @@
-import {
-  FileText,
-  FolderCog,
-  LayoutDashboard,
-  AppWindow,
-} from "lucide-react";
+import { FileText, FolderCog, LayoutDashboard, AppWindow } from "lucide-react";
 
 export const sidebarLinks = [
   {
@@ -23,7 +18,7 @@ export const sidebarLinks = [
   },
   {
     href: "/ai-interview",
-    label: "ai interview",
+    label: "AI interview",
     icon: FolderCog,
   },
 ];

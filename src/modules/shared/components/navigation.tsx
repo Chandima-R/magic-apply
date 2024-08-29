@@ -104,11 +104,13 @@ export const Navigation = () => {
 
   return (
     <div
-      className={"w-full flex items-center justify-between shadow-sm border"}
+      className={
+        "w-full flex items-center justify-between shadow-md border sticky top-0 left-0 right-0 bg-white"
+      }
     >
       <header className="w-full px-4 py-8 lg:px-14">
         <div className="max-w-screen-2xl mx-auto">
-          <div className="w-full flex items-center justify-between mb-8">
+          <div className="w-full flex items-center justify-between">
             <div className="flex items-center lg:gap-x-16">
               <HeaderLogo />
               <nav className="hidden lg:flex items-center gap-x-2 overflow-x-auto">
