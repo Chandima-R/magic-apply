@@ -2,14 +2,7 @@
 
 import React, { FC, ReactNode, useEffect, useState } from "react";
 import { Form } from "@/components/ui/form";
-import {
-  Eye,
-  FileDown,
-  MailPlus,
-  PlusCircle,
-  Send,
-  Trash2,
-} from "lucide-react";
+import { FileDown, MailPlus, PlusCircle, Send, Trash2 } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,9 +21,11 @@ import {
 } from "@/graphql/apply-jobs";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { generateResponse } from "@/utils/chatgpt";
-import { ADD_NEW_COVER_LETTER_BY_USER_ID } from "@/graphql/cover-letter";
-import Link from "next/link";
+import { ADD_NEW_COVER_LETTER_BY_JOB_ID } from "@/graphql/cover-letter";
 import { MultiInputField } from "@/modules/shared/mult-input-field";
+import { CONTACT_INFORMATION } from "@/graphql/contact";
+import { LoadingButton } from "@/modules/shared/components/loading-button";
+import Link from "next/link";
 
 const applyJobSchema = z.object({
   items: z.array(
@@ -116,14 +111,12 @@ export const ApplyJobs = () => {
     });
   };
 
-  const handleDeleteItem = (index: number) => {
-    console.log(11, index);
-    remove(index);
+  const handleDeleteItem = (index: string) => {
+    remove(parseInt(index));
   };
 
   const [addApplyJobs] = useMutation(ADD_NEW_APPLY_JOBS_ROW_BY_USER_ID);
   const [updateApplyJobs] = useMutation(UPDATE_APPLY_JOBS_ROW_BY_USER_ID);
-  const [addCoverLetter] = useMutation(ADD_NEW_COVER_LETTER_BY_USER_ID);
 
   const { data: jobsData, loading: jobsLoading } = useSubscription(
     APPLY_JOBS_INFORMATION_BY_USER_ID,
@@ -133,6 +126,17 @@ export const ApplyJobs = () => {
       },
     }
   );
+
+  const { data: contactData, loading: contactLoading } = useSubscription(
+    CONTACT_INFORMATION,
+    {
+      variables: {
+        _eq: user?.id,
+      },
+    }
+  );
+
+  const signedUserData = contactData?.contact[0];
 
   useEffect(() => {
     if (jobsData && jobsData.apply_jobs.length > 0) {
@@ -217,22 +221,6 @@ export const ApplyJobs = () => {
               },
             });
           }
-
-          // if (item.coverLetter) {
-          //   const openAIResponse = await generateResponse(
-          //     `Job Description: ${item.jobDescription}`
-          //   );
-
-          //   await addCoverLetter({
-          //     variables: {
-          //       letter: openAIResponse,
-          //       user_id: user?.id,
-          //       apply_jobs_id: item.id,
-          //     },
-          //   });
-
-          //   console.log("Cover Letter Response:", openAIResponse);
-          // }
         }
 
         toast({
@@ -272,17 +260,40 @@ export const ApplyJobs = () => {
         description: "There was an error deleting the row.",
       });
     }
+    handleDeleteItem(id);
   };
 
+  const [insertCoverLetter] = useMutation(ADD_NEW_COVER_LETTER_BY_JOB_ID);
+
   const handleApply = async (item: any) => {
+    console.log("item id: ", item.id);
+    const message = {
+      jobDescription: item.jobDescription,
+      companyDescription: item.companyDescription,
+      masterResume: item.masterResume,
+      name: signedUserData?.contact_name,
+      email: signedUserData?.contact_email,
+      city: signedUserData?.contact_city,
+    };
+
+    // TODO: add mutation to save the cover letter data with id which can taken from item id
+    const promptType = "coverLetter";
+
     try {
       if (!user?.id) {
         throw new Error("User is not authenticated");
       }
-      const response = await generateResponse(
-        `Job Description: ${item.jobDescription}`
-      );
-      console.log("Apply Response:", response);
+      await generateResponse(promptType, message).then((response) => {
+        console.log(12, item.id);
+        // insertCoverLetter({
+        //   variables: {
+        //     apply_jobs_id: item.id,
+        //     user_id: user?.id,
+        //     letter: response,
+        //   },
+        // });
+      });
+
       toast({
         variant: "default",
         title: "Applied Successfully.",
@@ -301,8 +312,6 @@ export const ApplyJobs = () => {
     const item = fields[index];
     if (item.id) {
       deleteApplyJobsRowAction(item.id);
-    } else {
-      handleDeleteItem(index);
     }
   };
 
@@ -319,58 +328,24 @@ export const ApplyJobs = () => {
             <Form {...form}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <ScrollBar>
-                  <div className={"grid grid-cols-8 gap-4"}>
-                    <p className={"text-sm font-semibold"}>
-                      Job Description (Paste or Link)
-                      <RequiredIndicator />
-                    </p>
-                    <p className={"text-sm font-semibold"}>
-                      Master Resume Or Manual (Input or Paste)
-                      <RequiredIndicator />
-                    </p>
-                    <p className={"text-sm font-semibold"}>
-                      Description of the Company
-                      <RequiredIndicator />
-                    </p>
-                    <p className={"text-sm font-semibold"}>
-                      Additional Information (Highlight any recent projects or
-                      experience)
-                    </p>
-                    <p className={"text-sm font-semibold"}>
-                      Additional Questions Asked 1
-                    </p>
-                    <p className={"text-sm font-semibold"}>
-                      Additional Questions Asked 2
-                    </p>
-                    <p className={"text-sm font-semibold"}>
-                      Additional Questions Asked 3
-                    </p>
-                    <p
-                      className={
-                        "text-sm font-semibold w-full flex justify-end"
-                      }
-                    >
-                      Cover Letter Needed
-                    </p>
-                  </div>
                   {fields.map((item, index) => (
                     <div
                       key={item.id}
-                      className="grid grid-cols-8 gap-4 items-center"
+                      className="grid grid-cols-4 gap-4 items-center border rounded-md p-4 mb-4"
                     >
                       <TextInput
-                        fieldLabel={""}
+                        fieldLabel={"Job Description (Paste or Link)"}
                         fieldName={`items[${index}].jobDescription`}
                         control={control}
                         placeholder={"Paste the JD (or link of JD here)"}
                       />
                       <MultiInputField
-                        fieldLabel={""}
-                        fieldName={"masterResume"}
+                        fieldLabel={"Master Resume Or Manual (Input or Paste)"}
+                        fieldName={`items[${index}].masterResume`}
                         control={control}
                       />
                       <TextInput
-                        fieldLabel={""}
+                        fieldLabel={"Description of the Company"}
                         fieldName={`items[${index}].companyDescription`}
                         control={control}
                         placeholder={
@@ -378,71 +353,77 @@ export const ApplyJobs = () => {
                         }
                       />
                       <TextInput
-                        fieldLabel={""}
+                        fieldLabel={
+                          "Additional Information (Highlight any recent projects or experience)"
+                        }
                         fieldName={`items[${index}].additionalInfo`}
                         control={control}
                         placeholder={"Describe if any"}
                       />
                       <TextInput
-                        fieldLabel={""}
+                        fieldLabel={" Additional Questions Asked 1"}
                         fieldName={`items[${index}].question1`}
                         control={control}
                         placeholder={"Write / Paste the Q here"}
                       />
                       <TextInput
-                        fieldLabel={""}
+                        fieldLabel={" Additional Questions Asked 2"}
                         fieldName={`items[${index}].question2`}
                         control={control}
                         placeholder={"Write / Paste the Q here"}
                       />
                       <TextInput
-                        fieldLabel={""}
+                        fieldLabel={" Additional Questions Asked 3"}
                         fieldName={`items[${index}].question3`}
                         control={control}
                         placeholder={"Write / Paste the Q here"}
                       />
                       <div className="flex items-center justify-end">
                         <CheckboxField
-                          fieldLabel={""}
+                          fieldLabel={" Cover Letter Needed"}
                           fieldName={`items[${index}].coverLetter`}
                           control={control}
                         />
                       </div>
 
-                      <div className="col-span-8 mb-4">
+                      <div className="col-span-4 mb-4">
                         <div className="flex items-center justify-end w-full gap-4">
-                          <Button
+                          {/* <Button
                             type="button"
                             size="sm"
                             className="bg-honoluluBlue hover:bg-blue-400/90 border-blue-400/20 p-2"
                           >
                             <FileDown className="size-4 mr-2" />
                             Download PDF
-                          </Button>
+                          </Button> */}
                           <div>
-                            <Link href={"/apply-jobs/cover-letter/123"}>
-                              {/* {item.coverLetterText && ( */}
-                              <Button
-                                type="button"
-                                variant="secondary"
-                                size="sm"
-                                className="bg-federalBlue hover:bg-blue-900/90 border-blue-900/20 p-2 text-white"
-                              >
-                                <MailPlus className="size-4 mr-2" />
-                                Download cover letter
-                              </Button>
-                              {/* )} */}
-                            </Link>
+                            {/* <Link href={`/apply-jobs/cover-letter/${item.id}`}> */}
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              className="bg-federalBlue hover:bg-blue-900/90 border-blue-900/20 p-2 text-white"
+                            >
+                              <MailPlus className="size-4 mr-2" />
+                              Download cover letter
+                            </Button>
+                            {/* </Link> */}
                           </div>
-                          <Button
-                            type="submit"
-                            size="sm"
-                            className=" bg-blue-500 hover:bg-blue-600 text-white hover:text-white  border-blue-600"
-                            onClick={() => handleApply(item)}
-                          >
-                            <Send className="size-4 mr-2" />
-                            Apply
-                          </Button>
+                          {isLoading ? (
+                            <div className="w-18">
+                              <LoadingButton />
+                            </div>
+                          ) : (
+                            <Button
+                              type="submit"
+                              size="sm"
+                              className=" bg-blue-500 hover:bg-blue-600 text-white hover:text-white  border-blue-600"
+                              onClick={() => handleApply(item)}
+                            >
+                              <Send className="size-4 mr-2" />
+                              Generate
+                            </Button>
+                          )}
                           <Button
                             type="button"
                             onClick={handleAddItem}

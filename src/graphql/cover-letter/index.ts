@@ -1,4 +1,4 @@
-import {gql} from "@apollo/client";
+import { gql } from "@apollo/client";
 
 // export const APPLY_JOBS_INFORMATION_BY_USER_ID = gql`
 //   subscription applyJobsInformationByUserId($_eq: String) {
@@ -28,16 +28,16 @@ export const VIEW_COVER_LETTER_BY_JOB_ID = gql`
   }
 `;
 
-export const ADD_NEW_COVER_LETTER_BY_USER_ID = gql`
-  mutation addNewCoverLetterByUserId(
-    $letter: String
-    $user_id: String
+export const ADD_NEW_COVER_LETTER_BY_JOB_ID = gql`
+  mutation MyMutation(
     $apply_jobs_id: uuid!
+    $user_id: String
+    $letter: String
   ) {
     insert_cover_letter(
       objects: {
-        letter: $letter
         user_id: $user_id
+        letter: $letter
         apply_jobs_id: $apply_jobs_id
       }
     ) {
