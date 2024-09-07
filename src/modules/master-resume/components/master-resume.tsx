@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useSubscription } from "@apollo/client";
 import { CONTACT_INFORMATION } from "@/graphql/contact";
@@ -14,138 +14,153 @@ import { SKILLS_INFORMATION_BY_USER_ID } from "@/graphql/skills";
 import { SUMMARY_INFORMATION_BY_USER_ID } from "@/graphql/summary";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import PdfPage from "@/modules/shared/components/pdf-viewer/pdf";
+import { Button } from "@/components/ui/button";
+import { WordPage } from "@/modules/shared/components/word-viewer/word";
 
 export const MasterResume = () => {
-    const { user } = useUser();
+  const [activeView, setActiveView] = useState("pdf"); // State to track the active view
+  const { user } = useUser();
 
-    const { data: certificationData } = useSubscription(
-        CERTIFICATE_INFORMATION_BY_USER_ID,
-        {
-            variables: {
-                _eq: user?.id,
-            },
-        }
-    );
+  const { data: certificationData } = useSubscription(
+    CERTIFICATE_INFORMATION_BY_USER_ID,
+    {
+      variables: { _eq: user?.id },
+    }
+  );
 
-    const { data: contactData } = useSubscription(CONTACT_INFORMATION, {
-        variables: {
-            _eq: user?.id,
-        },
-    });
+  const { data: contactData } = useSubscription(CONTACT_INFORMATION, {
+    variables: { _eq: user?.id },
+  });
 
-    const { data: courseworkData } = useSubscription(
-        COURSEWORK_INFORMATION_BY_USER_ID,
-        {
-            variables: {
-                _eq: user?.id,
-            },
-        }
-    );
+  const { data: courseworkData } = useSubscription(
+    COURSEWORK_INFORMATION_BY_USER_ID,
+    {
+      variables: { _eq: user?.id },
+    }
+  );
 
-    const { data: educationData } = useSubscription(
-        EDUCATION_INFORMATION_BY_USER_ID,
-        {
-            variables: {
-                _eq: user?.id,
-            },
-        }
-    );
+  const { data: educationData } = useSubscription(
+    EDUCATION_INFORMATION_BY_USER_ID,
+    {
+      variables: { _eq: user?.id },
+    }
+  );
 
-    const { data: experienceData } = useSubscription(
-        EXPERIENCE_INFORMATION_BY_USER_ID,
-        {
-            variables: {
-                _eq: user?.id,
-            },
-        }
-    );
+  const { data: experienceData } = useSubscription(
+    EXPERIENCE_INFORMATION_BY_USER_ID,
+    {
+      variables: { _eq: user?.id },
+    }
+  );
 
-    const { data: involvementData } = useSubscription(
-        INVOLVEMENT_INFORMATION_BY_USER_ID,
-        {
-            variables: {
-                _eq: user?.id,
-            },
-        }
-    );
+  const { data: involvementData } = useSubscription(
+    INVOLVEMENT_INFORMATION_BY_USER_ID,
+    {
+      variables: { _eq: user?.id },
+    }
+  );
 
-    const { data: projectData } = useSubscription(
-        PROJECT_INFORMATION_BY_USER_ID,
-        {
-            variables: {
-                _eq: user?.id,
-            },
-        }
-    );
+  const { data: projectData } = useSubscription(
+    PROJECT_INFORMATION_BY_USER_ID,
+    {
+      variables: { _eq: user?.id },
+    }
+  );
 
-    const { data: skillsData } = useSubscription(SKILLS_INFORMATION_BY_USER_ID, {
-        variables: {
-            _eq: user?.id,
-        },
-    });
+  const { data: skillsData } = useSubscription(SKILLS_INFORMATION_BY_USER_ID, {
+    variables: { _eq: user?.id },
+  });
 
-    const { data: summaryData, loading: summaryLoading } = useSubscription(
-        SUMMARY_INFORMATION_BY_USER_ID,
-        {
-            variables: {
-                _eq: user?.id,
-            },
-        }
-    );
+  const { data: summaryData, loading: summaryLoading } = useSubscription(
+    SUMMARY_INFORMATION_BY_USER_ID,
+    {
+      variables: { _eq: user?.id },
+    }
+  );
 
-    const certificates = certificationData?.certification?.map((c: any) => c);
-    const visibileCertificates = certificates?.filter(
-        (cer: any) => cer.visibility === true
-    );
+  const certificates = certificationData?.certification?.map((c: any) => c);
+  const visibleCertificates = certificates?.filter(
+    (cer: any) => cer.visibility === true
+  );
 
-    const contact = contactData?.contact[0];
+  const contact = contactData?.contact[0];
 
-    const coursework = courseworkData?.coursework?.map((c: any) => c);
-    const visibleCoursework = coursework?.filter(
-        (course: any) => course.visibility === true
-    );
+  const coursework = courseworkData?.coursework?.map((c: any) => c);
+  const visibleCoursework = coursework?.filter(
+    (course: any) => course.visibility === true
+  );
 
-    const education = educationData?.education?.map((c: any) => c);
-    const visibleEducation = education?.filter(
-        (ed: any) => ed.visibility === true
-    );
+  const education = educationData?.education?.map((c: any) => c);
+  const visibleEducation = education?.filter(
+    (ed: any) => ed.visibility === true
+  );
 
-    const experience = experienceData?.experience?.map((c: any) => c);
-    const visibleExperience = experience?.filter(
-        (ex: any) => ex.visibility === true
-    );
+  const experience = experienceData?.experience?.map((c: any) => c);
+  const visibleExperience = experience?.filter(
+    (ex: any) => ex.visibility === true
+  );
 
-    const involvement = involvementData?.involvement?.map((c: any) => c);
-    const visibleInvolvement = involvement?.filter(
-        (inv: any) => inv.visibility === true
-    );
+  const involvement = involvementData?.involvement?.map((c: any) => c);
+  const visibleInvolvement = involvement?.filter(
+    (inv: any) => inv.visibility === true
+  );
 
-    const project = projectData?.project?.map((c: any) => c);
-    const visibleProjects = project?.filter((pr: any) => pr.visibility === true);
+  const project = projectData?.project?.map((c: any) => c);
+  const visibleProjects = project?.filter((pr: any) => pr.visibility === true);
 
-    const skills = skillsData?.skill[0];
+  const skills = skillsData?.skill[0];
 
-    const summary = summaryData?.summary[0];
+  const summary = summaryData?.summary[0];
 
-    return (
-        <>
-            {summaryLoading ? (
-                <LoadingSpinner />
-            ) : (
-                <div>
-                    <PdfPage
-                        certificate={visibileCertificates}
-                        contact={contact}
-                        coursework={visibleCoursework}
-                        education={visibleEducation}
-                        experience={visibleExperience}
-                        involvement={visibleInvolvement}
-                        project={visibleProjects}
-                        skills={skills}
-                        summary={summary}
-                    />
-                </div>
-            )}
-        </>
-    );
+  return (
+    <>
+      <div className="w-full items-center justify-end flex gap-4 mb-4">
+        <Button
+          size={"sm"}
+          variant={activeView === "pdf" ? "outline" : "default"}
+          onClick={() => setActiveView("pdf")}
+        >
+          View PDF
+        </Button>
+        <Button
+          size={"sm"}
+          variant={activeView === "word" ? "outline" : "default"}
+          onClick={() => setActiveView("word")}
+        >
+          View Word
+        </Button>
+      </div>
+      {summaryLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <div>
+          {activeView === "pdf" ? (
+            <PdfPage
+              certificate={visibleCertificates}
+              contact={contact}
+              coursework={visibleCoursework}
+              education={visibleEducation}
+              experience={visibleExperience}
+              involvement={visibleInvolvement}
+              project={visibleProjects}
+              skills={skills}
+              summary={summary}
+            />
+          ) : (
+            <WordPage
+              certificate={visibleCertificates}
+              contact={contact}
+              coursework={visibleCoursework}
+              education={visibleEducation}
+              experience={visibleExperience}
+              involvement={visibleInvolvement}
+              project={visibleProjects}
+              skills={skills}
+              summary={summary}
+            />
+          )}
+        </div>
+      )}
+    </>
+  );
 };
