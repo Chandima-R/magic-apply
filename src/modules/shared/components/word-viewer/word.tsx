@@ -199,7 +199,7 @@ export const WordPage = ({
     });
 
     Packer.toBlob(doc).then((blob) => {
-      saveAs(blob, "resume.docx");
+      saveAs(blob, `${contact?.contact_name}.docx`);
     });
   };
 
