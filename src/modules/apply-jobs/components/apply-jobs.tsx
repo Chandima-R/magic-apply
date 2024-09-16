@@ -2,14 +2,13 @@
 
 import React, { FC, ReactNode, useEffect, useState } from "react";
 import { Form } from "@/components/ui/form";
-import { FileDown, MailPlus, PlusCircle, Send, Trash2 } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { MailPlus, PlusCircle, Send, Trash2 } from "lucide-react";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { TextInput } from "@/modules/shared/components/text-input";
 import { CheckboxField } from "@/modules/shared/components/checkbox-input";
-import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useSubscription } from "@apollo/client";
@@ -22,10 +21,12 @@ import {
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { generateResponse } from "@/utils/chatgpt";
 import { ADD_NEW_COVER_LETTER_BY_JOB_ID } from "@/graphql/cover-letter";
-import { MultiInputField } from "@/modules/shared/mult-input-field";
 import { CONTACT_INFORMATION } from "@/graphql/contact";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
-import Link from "next/link";
+import { SelectInput } from "@/modules/shared/components/select-input";
+import { resumeSelection } from "./resume-selection";
+import { TextArea } from "@/modules/shared/components/text-area";
+import { SingleFileDropBox } from "@/modules/shared/components/dropbox";
 
 const applyJobSchema = z.object({
   items: z.array(
@@ -34,13 +35,9 @@ const applyJobSchema = z.object({
       jobDescription: z.string().min(2, {
         message: "Job Description is required",
       }),
-      masterResume: z.union([
-        z.string().min(2, {
-          message: "Master Resume is required",
-        }),
-        z.boolean(),
-        z.instanceof(File),
-      ]),
+      masterResume: z.string().min(2, {
+        message: "Master Resume is required",
+      }),
       companyDescription: z.string().min(2, {
         message: "Company Description is required",
       }),
@@ -96,6 +93,11 @@ export const ApplyJobs = () => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "items",
+  });
+
+  const watchedMasterResume = useWatch({
+    control,
+    name: `items[0].masterResume`,
   });
 
   const handleAddItem = () => {
@@ -285,13 +287,6 @@ export const ApplyJobs = () => {
       }
       await generateResponse(promptType, message).then((response) => {
         console.log(12, item.id);
-        // insertCoverLetter({
-        //   variables: {
-        //     apply_jobs_id: item.id,
-        //     user_id: user?.id,
-        //     letter: response,
-        //   },
-        // });
       });
 
       toast({
@@ -331,7 +326,7 @@ export const ApplyJobs = () => {
                   {fields.map((item, index) => (
                     <div
                       key={item.id}
-                      className="grid grid-cols-4 gap-4 items-center border rounded-md p-4 mb-4"
+                      className="grid grid-cols-4 gap-4 items-start border rounded-md p-4 mb-4 bg-gray-50"
                     >
                       <TextInput
                         fieldLabel={"Job Description (Paste or Link)"}
@@ -339,11 +334,55 @@ export const ApplyJobs = () => {
                         control={control}
                         placeholder={"Paste the JD (or link of JD here)"}
                       />
-                      <MultiInputField
-                        fieldLabel={"Master Resume Or Manual (Input or Paste)"}
-                        fieldName={`items[${index}].masterResume`}
-                        control={control}
-                      />
+
+                      <div>
+                        <SelectInput
+                          fieldName={`items[${index}].masterResume`}
+                          fieldLabel={
+                            "Master Resume Or Manual (Input or Paste)"
+                          }
+                          placeholder="Selct your choice"
+                          control={form.control}
+                          options={
+                            resumeSelection?.map((opt: any) => ({
+                              label: opt.label,
+                              value: opt.value,
+                            })) || []
+                          }
+                        />
+
+                        <div className="mt-4">
+                          {watchedMasterResume?.includes("master") && (
+                            <CheckboxField
+                              fieldLabel={"Use current master resume"}
+                              fieldName={`items[${index}].coverLetter`}
+                              control={control}
+                            />
+                          )}
+
+                          {watchedMasterResume?.includes("custom") && (
+                            <TextArea
+                              fieldLabel={"Add a custom description here"}
+                              fieldName={""}
+                              control={form.control}
+                              placeholder={"Add a custom description here.."}
+                              required={false}
+                            />
+                          )}
+
+                          {watchedMasterResume?.includes("upload") && (
+                            <SingleFileDropBox
+                              fieldLabel={"Upload your resume here"}
+                              fieldName={`items[${index}].question3`}
+                              control={control}
+                              required={true}
+                              setValue={form.setValue}
+                              setUploading={() => {}}
+                            />
+                          )}
+                        </div>
+                      </div>
+
                       <TextInput
                         fieldLabel={"Description of the Company"}
                         fieldName={`items[${index}].companyDescription`}
@@ -378,7 +417,7 @@ export const ApplyJobs = () => {
                         control={control}
                         placeholder={"Write / Paste the Q here"}
                       />
-                      <div className="flex items-center justify-end">
+                      <div className="flex items-center pt-4">
                         <CheckboxField
                           fieldLabel={" Cover Letter Needed"}
                           fieldName={`items[${index}].coverLetter`}
@@ -453,26 +492,6 @@ export const ApplyJobs = () => {
                     </div>
                   ))}
                 </ScrollBar>
-
-                <div className="flex justify-end w-full mt-8">
-                  {/*<div className="w-38">*/}
-                  {/*  {isLoading ? (*/}
-                  {/*    <LoadingButton />*/}
-                  {/*  ) : (*/}
-                  {/*    <>*/}
-                  {/*      <CustomButton*/}
-                  {/*        type="submit"*/}
-                  {/*        size={"sm"}*/}
-                  {/*        title="Apply / Bulk Apply"*/}
-                  {/*      />*/}
-                  {/*    </>*/}
-                  {/*  )}*/}
-                  {/*</div>*/}
-
-                  {/*<div className="w-38">*/}
-                  {/*    <Button type="button" variant="outline" size={'sm'}>Excel Upload</Button>*/}
-                  {/*</div>*/}
-                </div>
               </form>
             </Form>
           </div>
