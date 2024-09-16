@@ -2,8 +2,12 @@ import { gql } from "@apollo/client";
 
 export const EDUCATION_INFORMATION_BY_USER_ID = gql`
   subscription educationInformation($_eq: String) {
-    education(where: { user_id: { _eq: $_eq } }, order_by: {education_completion_year: desc}) {
-      education_completion_year
+    education(
+      where: { user_id: { _eq: $_eq } }
+      order_by: { education_end_date: desc }
+    ) {
+      education_start_date
+      education_end_date
       education_gpa
       education_institute
       education_location
@@ -19,7 +23,8 @@ export const EDUCATION_INFORMATION_BY_USER_ID = gql`
 export const VIEW_EDUCATION_BY_ID = gql`
   subscription viewEducationById($_eq: uuid!) {
     education(where: { id: { _eq: $_eq } }) {
-      education_completion_year
+      education_start_date
+      education_end_date
       education_gpa
       education_institute
       education_location
@@ -34,7 +39,8 @@ export const VIEW_EDUCATION_BY_ID = gql`
 
 export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
   mutation addNewEducationByUserId(
-    $education_completion_year: String
+    $education_start_date: String
+    $education_end_date: String
     $education_gpa: String
     $education_institute: String
     $education_location: String
@@ -44,7 +50,8 @@ export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
   ) {
     insert_education(
       objects: {
-        education_completion_year: $education_completion_year
+        education_start_date: $education_start_date
+        education_end_date: $education_end_date
         education_gpa: $education_gpa
         education_institute: $education_institute
         education_location: $education_location
@@ -60,7 +67,8 @@ export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
 
 export const UPDATE_EDUCATION_BY_ID = gql`
   mutation updateEducationById(
-    $education_completion_year: String
+    $education_start_date: String
+    $education_end_date: String
     $education_gpa: String
     $education_institute: String
     $education_location: String
@@ -71,7 +79,8 @@ export const UPDATE_EDUCATION_BY_ID = gql`
     update_education(
       where: { id: { _eq: $_eq } }
       _set: {
-        education_completion_year: $education_completion_year
+        education_start_date: $education_start_date
+        education_end_date: $education_end_date
         education_gpa: $education_gpa
         education_institute: $education_institute
         education_location: $education_location
@@ -87,7 +96,8 @@ export const UPDATE_EDUCATION_BY_ID = gql`
 export const DELETE_EDUCATION_BY_PK = gql`
   mutation deleteEducationByPk($id: uuid!) {
     delete_education_by_pk(id: $id) {
-      education_completion_year
+      education_start_date
+      education_end_date
       education_gpa
       education_institute
       education_location

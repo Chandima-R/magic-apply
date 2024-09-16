@@ -28,17 +28,25 @@ import { ActionCard } from "@/modules/shared/components/action-card";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "../../../shared/components/profile-active-links";
+import { CalendarField } from "@/modules/shared/components/calendar-field";
 
-const educationSchema = z.object({
-  degree: z.string().nonempty("Degree or major required."),
-  institute: z.string().nonempty("Institute is required."),
-  instituteLocation: z
-    .string()
-    .nonempty("Location of the institute is required."),
-  completionDate: z.string().nonempty("Completion date is required."),
-  gpa: z.string(),
-  additionalInformation: z.string(),
-});
+const educationSchema = z
+  .object({
+    degree: z.string().nonempty("Degree or major required."),
+    institute: z.string().nonempty("Institute is required."),
+    instituteLocation: z
+      .string()
+      .nonempty("Location of the institute is required."),
+    startDate: z.date({ required_error: "Start date is required." }),
+    endDate: z.date({ required_error: "Completion date is required." }),
+    gpa: z.string(),
+    additionalInformation: z.string(),
+  })
+  .refine((data) => data.startDate < data.endDate, {
+    message: "Start date must be before end date",
+    path: ["endDate"],
+  });
+
 export const Education = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -50,7 +58,8 @@ export const Education = () => {
       degree: "",
       institute: "",
       instituteLocation: "",
-      completionDate: "",
+      startDate: new Date(),
+      endDate: new Date(),
       gpa: "",
       additionalInformation: "",
     },
@@ -88,7 +97,8 @@ export const Education = () => {
         await addEducation({
           variables: {
             user_id: user?.id,
-            education_completion_year: values.completionDate,
+            education_start_date: values.startDate,
+            education_end_date: values.endDate,
             education_gpa: values.gpa,
             education_institute: values.institute,
             education_location: values.instituteLocation,
@@ -227,8 +237,8 @@ export const Education = () => {
                             company={education.education_institute}
                             role={education.education_major}
                             country={""}
-                            fromDate={""}
-                            toDate={education.education_completion_year}
+                            fromDate={education.education_start_date}
+                            toDate={education.education_end_date}
                             deleteTitle={"Delete your education."}
                             deleteDescription={
                               "Are you sure to delete this education. This action cannot be undone and it will completely remove this education from your educations."
@@ -269,8 +279,8 @@ export const Education = () => {
                               company={education.education_institute}
                               role={education.education_major}
                               country={""}
-                              fromDate={""}
-                              toDate={education.education_completion_year}
+                              fromDate={education.education_start_date}
+                              toDate={education.education_end_date}
                               deleteTitle={"Delete your education."}
                               deleteDescription={
                                 "Are you sure to delete this education. This action cannot be undone and it will completely remove this education from your educations."
@@ -331,13 +341,22 @@ export const Education = () => {
                   placeholder={"Madison, WI"}
                   required={true}
                 />
-                <TextInput
-                  fieldLabel={"When did you earn your degree/ qualification?"}
-                  fieldName={"completionDate"}
-                  control={form.control}
-                  placeholder={"2024"}
-                  required={true}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <CalendarField
+                    fieldLabel={
+                      "When did you start your degree/ qualification?"
+                    }
+                    fieldName={"startDate"}
+                    control={form.control}
+                    required={true}
+                  />
+                  <CalendarField
+                    fieldLabel={"When did you earn your degree/ qualification?"}
+                    fieldName={"endDate"}
+                    control={form.control}
+                    required={true}
+                  />
+                </div>
                 <TextInput
                   fieldLabel={"GPA (If applicable)"}
                   fieldName={"gpa"}
