@@ -60,7 +60,7 @@ interface ScrollBarProps {
 }
 
 const ScrollBar: FC<ScrollBarProps> = ({ children }) => (
-  <div className="overflow-auto h-auto p-4 rounded">{children}</div>
+  <div className="overflow-auto h-auto rounded mb-4 p-4">{children}</div>
 );
 
 export const ApplyJobs = () => {
@@ -331,7 +331,7 @@ export const ApplyJobs = () => {
                   {fields.map((item, index) => (
                     <div
                       key={item.id}
-                      className="grid grid-cols-4 gap-4 items-center border rounded-md p-4 mb-4"
+                      className="grid grid-cols-4 gap-4 items-center border rounded-md p-6 bg-sky-50 mb-4"
                     >
                       <TextInput
                         fieldLabel={"Job Description (Paste or Link)"}
