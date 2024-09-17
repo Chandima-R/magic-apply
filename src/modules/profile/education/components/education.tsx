@@ -33,6 +33,7 @@ import { CalendarField } from "@/modules/shared/components/calendar-field";
 const educationSchema = z
   .object({
     degree: z.string().nonempty("Degree or major required."),
+    specialization: z.string().optional(),
     institute: z.string().nonempty("Institute is required."),
     instituteLocation: z
       .string()
@@ -56,6 +57,7 @@ export const Education = () => {
     resolver: zodResolver(educationSchema),
     defaultValues: {
       degree: "",
+      specialization: "",
       institute: "",
       instituteLocation: "",
       startDate: new Date(),
@@ -103,6 +105,7 @@ export const Education = () => {
             education_institute: values.institute,
             education_location: values.instituteLocation,
             education_major: values.degree,
+            education_specialization: values.specialization,
             educatoin_additional_information: values.additionalInformation,
           },
         });
@@ -326,6 +329,13 @@ export const Education = () => {
                   control={form.control}
                   placeholder={"Bachelor of Science in Economics"}
                   required={true}
+                />
+                <TextInput
+                  fieldLabel={"What is your specialization?"}
+                  fieldName={"specialization"}
+                  control={form.control}
+                  placeholder={"Financial Economics"}
+                  required={false}
                 />
                 <TextInput
                   fieldLabel={"Where did you earn your degree / qualification?"}
