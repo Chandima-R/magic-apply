@@ -63,7 +63,7 @@ export const ActionCard = ({
                 <span>
                   {fromDate?.length > 4 ? (
                     <>
-                      {format(fromDate, "dd MMMM, yyyy")} {" - "}
+                      {format(fromDate, "dd MMM, yyyy")} {" - "}
                     </>
                   ) : (
                     <>{fromDate}</>
@@ -74,7 +74,7 @@ export const ActionCard = ({
               {toDate?.length > 0 ? (
                 <>
                   {toDate?.length > 4 ? (
-                    <span>{format(toDate, "dd MMMM, yyyy")}</span>
+                    <span>{format(toDate, "dd MMM, yyyy")}</span>
                   ) : (
                     <span>{format(toDate, "yyyy")}</span>
                   )}

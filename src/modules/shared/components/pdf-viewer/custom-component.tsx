@@ -87,7 +87,7 @@ const CustomComponent = ({
 
               <View style={styles.sectionItemContentBlock}>
                 <Text style={styles.sectionItemContentBlockText}>
-                  {format(exp?.company_start_date, "MMMM, yyyy")}
+                  {format(exp?.company_start_date, "MMM, yyyy")}
                 </Text>
                 <Text style={styles.sectionItemContentBlockText}>
                   {" "}
@@ -96,7 +96,7 @@ const CustomComponent = ({
 
                 <Text style={styles.sectionItemContentBlockText}>
                   {exp?.company_end_date
-                    ? format(exp?.company_end_date, "MMMM, yyyy")
+                    ? format(exp?.company_end_date, "MMM, yyyy")
                     : "Current"}
                 </Text>
               </View>
@@ -177,14 +177,14 @@ const CustomComponent = ({
               </View>
               <View style={styles.sectionItemContentBlock}>
                 <Text style={styles.sectionItemContentBlockText}>
-                  {format(pro?.project_start_date, "MMMM, yyyy")}
+                  {format(pro?.project_start_date, "MMM, yyyy")}
                 </Text>
                 <Text style={styles.sectionItemContentBlockText}>
                   {" "}
                   {" - "}{" "}
                 </Text>
                 <Text style={styles.sectionItemContentBlockText}>
-                  {format(pro?.project_end_date, "MMMM, yyyy")}
+                  {format(pro?.project_end_date, "MMM, yyyy")}
                 </Text>
               </View>
             </View>
@@ -214,14 +214,14 @@ const CustomComponent = ({
               </View>
               <View style={styles.sectionItemContentBlock}>
                 <Text style={styles.sectionItemContentBlockText}>
-                  {format(inv?.involvement_start_date, "MMMM, yyyy")}
+                  {format(inv?.involvement_start_date, "MMM, yyyy")}
                 </Text>
                 <Text style={styles.sectionItemContentBlockText}>
                   {" "}
                   {" - "}{" "}
                 </Text>
                 <Text style={styles.sectionItemContentBlockText}>
-                  {format(inv?.involvement_end_date, "MMMM, yyyy")}
+                  {format(inv?.involvement_end_date, "MMM, yyyy")}
                 </Text>
               </View>
             </View>
