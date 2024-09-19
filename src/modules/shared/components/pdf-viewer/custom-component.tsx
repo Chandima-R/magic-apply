@@ -46,11 +46,11 @@ const CustomComponent = ({
           <Text style={styles.headerContentText}>
             Telephone: {contact?.contact_phone}
           </Text>
-          <Text style={styles.horizontalBar}>|</Text>
+
           <Text style={styles.headerContentText}>
             Email: {contact?.contact_email}
           </Text>
-          <Text style={styles.horizontalBar}>|</Text>
+
           <Text style={styles.headerContentText}>
             Location: {contact?.contact_city}
           </Text>
@@ -63,7 +63,7 @@ const CustomComponent = ({
       </View>
 
       <View style={styles.sectionContainer}>
-        <Text style={styles.sectionContainerTitle}>summary</Text>
+        <Text style={styles.sectionContainerTitle}>professional summary</Text>
         <View>
           <Text style={styles.sectionContainerDescription}>
             {summary?.summary_description}
@@ -73,47 +73,86 @@ const CustomComponent = ({
 
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionContainerTitle}>experience</Text>
+
         {experience?.map((exp: any) => (
-          <View key={exp.id} style={styles.sectionItem}>
-            <View style={styles.sectionItemTitle}>
-              <View style={styles.sectionItemTitleLeft}>
-                <Text style={styles.sectionItemTitleText}>
-                  {exp?.company_role}
-                </Text>
-                <Text style={styles.sectionItemTitleSpan}>
-                  , {exp?.company_location}
-                </Text>
-              </View>
+          <View style={styles.specialSectionItem}>
+            {!exp?.company_end_date ? (
+              <View key={exp.id} style={styles.sectionItem}>
+                <View style={styles.sectionItemTitle}>
+                  <View style={styles.sectionItemTitleLeft}>
+                    <Text style={styles.sectionItemTitleText}>
+                      {exp?.company_role}
+                    </Text>
+                    <Text style={styles.sectionItemTitleSpan}>
+                      , {exp?.company_name}
+                    </Text>
+                    <Text style={styles.sectionItemTitleSpan}>
+                      , {exp?.company_location}
+                    </Text>
+                  </View>
 
-              <View style={styles.sectionItemContentBlock}>
-                <Text style={styles.sectionItemContentBlockText}>
-                  {format(exp?.company_start_date, "MMM, yyyy")}
-                </Text>
-                <Text style={styles.sectionItemContentBlockText}>
-                  {" "}
-                  {" - "}{" "}
-                </Text>
+                  <View style={styles.sectionItemContentBlock}>
+                    <Text style={styles.sectionItemContentBlockText}>
+                      {format(exp?.company_start_date, "MMM, yyyy")}
+                    </Text>
+                    <Text style={styles.sectionItemContentBlockText}>
+                      {" "}
+                      {" - "}{" "}
+                    </Text>
 
-                <Text style={styles.sectionItemContentBlockText}>
-                  {exp?.company_end_date
-                    ? format(exp?.company_end_date, "MMM, yyyy")
-                    : "Current"}
-                </Text>
+                    <Text style={styles.sectionItemContentBlockText}>
+                      Current
+                    </Text>
+                  </View>
+                </View>
+                <View>
+                  <View style={styles.sectionItemDescription}>
+                    <View style={styles.sectionItemDescriptionDot} />
+                    <Text style={styles.sectionItemDescriptionText}>
+                      {exp?.company_role_description}
+                    </Text>
+                  </View>
+                </View>
               </View>
-            </View>
-            <View>
-              <View style={styles.sectionItemContent}>
-                <Text style={styles.sectionItemContentHeader}>
-                  {exp?.company_name}
-                </Text>
+            ) : (
+              <View key={exp.id} style={styles.sectionItem}>
+                <View style={styles.sectionItemTitle}>
+                  <View style={styles.sectionItemTitleLeft}>
+                    <Text style={styles.sectionItemTitleText}>
+                      {exp?.company_role}
+                    </Text>
+                    <Text style={styles.sectionItemTitleSpan}>
+                      , {exp?.company_name}
+                    </Text>
+                    <Text style={styles.sectionItemTitleSpan}>
+                      , {exp?.company_location}
+                    </Text>
+                  </View>
+
+                  <View style={styles.sectionItemContentBlock}>
+                    <Text style={styles.sectionItemContentBlockText}>
+                      {format(exp?.company_start_date, "MMM, yyyy")}
+                    </Text>
+                    <Text style={styles.sectionItemContentBlockText}>
+                      {" "}
+                      {" - "}{" "}
+                    </Text>
+
+                    <Text style={styles.sectionItemContentBlockText}>
+                      {format(exp?.company_end_date, "MMM, yyyy")}
+                    </Text>
+                  </View>
+                </View>
+                <View>
+                  <View style={styles.sectionItemDescription}>
+                    <View style={styles.sectionItemDescriptionDot} />
+                    <Text style={styles.sectionItemDescriptionText}>
+                      {exp?.company_role_description}
+                    </Text>
+                  </View>
+                </View>
               </View>
-              <View style={styles.sectionItemDescription}>
-                <View style={styles.sectionItemDescriptionDot} />
-                <Text style={styles.sectionItemDescriptionText}>
-                  {exp?.company_role_description}
-                </Text>
-              </View>
-            </View>
+            )}
           </View>
         ))}
       </View>
@@ -131,16 +170,30 @@ const CustomComponent = ({
                   , {edu?.education_location}
                 </Text>
               </View>
+
               <View style={styles.sectionItemContentBlock}>
                 <Text style={styles.sectionItemContentBlockText}>
-                  {format(edu?.education_completion_year, "yyyy")}
+                  {format(edu?.education_start_date, "MMM, yyyy")}
+                </Text>
+                <Text style={styles.sectionItemContentBlockText}>
+                  {" "}
+                  {" - "}{" "}
+                </Text>
+
+                <Text style={styles.sectionItemContentBlockText}>
+                  {format(edu?.education_end_date, "MMM, yyyy")}
                 </Text>
               </View>
             </View>
             <View>
               <View style={styles.sectionItemContent}>
                 <Text style={styles.sectionItemContentHeader}>
-                  Specialization: {edu?.education_major}
+                  {edu?.education_major}
+                  {edu?.education_specialization ? (
+                    <View>Specialization: {edu?.education_specialization}</View>
+                  ) : (
+                    ""
+                  )}
                 </Text>
               </View>
               <View style={styles.sectionItemDescription}>
@@ -320,8 +373,8 @@ const styles = StyleSheet.create({
 
   headerSection: {
     display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
+    alignItems: "center",
+    justifyContent: "center",
     paddingBottom: "10px",
   },
 
@@ -335,7 +388,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    gap: "10px",
+    gap: "20px",
     flexDirection: "row",
   },
 
@@ -380,6 +433,7 @@ const styles = StyleSheet.create({
   sectionContainerDescription: {
     fontSize: "10px",
     fontWeight: 400,
+    textAlign: "justify",
   },
 
   sectionItem: {
@@ -452,6 +506,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     flexDirection: "row",
     justifyContent: "flex-start",
+    textAlign: "justify",
   },
 
   sectionItemDescriptionDot: {
@@ -465,6 +520,10 @@ const styles = StyleSheet.create({
 
   sectionItemDescriptionText: {
     fontSize: "10px",
+  },
+
+  specialSectionItem: {
+    width: "100%",
   },
 });
 
