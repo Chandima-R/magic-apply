@@ -302,63 +302,67 @@ const CustomComponent = ({
           Skills, Languages and Interests
         </Text>
 
-        <View style={styles.sectionItem}>
-          <View style={styles.sectionItemTitle}>
+        <View style={styles.sectionItemHorizontalView}>
+          <View style={styles.sectionItem}>
             <View style={styles.sectionItemTitle}>
-              <Text style={styles.sectionItemTitleText}>Technical Skills</Text>
+              <View style={styles.sectionItemTitle}>
+                <Text style={styles.sectionItemTitleText}>
+                  Technical Skills
+                </Text>
+              </View>
+            </View>
+            <View>
+              {technicalSkills?.map((skill: any, index: number) => (
+                <View key={index} style={styles.sectionItemContentGrid}>
+                  <Text style={styles.sectionItemContentHeader}>{skill}</Text>
+                </View>
+              ))}
             </View>
           </View>
-          <View>
-            {technicalSkills?.map((skill: any, index: number) => (
-              <View key={index} style={styles.sectionItemContentGrid}>
-                <Text style={styles.sectionItemContentHeader}>{skill}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
 
-        <View style={styles.sectionItem}>
-          <View style={styles.sectionItemTitle}>
+          <View style={styles.sectionItem}>
             <View style={styles.sectionItemTitle}>
-              <Text style={styles.sectionItemTitleText}>Other Skills</Text>
+              <View style={styles.sectionItemTitle}>
+                <Text style={styles.sectionItemTitleText}>Other Skills</Text>
+              </View>
+            </View>
+            <View>
+              {otherSkills?.map((skill: any, index: number) => (
+                <View key={index} style={styles.sectionItemContentGrid}>
+                  <Text style={styles.sectionItemContentHeader}>{skill}</Text>
+                </View>
+              ))}
             </View>
           </View>
-          <View>
-            {otherSkills?.map((skill: any, index: number) => (
-              <View key={index} style={styles.sectionItemContentGrid}>
-                <Text style={styles.sectionItemContentHeader}>{skill}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
 
-        <View style={styles.sectionItem}>
-          <View style={styles.sectionItemTitle}>
+          <View style={styles.sectionItem}>
             <View style={styles.sectionItemTitle}>
-              <Text style={styles.sectionItemTitleText}>Languages</Text>
+              <View style={styles.sectionItemTitle}>
+                <Text style={styles.sectionItemTitleText}>Languages</Text>
+              </View>
+            </View>
+            <View>
+              {lnguageSkills?.map((skill: any, index: number) => (
+                <View key={index} style={styles.sectionItemContentGrid}>
+                  <Text style={styles.sectionItemContentHeader}>{skill}</Text>
+                </View>
+              ))}
             </View>
           </View>
-          <View>
-            {lnguageSkills?.map((skill: any, index: number) => (
-              <View key={index} style={styles.sectionItemContentGrid}>
-                <Text style={styles.sectionItemContentHeader}>{skill}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
 
-        <View style={styles.sectionItem}>
-          <View style={styles.sectionItemTitle}>
+          <View style={styles.sectionItem}>
             <View style={styles.sectionItemTitle}>
-              <Text style={styles.sectionItemTitleText}>Interests</Text>
-            </View>
-          </View>
-          <View>
-            {interests?.map((skill: any, index: number) => (
-              <View key={index} style={styles.sectionItemContentGrid}>
-                <Text style={styles.sectionItemContentHeader}>{skill}</Text>
+              <View style={styles.sectionItemTitle}>
+                <Text style={styles.sectionItemTitleText}>Interests</Text>
               </View>
-            ))}
+            </View>
+            <View>
+              {interests?.map((skill: any, index: number) => (
+                <View key={index} style={styles.sectionItemContentGrid}>
+                  <Text style={styles.sectionItemContentHeader}>{skill}</Text>
+                </View>
+              ))}
+            </View>
           </View>
         </View>
       </View>
@@ -524,6 +528,14 @@ const styles = StyleSheet.create({
 
   specialSectionItem: {
     width: "100%",
+  },
+
+  sectionItemHorizontalView: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
   },
 });
 
