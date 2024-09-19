@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "@react-pdf/renderer";
 import { format } from "date-fns";
+import { summarizeGPT } from "@/utils/summarize-gpt";
 
 interface Props {
   certificate: any;
@@ -37,6 +38,71 @@ const CustomComponent = ({
   const interests = skills?.technical_skills
     ?.split(",")
     .map((skill: string) => skill.trim());
+
+  const [summarizedIProjects, setSummarizedProjects] = useState<any>([]);
+  const [summarizedInvolvments, setSummarizedInvolvments] = useState<any>([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const projectSummaries = await Promise.all(
+          project.map(async (pr: any) => {
+            try {
+              const summary = await summarizeGPT(
+                "summarizeDesc",
+                pr.project_role_description
+              );
+              return { ...pr, summarizedDescription: summary };
+            } catch (error) {
+              console.error("Error summarizing description:", error);
+              return {
+                ...pr,
+                summarizedDescription: "Error summarizing description",
+              };
+            }
+          })
+        );
+        setSummarizedProjects(projectSummaries);
+      } catch (error) {
+        console.error("Error fetching summaries:", error);
+      }
+    };
+
+    if (project?.length > 0) {
+      fetchProjects();
+    }
+
+    const fetchInvolvements = async () => {
+      try {
+        const InvolvementSummaries = await Promise.all(
+          involvement.map(async (inv: any) => {
+            try {
+              const summary = await summarizeGPT(
+                "summarizeDesc",
+                inv.involvement_description
+              );
+              return { ...inv, summarizedDescription: summary };
+            } catch (error) {
+              console.error("Error summarizing description:", error);
+              return {
+                ...inv,
+                summarizedDescription: "Error summarizing description",
+              };
+            }
+          })
+        );
+        setSummarizedInvolvments(InvolvementSummaries);
+      } catch (error) {
+        console.error("Error fetching summaries:", error);
+      }
+    };
+
+    if (involvement?.length > 0) {
+      fetchInvolvements();
+    }
+  }, [involvement]);
+
+  console.log(78, summarizedIProjects);
 
   return (
     <View style={styles.container}>
@@ -214,10 +280,13 @@ const CustomComponent = ({
       </View>
 
       <View style={styles.sectionContainer}>
-        <Text style={styles.sectionContainerTitle}>
-          Additional Experience and Achievements (Projects and Involvements)
-        </Text>
-        {project?.map((pro: any) => (
+        {summarizedIProjects?.length > 0 ||
+          (summarizedInvolvments?.length > 0 && (
+            <Text style={styles.sectionContainerTitle}>
+              Additional Experience and Achievements (Projects and Involvements)
+            </Text>
+          ))}
+        {summarizedIProjects?.map((pro: any) => (
           <View key={pro.id} style={styles.sectionItem}>
             <View style={styles.sectionItemTitle}>
               <View style={styles.sectionItemTitleLeft}>
@@ -245,8 +314,8 @@ const CustomComponent = ({
               <View style={styles.sectionItemDescription}>
                 <View style={styles.sectionItemDescriptionDot} />
                 <Text style={styles.sectionItemDescriptionText}>
-                  {pro?.project_role_description.length > 0
-                    ? pro?.project_role_description
+                  {pro?.summarizedDescription.length > 0
+                    ? pro?.summarizedDescription
                     : ""}
                 </Text>
               </View>
@@ -254,7 +323,7 @@ const CustomComponent = ({
           </View>
         ))}
 
-        {involvement?.map((inv: any) => (
+        {summarizedInvolvments?.map((inv: any) => (
           <View key={inv.id} style={styles.sectionItem}>
             <View style={styles.sectionItemTitle}>
               <View style={styles.sectionItemTitleLeft}>
@@ -287,8 +356,8 @@ const CustomComponent = ({
               <View style={styles.sectionItemDescription}>
                 <View style={styles.sectionItemDescriptionDot} />
                 <Text style={styles.sectionItemDescriptionText}>
-                  {inv?.involvement_description.length > 0
-                    ? inv?.involvement_description
+                  {inv?.summarizedDescription.length > 0
+                    ? inv?.summarizedDescription
                     : ""}
                 </Text>
               </View>
