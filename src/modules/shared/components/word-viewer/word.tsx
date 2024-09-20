@@ -336,55 +336,105 @@ export const WordPage = ({
           Experience
         </h2>
         {summarizedExperience?.map((exp: any) => (
-          <div key={exp.id} className="mb-4">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <h3 className="text-md font-semibold capitalize mr-2">
-                  {exp?.company_role},
-                </h3>
-                <h4 className="text-md font-semibold mr-2">
-                  {exp?.company_name},
-                </h4>
-                <span className="text-md font-normal capitalize">
-                  {exp?.company_location}
-                </span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <p className="text-md">
-                  {new Date(exp?.company_start_date).toLocaleDateString(
-                    "en-US",
-                    { month: "short", year: "numeric" }
-                  )}
-                </p>
-                <span className="text-md"> - </span>
-                <p className="text-md">
-                  {exp?.company_end_date
-                    ? new Date(exp?.company_end_date).toLocaleDateString(
+          <>
+            {exp?.company_end_date === "" && (
+              <div key={exp.id} className="mb-4">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <h3 className="text-md font-semibold capitalize mr-2">
+                      {exp?.company_role},
+                    </h3>
+                    <h4 className="text-md font-semibold mr-2">
+                      {exp?.company_name},
+                    </h4>
+                    <span className="text-md font-normal capitalize">
+                      {exp?.company_location}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <p className="text-md">
+                      {new Date(exp?.company_start_date).toLocaleDateString(
                         "en-US",
                         { month: "short", year: "numeric" }
-                      )
-                    : "Current"}
-                </p>
+                      )}
+                    </p>
+                    <span className="text-md"> - </span>
+                    <p className="text-md">Current</p>
+                  </div>
+                </div>
+
+                <div className="mt-2 flex">
+                  <div className="w-3 h-3 flex items-center justify-center mt-1.5 mr-1"></div>
+
+                  <ul className="list-disc text-honoluluBlue">
+                    {exp?.summarizedDescription
+                      ?.split("-")
+                      ?.slice(1)
+                      ?.map((experience: any, index: number) => (
+                        <li key={index}>
+                          <p className="text-md text-justify text-black">
+                            {experience}
+                          </p>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
               </div>
-            </div>
+            )}
+          </>
+        ))}
+        {summarizedExperience?.map((exp: any) => (
+          <>
+            {exp?.company_end_date?.length > 0 && (
+              <div key={exp.id} className="mb-4">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <h3 className="text-md font-semibold capitalize mr-2">
+                      {exp?.company_role},
+                    </h3>
+                    <h4 className="text-md font-semibold mr-2">
+                      {exp?.company_name},
+                    </h4>
+                    <span className="text-md font-normal capitalize">
+                      {exp?.company_location}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <p className="text-md">
+                      {new Date(exp?.company_start_date).toLocaleDateString(
+                        "en-US",
+                        { month: "short", year: "numeric" }
+                      )}
+                    </p>
+                    <span className="text-md"> - </span>
+                    <p className="text-md">
+                      {new Date(exp?.company_end_date).toLocaleDateString(
+                        "en-US",
+                        { month: "short", year: "numeric" }
+                      )}
+                    </p>
+                  </div>
+                </div>
 
-            <div className="mt-2 flex">
-              <div className="w-3 h-3 flex items-center justify-center mt-1.5 mr-1"></div>
+                <div className="mt-2 flex">
+                  <div className="w-3 h-3 flex items-center justify-center mt-1.5 mr-1"></div>
 
-              <ul className="list-disc text-honoluluBlue">
-                {exp?.summarizedDescription
-                  ?.split("-")
-                  ?.slice(1)
-                  ?.map((experience: any, index: number) => (
-                    <li key={index}>
-                      <p className="text-md text-justify text-black">
-                        {experience}
-                      </p>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          </div>
+                  <ul className="list-disc text-honoluluBlue">
+                    {exp?.summarizedDescription
+                      ?.split("-")
+                      ?.slice(1)
+                      ?.map((experience: any, index: number) => (
+                        <li key={index}>
+                          <p className="text-md text-justify text-black">
+                            {experience}
+                          </p>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </>
         ))}
       </section>
 
