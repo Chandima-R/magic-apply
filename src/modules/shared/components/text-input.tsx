@@ -17,7 +17,9 @@ interface Props {
   required?: boolean;
   fieldLabelColor?: string;
   description?: string;
+  disabled?: boolean;
 }
+
 export const TextInput = ({
   control,
   description,
@@ -26,6 +28,7 @@ export const TextInput = ({
   fieldName,
   fieldLabel,
   fieldLabelColor,
+  disabled,
 }: Props) => {
   return (
     <FormField
@@ -42,7 +45,7 @@ export const TextInput = ({
             {required && <RequiredIndicator />}
           </FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} />
+            <Input placeholder={placeholder} {...field} disabled={disabled} />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />

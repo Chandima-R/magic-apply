@@ -19,7 +19,6 @@ import { useRouter, usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
-import { Button } from "@/components/ui/button";
 
 const contactSchema = z.object({
   fullName: z.string().nonempty("Full name is required."),
@@ -169,6 +168,7 @@ export const Contact = () => {
                 control={form.control}
                 placeholder="Charles Bloomberg"
                 required
+                disabled={!!contactDetails?.contact_name}
               />
               <TextInput
                 fieldLabel="Email address"
@@ -176,6 +176,7 @@ export const Contact = () => {
                 control={form.control}
                 placeholder="charlesbloomberg@wisc.edu"
                 required
+                disabled={!!contactDetails?.contact_email}
               />
               <TextInput
                 fieldLabel="Phone number"
@@ -183,6 +184,7 @@ export const Contact = () => {
                 control={form.control}
                 placeholder="(621) 7999 5548"
                 required
+                disabled={!!contactDetails?.contact_phone}
               />
               <TextInput
                 fieldLabel="LinkedIn"
@@ -209,6 +211,7 @@ export const Contact = () => {
                 control={form.control}
                 placeholder="Country"
                 required
+                disabled={!!contactDetails?.contact_country}
               />
               <TextInput
                 fieldLabel="State"
@@ -230,21 +233,7 @@ export const Contact = () => {
                 {isLoading ? (
                   <LoadingButton />
                 ) : (
-                  <>
-                    {console.log(contactDetails?.contact_name?.length)}
-                    {contactDetails?.contact_name?.length > 0 &&
-                    contactDetails?.contact_email?.length > 0 &&
-                    contactDetails?.contact_phone.length > 0 &&
-                    contactDetails?.contact_country?.length > 0 ? (
-                      <CustomButton
-                        type="submit"
-                        title="Save basic info"
-                        disabled
-                      />
-                    ) : (
-                      <CustomButton type="submit" title="Save basic info" />
-                    )}
-                  </>
+                  <CustomButton type="submit" title="Save basic info" />
                 )}
               </div>
             </div>
