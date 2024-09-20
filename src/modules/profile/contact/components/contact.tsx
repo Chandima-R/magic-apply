@@ -26,6 +26,7 @@ const contactSchema = z.object({
   phone: z.string().nonempty("Phone number is required."),
   linkedin: z.string().nonempty("LinkedIn is required."),
   personalWebsite: z.string().optional(),
+  portfolio: z.string().optional(),
   country: z.string().nonempty("Country is required."),
   state: z.string().optional(),
   city: z.string().nonempty("City is required."),
@@ -60,6 +61,7 @@ export const Contact = () => {
       phone: "",
       linkedin: "",
       personalWebsite: "",
+      portfolio: "",
       country: "",
       state: "",
       city: "",
@@ -74,6 +76,7 @@ export const Contact = () => {
         phone: contactDetails.contact_phone || "",
         linkedin: contactDetails.contact_linkedin || "",
         personalWebsite: contactDetails.contact_website || "",
+        portfolio: contactDetails.contact_portfolio || "",
         country: contactDetails.contact_country || "",
         state: contactDetails.contact_state || "",
         city: contactDetails.contact_city || "",
@@ -102,6 +105,7 @@ export const Contact = () => {
             contact_phone: values.phone,
             contact_state: values.state,
             contact_website: values.personalWebsite,
+            contact_portfolio: values.portfolio,
           },
         });
         toast({
@@ -120,6 +124,7 @@ export const Contact = () => {
             contact_phone: values.phone,
             contact_state: values.state,
             contact_website: values.personalWebsite,
+            contact_portfolio: values.portfolio,
             user_id: user.id,
           },
         });
@@ -162,6 +167,7 @@ export const Contact = () => {
                 control={form.control}
                 placeholder="Charles Bloomberg"
                 required
+                disabled={!!contactDetails?.contact_name}
               />
               <TextInput
                 fieldLabel="Email address"
@@ -169,6 +175,7 @@ export const Contact = () => {
                 control={form.control}
                 placeholder="charlesbloomberg@wisc.edu"
                 required
+                disabled={!!contactDetails?.contact_email}
               />
               <TextInput
                 fieldLabel="Phone number"
@@ -176,6 +183,7 @@ export const Contact = () => {
                 control={form.control}
                 placeholder="(621) 7999 5548"
                 required
+                disabled={!!contactDetails?.contact_phone}
               />
               <TextInput
                 fieldLabel="LinkedIn"
@@ -191,11 +199,18 @@ export const Contact = () => {
                 placeholder="https://www.chaarlesbloomberg.com"
               />
               <TextInput
+                fieldLabel="Portfolio"
+                fieldName="portfolio"
+                control={form.control}
+                placeholder="https://www.chaarlesbloomberg.com"
+              />
+              <TextInput
                 fieldLabel="Country"
                 fieldName="country"
                 control={form.control}
                 placeholder="Country"
                 required
+                disabled={!!contactDetails?.contact_country}
               />
               <TextInput
                 fieldLabel="State"

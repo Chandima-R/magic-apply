@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "@react-pdf/renderer";
 import { format } from "date-fns";
+import { summarizeGPT } from "@/utils/summarize-gpt";
 
 interface Props {
   certificate: any;
@@ -38,6 +39,69 @@ const CustomComponent = ({
     ?.split(",")
     .map((skill: string) => skill.trim());
 
+  const [summarizedIProjects, setSummarizedProjects] = useState<any>([]);
+  const [summarizedInvolvments, setSummarizedInvolvments] = useState<any>([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const projectSummaries = await Promise.all(
+          project.map(async (pr: any) => {
+            try {
+              const summary = await summarizeGPT(
+                "summarizeDesc",
+                pr.project_role_description
+              );
+              return { ...pr, summarizedDescription: summary };
+            } catch (error) {
+              console.error("Error summarizing description:", error);
+              return {
+                ...pr,
+                summarizedDescription: "Error summarizing description",
+              };
+            }
+          })
+        );
+        setSummarizedProjects(projectSummaries);
+      } catch (error) {
+        console.error("Error fetching summaries:", error);
+      }
+    };
+
+    if (project?.length > 0) {
+      fetchProjects();
+    }
+
+    const fetchInvolvements = async () => {
+      try {
+        const InvolvementSummaries = await Promise.all(
+          involvement.map(async (inv: any) => {
+            try {
+              const summary = await summarizeGPT(
+                "summarizeDesc",
+                inv.involvement_description
+              );
+              return { ...inv, summarizedDescription: summary };
+            } catch (error) {
+              console.error("Error summarizing description:", error);
+              return {
+                ...inv,
+                summarizedDescription: "Error summarizing description",
+              };
+            }
+          })
+        );
+        setSummarizedInvolvments(InvolvementSummaries);
+      } catch (error) {
+        console.error("Error fetching summaries:", error);
+      }
+    };
+
+    if (involvement?.length > 0) {
+      fetchInvolvements();
+    }
+  }, [involvement]);
+
   return (
     <View style={styles.container}>
       <View style={styles.headerSection}>
@@ -46,11 +110,11 @@ const CustomComponent = ({
           <Text style={styles.headerContentText}>
             Telephone: {contact?.contact_phone}
           </Text>
-          <Text style={styles.horizontalBar}>|</Text>
+
           <Text style={styles.headerContentText}>
             Email: {contact?.contact_email}
           </Text>
-          <Text style={styles.horizontalBar}>|</Text>
+
           <Text style={styles.headerContentText}>
             Location: {contact?.contact_city}
           </Text>
@@ -63,7 +127,7 @@ const CustomComponent = ({
       </View>
 
       <View style={styles.sectionContainer}>
-        <Text style={styles.sectionContainerTitle}>summary</Text>
+        <Text style={styles.sectionContainerTitle}>professional summary</Text>
         <View>
           <Text style={styles.sectionContainerDescription}>
             {summary?.summary_description}
@@ -73,47 +137,86 @@ const CustomComponent = ({
 
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionContainerTitle}>experience</Text>
+
         {experience?.map((exp: any) => (
-          <View key={exp.id} style={styles.sectionItem}>
-            <View style={styles.sectionItemTitle}>
-              <View style={styles.sectionItemTitleLeft}>
-                <Text style={styles.sectionItemTitleText}>
-                  {exp?.company_role}
-                </Text>
-                <Text style={styles.sectionItemTitleSpan}>
-                  , {exp?.company_location}
-                </Text>
-              </View>
+          <View style={styles.specialSectionItem} key={exp?.id}>
+            {!exp?.company_end_date ? (
+              <View key={exp.id} style={styles.sectionItem}>
+                <View style={styles.sectionItemTitle}>
+                  <View style={styles.sectionItemTitleLeft}>
+                    <Text style={styles.sectionItemTitleText}>
+                      {exp?.company_role}
+                    </Text>
+                    <Text style={styles.sectionItemTitleSpan}>
+                      , {exp?.company_name}
+                    </Text>
+                    <Text style={styles.sectionItemTitleSpan}>
+                      , {exp?.company_location}
+                    </Text>
+                  </View>
 
-              <View style={styles.sectionItemContentBlock}>
-                <Text style={styles.sectionItemContentBlockText}>
-                  {format(exp?.company_start_date, "MMMM, yyyy")}
-                </Text>
-                <Text style={styles.sectionItemContentBlockText}>
-                  {" "}
-                  {" - "}{" "}
-                </Text>
+                  <View style={styles.sectionItemContentBlock}>
+                    <Text style={styles.sectionItemContentBlockText}>
+                      {format(exp?.company_start_date, "MMM, yyyy")}
+                    </Text>
+                    <Text style={styles.sectionItemContentBlockText}>
+                      {" "}
+                      {" - "}{" "}
+                    </Text>
 
-                <Text style={styles.sectionItemContentBlockText}>
-                  {exp?.company_end_date
-                    ? format(exp?.company_end_date, "MMMM, yyyy")
-                    : "Current"}
-                </Text>
+                    <Text style={styles.sectionItemContentBlockText}>
+                      Current
+                    </Text>
+                  </View>
+                </View>
+                <View>
+                  <View style={styles.sectionItemDescription}>
+                    <View style={styles.sectionItemDescriptionDot} />
+                    <Text style={styles.sectionItemDescriptionText}>
+                      {exp?.company_role_description}
+                    </Text>
+                  </View>
+                </View>
               </View>
-            </View>
-            <View>
-              <View style={styles.sectionItemContent}>
-                <Text style={styles.sectionItemContentHeader}>
-                  {exp?.company_name}
-                </Text>
+            ) : (
+              <View key={exp.id} style={styles.sectionItem}>
+                <View style={styles.sectionItemTitle}>
+                  <View style={styles.sectionItemTitleLeft}>
+                    <Text style={styles.sectionItemTitleText}>
+                      {exp?.company_role}
+                    </Text>
+                    <Text style={styles.sectionItemTitleSpan}>
+                      , {exp?.company_name}
+                    </Text>
+                    <Text style={styles.sectionItemTitleSpan}>
+                      , {exp?.company_location}
+                    </Text>
+                  </View>
+
+                  <View style={styles.sectionItemContentBlock}>
+                    <Text style={styles.sectionItemContentBlockText}>
+                      {format(exp?.company_start_date, "MMM, yyyy")}
+                    </Text>
+                    <Text style={styles.sectionItemContentBlockText}>
+                      {" "}
+                      {" - "}{" "}
+                    </Text>
+
+                    <Text style={styles.sectionItemContentBlockText}>
+                      {format(exp?.company_end_date, "MMM, yyyy")}
+                    </Text>
+                  </View>
+                </View>
+                <View>
+                  <View style={styles.sectionItemDescription}>
+                    <View style={styles.sectionItemDescriptionDot} />
+                    <Text style={styles.sectionItemDescriptionText}>
+                      {exp?.company_role_description}
+                    </Text>
+                  </View>
+                </View>
               </View>
-              <View style={styles.sectionItemDescription}>
-                <View style={styles.sectionItemDescriptionDot} />
-                <Text style={styles.sectionItemDescriptionText}>
-                  {exp?.company_role_description}
-                </Text>
-              </View>
-            </View>
+            )}
           </View>
         ))}
       </View>
@@ -131,16 +234,30 @@ const CustomComponent = ({
                   , {edu?.education_location}
                 </Text>
               </View>
+
               <View style={styles.sectionItemContentBlock}>
                 <Text style={styles.sectionItemContentBlockText}>
-                  {format(edu?.education_completion_year, "yyyy")}
+                  {format(edu?.education_start_date, "MMM, yyyy")}
+                </Text>
+                <Text style={styles.sectionItemContentBlockText}>
+                  {" "}
+                  {" - "}{" "}
+                </Text>
+
+                <Text style={styles.sectionItemContentBlockText}>
+                  {format(edu?.education_end_date, "MMM, yyyy")}
                 </Text>
               </View>
             </View>
             <View>
               <View style={styles.sectionItemContent}>
                 <Text style={styles.sectionItemContentHeader}>
-                  Specialization: {edu?.education_major}
+                  {edu?.education_major}
+                  {edu?.education_specialization ? (
+                    <View>Specialization: {edu?.education_specialization}</View>
+                  ) : (
+                    ""
+                  )}
                 </Text>
               </View>
               <View style={styles.sectionItemDescription}>
@@ -161,10 +278,13 @@ const CustomComponent = ({
       </View>
 
       <View style={styles.sectionContainer}>
-        <Text style={styles.sectionContainerTitle}>
-          Additional Experience and Achievements (Projects and Involvements)
-        </Text>
-        {project?.map((pro: any) => (
+        {summarizedIProjects?.length > 0 ||
+          (summarizedInvolvments?.length > 0 && (
+            <Text style={styles.sectionContainerTitle}>
+              Additional Experience and Achievements (Projects and Involvements)
+            </Text>
+          ))}
+        {summarizedIProjects?.map((pro: any) => (
           <View key={pro.id} style={styles.sectionItem}>
             <View style={styles.sectionItemTitle}>
               <View style={styles.sectionItemTitleLeft}>
@@ -177,14 +297,14 @@ const CustomComponent = ({
               </View>
               <View style={styles.sectionItemContentBlock}>
                 <Text style={styles.sectionItemContentBlockText}>
-                  {format(pro?.project_start_date, "MMMM, yyyy")}
+                  {format(pro?.project_start_date, "MMM, yyyy")}
                 </Text>
                 <Text style={styles.sectionItemContentBlockText}>
                   {" "}
                   {" - "}{" "}
                 </Text>
                 <Text style={styles.sectionItemContentBlockText}>
-                  {format(pro?.project_end_date, "MMMM, yyyy")}
+                  {format(pro?.project_end_date, "MMM, yyyy")}
                 </Text>
               </View>
             </View>
@@ -192,8 +312,8 @@ const CustomComponent = ({
               <View style={styles.sectionItemDescription}>
                 <View style={styles.sectionItemDescriptionDot} />
                 <Text style={styles.sectionItemDescriptionText}>
-                  {pro?.project_role_description.length > 0
-                    ? pro?.project_role_description
+                  {pro?.summarizedDescription.length > 0
+                    ? pro?.summarizedDescription
                     : ""}
                 </Text>
               </View>
@@ -201,7 +321,7 @@ const CustomComponent = ({
           </View>
         ))}
 
-        {involvement?.map((inv: any) => (
+        {summarizedInvolvments?.map((inv: any) => (
           <View key={inv.id} style={styles.sectionItem}>
             <View style={styles.sectionItemTitle}>
               <View style={styles.sectionItemTitleLeft}>
@@ -214,14 +334,14 @@ const CustomComponent = ({
               </View>
               <View style={styles.sectionItemContentBlock}>
                 <Text style={styles.sectionItemContentBlockText}>
-                  {format(inv?.involvement_start_date, "MMMM, yyyy")}
+                  {format(inv?.involvement_start_date, "MMM, yyyy")}
                 </Text>
                 <Text style={styles.sectionItemContentBlockText}>
                   {" "}
                   {" - "}{" "}
                 </Text>
                 <Text style={styles.sectionItemContentBlockText}>
-                  {format(inv?.involvement_end_date, "MMMM, yyyy")}
+                  {format(inv?.involvement_end_date, "MMM, yyyy")}
                 </Text>
               </View>
             </View>
@@ -234,8 +354,8 @@ const CustomComponent = ({
               <View style={styles.sectionItemDescription}>
                 <View style={styles.sectionItemDescriptionDot} />
                 <Text style={styles.sectionItemDescriptionText}>
-                  {inv?.involvement_description.length > 0
-                    ? inv?.involvement_description
+                  {inv?.summarizedDescription.length > 0
+                    ? inv?.summarizedDescription
                     : ""}
                 </Text>
               </View>
@@ -249,63 +369,67 @@ const CustomComponent = ({
           Skills, Languages and Interests
         </Text>
 
-        <View style={styles.sectionItem}>
-          <View style={styles.sectionItemTitle}>
+        <View style={styles.sectionItemHorizontalView}>
+          <View style={styles.sectionItem}>
             <View style={styles.sectionItemTitle}>
-              <Text style={styles.sectionItemTitleText}>Technical Skills</Text>
+              <View style={styles.sectionItemTitle}>
+                <Text style={styles.sectionItemTitleText}>
+                  Technical Skills
+                </Text>
+              </View>
+            </View>
+            <View>
+              {technicalSkills?.map((skill: any, index: number) => (
+                <View key={index} style={styles.sectionItemContentGrid}>
+                  <Text style={styles.sectionItemContentHeader}>{skill}</Text>
+                </View>
+              ))}
             </View>
           </View>
-          <View>
-            {technicalSkills?.map((skill: any, index: number) => (
-              <View key={index} style={styles.sectionItemContentGrid}>
-                <Text style={styles.sectionItemContentHeader}>{skill}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
 
-        <View style={styles.sectionItem}>
-          <View style={styles.sectionItemTitle}>
+          <View style={styles.sectionItem}>
             <View style={styles.sectionItemTitle}>
-              <Text style={styles.sectionItemTitleText}>Other Skills</Text>
+              <View style={styles.sectionItemTitle}>
+                <Text style={styles.sectionItemTitleText}>Other Skills</Text>
+              </View>
+            </View>
+            <View>
+              {otherSkills?.map((skill: any, index: number) => (
+                <View key={index} style={styles.sectionItemContentGrid}>
+                  <Text style={styles.sectionItemContentHeader}>{skill}</Text>
+                </View>
+              ))}
             </View>
           </View>
-          <View>
-            {otherSkills?.map((skill: any, index: number) => (
-              <View key={index} style={styles.sectionItemContentGrid}>
-                <Text style={styles.sectionItemContentHeader}>{skill}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
 
-        <View style={styles.sectionItem}>
-          <View style={styles.sectionItemTitle}>
+          <View style={styles.sectionItem}>
             <View style={styles.sectionItemTitle}>
-              <Text style={styles.sectionItemTitleText}>Languages</Text>
+              <View style={styles.sectionItemTitle}>
+                <Text style={styles.sectionItemTitleText}>Languages</Text>
+              </View>
+            </View>
+            <View>
+              {lnguageSkills?.map((skill: any, index: number) => (
+                <View key={index} style={styles.sectionItemContentGrid}>
+                  <Text style={styles.sectionItemContentHeader}>{skill}</Text>
+                </View>
+              ))}
             </View>
           </View>
-          <View>
-            {lnguageSkills?.map((skill: any, index: number) => (
-              <View key={index} style={styles.sectionItemContentGrid}>
-                <Text style={styles.sectionItemContentHeader}>{skill}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
 
-        <View style={styles.sectionItem}>
-          <View style={styles.sectionItemTitle}>
+          <View style={styles.sectionItem}>
             <View style={styles.sectionItemTitle}>
-              <Text style={styles.sectionItemTitleText}>Interests</Text>
-            </View>
-          </View>
-          <View>
-            {interests?.map((skill: any, index: number) => (
-              <View key={index} style={styles.sectionItemContentGrid}>
-                <Text style={styles.sectionItemContentHeader}>{skill}</Text>
+              <View style={styles.sectionItemTitle}>
+                <Text style={styles.sectionItemTitleText}>Interests</Text>
               </View>
-            ))}
+            </View>
+            <View>
+              {interests?.map((skill: any, index: number) => (
+                <View key={index} style={styles.sectionItemContentGrid}>
+                  <Text style={styles.sectionItemContentHeader}>{skill}</Text>
+                </View>
+              ))}
+            </View>
           </View>
         </View>
       </View>
@@ -320,8 +444,8 @@ const styles = StyleSheet.create({
 
   headerSection: {
     display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
+    alignItems: "center",
+    justifyContent: "center",
     paddingBottom: "10px",
   },
 
@@ -335,7 +459,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    gap: "10px",
+    gap: "20px",
     flexDirection: "row",
   },
 
@@ -380,6 +504,7 @@ const styles = StyleSheet.create({
   sectionContainerDescription: {
     fontSize: "10px",
     fontWeight: 400,
+    textAlign: "justify",
   },
 
   sectionItem: {
@@ -452,6 +577,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     flexDirection: "row",
     justifyContent: "flex-start",
+    textAlign: "justify",
   },
 
   sectionItemDescriptionDot: {
@@ -465,6 +591,18 @@ const styles = StyleSheet.create({
 
   sectionItemDescriptionText: {
     fontSize: "10px",
+  },
+
+  specialSectionItem: {
+    width: "100%",
+  },
+
+  sectionItemHorizontalView: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
   },
 });
 

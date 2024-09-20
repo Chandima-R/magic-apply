@@ -15,6 +15,7 @@ import { PROJECT_INFORMATION_BY_USER_ID } from "@/graphql/project";
 import { SKILLS_INFORMATION_BY_USER_ID } from "@/graphql/skills";
 import { SUMMARY_INFORMATION_BY_USER_ID } from "@/graphql/summary";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
+import { WordPage } from "@/modules/shared/components/word-viewer/word";
 
 export const FinishReview = () => {
   const path = usePathname();
@@ -132,13 +133,13 @@ export const FinishReview = () => {
   const summary = summaryData?.summary[0];
 
   return (
-    <>
+    <div className="p-4 border-[1px] shadow-md rounded">
       <ProfileActiveLinks activeLink={activeLink} />
       {summaryLoading ? (
         <LoadingSpinner />
       ) : (
         <div>
-          <PdfPage
+          <WordPage
             certificate={visibileCertificates}
             contact={contact}
             coursework={visibleCoursework}
@@ -151,6 +152,6 @@ export const FinishReview = () => {
           />
         </div>
       )}
-    </>
+    </div>
   );
 };

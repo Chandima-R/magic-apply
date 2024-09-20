@@ -1,3 +1,5 @@
+import React from "react";
+import MDEditor from "@uiw/react-md-editor";
 import {
   FormControl,
   FormDescription,
@@ -6,7 +8,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
 
 interface Props {
@@ -14,13 +15,12 @@ interface Props {
   fieldName: string;
   control: any;
   placeholder: string;
-  required?: boolean;
+  required: boolean;
   fieldLabelColor?: string;
   description?: string;
-  disabled?: boolean;
 }
 
-export const TextInput = ({
+export const MarkdownTextArea = ({
   control,
   description,
   placeholder,
@@ -28,7 +28,6 @@ export const TextInput = ({
   fieldName,
   fieldLabel,
   fieldLabelColor,
-  disabled,
 }: Props) => {
   return (
     <FormField
@@ -45,7 +44,14 @@ export const TextInput = ({
             {required && <RequiredIndicator />}
           </FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} disabled={disabled} />
+            <div data-color-mode="light" className="w-full">
+              <MDEditor
+                value={field.value}
+                onChange={(value) => field.onChange(value)}
+                preview="edit"
+                // placeholder={placeholder}
+              />
+            </div>
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />

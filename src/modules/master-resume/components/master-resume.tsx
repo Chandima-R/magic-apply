@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { WordPage } from "@/modules/shared/components/word-viewer/word";
 
 export const MasterResume = () => {
-  const [activeView, setActiveView] = useState("pdf"); // State to track the active view
+  // const [activeView, setActiveView] = useState("pdf");
   const { user } = useUser();
 
   const { data: certificationData } = useSubscription(
@@ -114,7 +114,7 @@ export const MasterResume = () => {
 
   return (
     <>
-      <div className="w-full items-center justify-end flex gap-4 mb-4">
+      {/* <div className="w-full items-center justify-end flex gap-4 mb-4">
         <Button
           size={"sm"}
           variant={activeView === "pdf" ? "outline" : "default"}
@@ -129,12 +129,12 @@ export const MasterResume = () => {
         >
           View Word
         </Button>
-      </div>
+      </div> */}
       {summaryLoading ? (
         <LoadingSpinner />
       ) : (
         <div>
-          {activeView === "pdf" ? (
+          {/* {activeView === "pdf" ? (
             <PdfPage
               certificate={visibleCertificates}
               contact={contact}
@@ -146,19 +146,19 @@ export const MasterResume = () => {
               skills={skills}
               summary={summary}
             />
-          ) : (
-            <WordPage
-              certificate={visibleCertificates}
-              contact={contact}
-              coursework={visibleCoursework}
-              education={visibleEducation}
-              experience={visibleExperience}
-              involvement={visibleInvolvement}
-              project={visibleProjects}
-              skills={skills}
-              summary={summary}
-            />
-          )}
+          ) : ( */}
+          <WordPage
+            certificate={visibleCertificates}
+            contact={contact}
+            coursework={visibleCoursework}
+            education={visibleEducation}
+            experience={visibleExperience}
+            involvement={visibleInvolvement}
+            project={visibleProjects}
+            skills={skills}
+            summary={summary}
+          />
+          {/* )} */}
         </div>
       )}
     </>

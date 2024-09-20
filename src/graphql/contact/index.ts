@@ -11,6 +11,7 @@ export const CONTACT_INFORMATION = gql`
       contact_phone
       contact_state
       contact_website
+      contact_portfolio
       id
       user_id
     }
@@ -27,6 +28,7 @@ export const ADD_NEW_CONTACT = gql`
     $contact_phone: String
     $contact_state: String
     $contact_website: String
+    $contact_portfolio: String
     $user_id: String
   ) {
     insert_contact(
@@ -39,6 +41,7 @@ export const ADD_NEW_CONTACT = gql`
         contact_phone: $contact_phone
         contact_state: $contact_state
         contact_website: $contact_website
+        contact_portfolio: $contact_portfolio
         user_id: $user_id
       }
     ) {
@@ -57,6 +60,7 @@ export const UPDATE_CONTACT = gql`
     $contact_email: String
     $contact_country: String
     $contact_city: String
+    $contact_portfolio: String
     $_eq: uuid
   ) {
     update_contact(
@@ -70,6 +74,7 @@ export const UPDATE_CONTACT = gql`
         contact_phone: $contact_phone
         contact_state: $contact_state
         contact_website: $contact_website
+        contact_portfolio: $contact_portfolio
       }
     ) {
       affected_rows
