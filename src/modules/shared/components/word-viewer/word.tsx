@@ -205,11 +205,31 @@ export const WordPage = ({
       saveAs(blob, `${contact?.contact_name}.docx`);
     });
   };
+
+  const [profileSummary, setProfleSummary] = useState<string>("");
   const [summarizedExperience, setSummarizedExperience] = useState<any>([]);
   const [summarizedIProjects, setSummarizedProjects] = useState<any>([]);
   const [summarizedInvolvments, setSummarizedInvolvments] = useState<any>([]);
 
   useEffect(() => {
+    const fetchProfileSummary = async () => {
+      try {
+        // Make sure the prompt type matches what you defined in the promptMap
+        const sum = await summarizeGPT(
+          "summarizeDesc", // Updated prompt type to match the promptMap key
+          summary?.summary_description
+        );
+
+        setProfleSummary(sum);
+
+        return { summarizedSummary: sum };
+      } catch (error) {
+        console.error("Error fetching profile summary:", error);
+      }
+    };
+
+    fetchProfileSummary();
+
     const fetchExperienceSummaries = async () => {
       try {
         const experienceSummaries = await Promise.all(
@@ -296,7 +316,7 @@ export const WordPage = ({
     if (involvement?.length > 0) {
       fetchInvolvements();
     }
-  }, [experience, involvement, project]);
+  }, [summary, experience, involvement, project]);
 
   return (
     <div className="p-4">
@@ -326,9 +346,7 @@ export const WordPage = ({
         <h2 className="text-xl font-medium text-honoluluBlue border-b border-honoluluBlue pb-1">
           Professional Summary
         </h2>
-        <p className="text-md mt-2 text-justify">
-          {summary?.summary_description}
-        </p>
+        <p className="text-md mt-2 text-justify">{profileSummary}</p>
       </section>
 
       <section className="py-2">

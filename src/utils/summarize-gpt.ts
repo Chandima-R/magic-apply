@@ -26,7 +26,6 @@ export async function summarizeGPT(promptType: string, message: string) {
     }
 
     const data = await response.json();
-    console.log("API Response:", data);
 
     if (!data.choices || data.choices.length === 0) {
       throw new Error("No choices found in the response");
