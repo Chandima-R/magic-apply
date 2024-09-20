@@ -1,4 +1,10 @@
-import { FileText, FolderCog, LayoutDashboard, AppWindow } from "lucide-react";
+import {
+  FileText,
+  FolderCog,
+  LayoutDashboard,
+  AppWindow,
+  ScrollText,
+} from "lucide-react";
 
 export const sidebarLinks = [
   {
@@ -10,6 +16,11 @@ export const sidebarLinks = [
     href: "/apply-jobs",
     label: "apply jobs",
     icon: AppWindow,
+  },
+  {
+    href: "/master-resume",
+    label: "master resume",
+    icon: ScrollText,
   },
   // {
   //   href: "/sample-library",
