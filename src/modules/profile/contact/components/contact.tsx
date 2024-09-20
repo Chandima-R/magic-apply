@@ -88,7 +88,6 @@ export const Contact = () => {
   const [updateContact] = useMutation(UPDATE_CONTACT);
 
   async function onSubmit(values: z.infer<typeof contactSchema>) {
-    console.log(values);
     try {
       if (!user?.id) {
         throw new Error("User is not authenticated");
