@@ -15,6 +15,7 @@ import { PROJECT_INFORMATION_BY_USER_ID } from "@/graphql/project";
 import { SKILLS_INFORMATION_BY_USER_ID } from "@/graphql/skills";
 import { SUMMARY_INFORMATION_BY_USER_ID } from "@/graphql/summary";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
+import { WordPage } from "@/modules/shared/components/word-viewer/word";
 
 export const FinishReview = () => {
   const path = usePathname();
@@ -138,7 +139,7 @@ export const FinishReview = () => {
         <LoadingSpinner />
       ) : (
         <div>
-          <PdfPage
+          <WordPage
             certificate={visibileCertificates}
             contact={contact}
             coursework={visibleCoursework}
