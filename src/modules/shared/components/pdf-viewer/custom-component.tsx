@@ -102,8 +102,6 @@ const CustomComponent = ({
     }
   }, [involvement]);
 
-  console.log(78, summarizedIProjects);
-
   return (
     <View style={styles.container}>
       <View style={styles.headerSection}>

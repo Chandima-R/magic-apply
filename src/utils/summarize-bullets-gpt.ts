@@ -1,8 +1,8 @@
-export async function generateResponse(promptType: string, message: any) {
+export async function summarizAndBulletGPT(promptType: string, message: any) {
   const OPENAI_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
   const promptMap: any = {
-    summarizeAndBulletPoints: `Summarize the following content and provide it as bullet points. Ensure the summary is concise and each bullet point highlights a key aspect. Content: ${message.content}`,
+    summarizeAndBulletPoints: `Summarize the following content in a meaninful way and provide it as to five bullet points.here dont use any special characters between words. Ensure the summary is concise and each bullet point highlights a key aspect. Content: ${message.content}`,
   };
 
   const response = await fetch("https://api.openai.com/v1/chat/completions", {

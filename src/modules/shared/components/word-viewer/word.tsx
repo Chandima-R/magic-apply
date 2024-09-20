@@ -5,6 +5,7 @@ import { saveAs } from "file-saver";
 import { Button } from "@/components/ui/button";
 import { summarizeGPT } from "@/utils/summarize-gpt";
 import { Linkedin, Mail, MapPin, Phone, Smartphone } from "lucide-react";
+import { summarizAndBulletGPT } from "@/utils/summarize-bullets-gpt";
 
 interface Props {
   certificate: any;
@@ -204,11 +205,40 @@ export const WordPage = ({
       saveAs(blob, `${contact?.contact_name}.docx`);
     });
   };
-
+  const [summarizedExperience, setSummarizedExperience] = useState<any>([]);
   const [summarizedIProjects, setSummarizedProjects] = useState<any>([]);
   const [summarizedInvolvments, setSummarizedInvolvments] = useState<any>([]);
 
   useEffect(() => {
+    const fetchExperienceSummaries = async () => {
+      try {
+        const experienceSummaries = await Promise.all(
+          experience.map(async (exp: any) => {
+            try {
+              const summary = await summarizAndBulletGPT(
+                "summarizeAndBulletPoints",
+                { content: exp.company_role_description }
+              );
+              return { ...exp, summarizedDescription: summary };
+            } catch (error) {
+              console.error("Error summarizing description:", error);
+              return {
+                ...exp,
+                summarizedDescription: "Error summarizing description",
+              };
+            }
+          })
+        );
+        setSummarizedExperience(experienceSummaries);
+      } catch (error) {
+        console.error("Error fetching summaries:", error);
+      }
+    };
+
+    if (experience?.length > 0) {
+      fetchExperienceSummaries();
+    }
+
     const fetchProjects = async () => {
       try {
         const projectSummaries = await Promise.all(
@@ -266,7 +296,7 @@ export const WordPage = ({
     if (involvement?.length > 0) {
       fetchInvolvements();
     }
-  }, [involvement, project]);
+  }, [experience, involvement, project]);
 
   return (
     <div className="p-4">
@@ -305,7 +335,7 @@ export const WordPage = ({
         <h2 className="text-xl font-medium text-honoluluBlue border-b border-honoluluBlue pb-1">
           Experience
         </h2>
-        {experience?.map((exp: any) => (
+        {summarizedExperience?.map((exp: any) => (
           <div key={exp.id} className="mb-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center">
@@ -339,10 +369,20 @@ export const WordPage = ({
             </div>
 
             <div className="mt-2 flex">
-              <div className="w-3 h-3 flex items-center justify-center mt-1.5 mr-1">
-                <span className="h-1 w-1 bg-honoluluBlue rounded-full" />
-              </div>
-              <p className="text-md">{exp?.company_role_description}</p>
+              <div className="w-3 h-3 flex items-center justify-center mt-1.5 mr-1"></div>
+
+              <ul className="list-disc text-honoluluBlue">
+                {exp?.summarizedDescription
+                  ?.split("-")
+                  ?.slice(1)
+                  ?.map((experience: any, index: number) => (
+                    <li key={index}>
+                      <p className="text-md text-justify text-black">
+                        {experience}
+                      </p>
+                    </li>
+                  ))}
+              </ul>
             </div>
           </div>
         ))}
@@ -385,7 +425,7 @@ export const WordPage = ({
             <div className="mt-2">
               <div className="flex">
                 <div className="w-3 h-3 flex items-center justify-center mt-1.5 mr-1">
-                  <span className="h-1 w-1 bg-honoluluBlue rounded-full" />
+                  <span className="h-1.5 w-1.5 bg-honoluluBlue rounded-full" />
                 </div>
                 <h4 className="text-md font-normal">{edu?.education_major}</h4>
               </div>
@@ -438,7 +478,7 @@ export const WordPage = ({
             </div>
             <div className="mt-2 flex">
               <div className="w-3 h-3 flex items-center justify-center mt-1.5 mr-1">
-                <span className="h-1 w-1 bg-honoluluBlue rounded-full" />
+                <span className="h-1.5 w-1.5 bg-honoluluBlue rounded-full" />
               </div>
               <h4 className="text-md font-normal text-justify">
                 {pro?.summarizedDescription}
@@ -475,7 +515,7 @@ export const WordPage = ({
             </div>
             <div className="mt-2 flex">
               <div className="w-3 h-3 flex items-center justify-center mt-1.5 mr-1">
-                <span className="h-1 w-1 bg-honoluluBlue rounded-full" />
+                <span className="h-1.5 w-1.5 bg-honoluluBlue rounded-full" />
               </div>
               <h4 className="text-md font-normal text-justify">
                 {inv?.summarizedDescription}
