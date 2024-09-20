@@ -139,7 +139,7 @@ const CustomComponent = ({
         <Text style={styles.sectionContainerTitle}>experience</Text>
 
         {experience?.map((exp: any) => (
-          <View style={styles.specialSectionItem}>
+          <View style={styles.specialSectionItem} key={exp?.id}>
             {!exp?.company_end_date ? (
               <View key={exp.id} style={styles.sectionItem}>
                 <View style={styles.sectionItemTitle}>
