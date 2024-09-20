@@ -19,6 +19,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
+import { Button } from "@/components/ui/button";
 
 const contactSchema = z.object({
   fullName: z.string().nonempty("Full name is required."),
@@ -229,7 +230,21 @@ export const Contact = () => {
                 {isLoading ? (
                   <LoadingButton />
                 ) : (
-                  <CustomButton type="submit" title="Save basic info" />
+                  <>
+                    {console.log(contactDetails?.contact_name?.length)}
+                    {contactDetails?.contact_name?.length > 0 &&
+                    contactDetails?.contact_email?.length > 0 &&
+                    contactDetails?.contact_phone.length > 0 &&
+                    contactDetails?.contact_country?.length > 0 ? (
+                      <CustomButton
+                        type="submit"
+                        title="Save basic info"
+                        disabled
+                      />
+                    ) : (
+                      <CustomButton type="submit" title="Save basic info" />
+                    )}
+                  </>
                 )}
               </div>
             </div>
