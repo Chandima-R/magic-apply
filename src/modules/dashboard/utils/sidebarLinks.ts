@@ -13,14 +13,14 @@ export const sidebarLinks = [
     icon: LayoutDashboard,
   },
   {
-    href: "/apply-jobs",
-    label: "apply jobs",
-    icon: AppWindow,
-  },
-  {
     href: "/master-resume",
     label: "master resume",
     icon: ScrollText,
+  },
+  {
+    href: "/apply-jobs",
+    label: "apply jobs",
+    icon: AppWindow,
   },
   // {
   //   href: "/sample-library",
