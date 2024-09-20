@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CustomButton } from "../custom-button";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx";
 import { saveAs } from "file-saver";
 import { Button } from "@/components/ui/button";
+import { summarizeGPT } from "@/utils/summarize-gpt";
+import { Linkedin, Mail, MapPin, Phone, Smartphone } from "lucide-react";
 
 interface Props {
   certificate: any;
@@ -77,12 +79,12 @@ export const WordPage = ({
                     new TextRun(
                       ` ${new Date(exp?.company_start_date).toLocaleDateString(
                         "en-US",
-                        { month: "long", year: "numeric" }
+                        { month: "short", year: "numeric" }
                       )} - ${
                         exp?.company_end_date
                           ? new Date(exp?.company_end_date).toLocaleDateString(
                               "en-US",
-                              { month: "long", year: "numeric" }
+                              { month: "short", year: "numeric" }
                             )
                           : "Current"
                       }`
@@ -129,10 +131,10 @@ export const WordPage = ({
                     new TextRun(
                       ` ${new Date(pro?.project_start_date).toLocaleDateString(
                         "en-US",
-                        { month: "long", year: "numeric" }
+                        { month: "short", year: "numeric" }
                       )} - ${new Date(pro?.project_end_date).toLocaleDateString(
                         "en-US",
-                        { month: "long", year: "numeric" }
+                        { month: "short", year: "numeric" }
                       )}`
                     ),
                     new TextRun(`${pro?.project_role_description}`),
@@ -150,12 +152,12 @@ export const WordPage = ({
                       ` ${new Date(
                         inv?.involvement_start_date
                       ).toLocaleDateString("en-US", {
-                        month: "long",
+                        month: "short",
                         year: "numeric",
                       })} - ${new Date(
                         inv?.involvement_end_date
                       ).toLocaleDateString("en-US", {
-                        month: "long",
+                        month: "short",
                         year: "numeric",
                       })}`
                     ),
@@ -203,36 +205,103 @@ export const WordPage = ({
     });
   };
 
+  const [summarizedIProjects, setSummarizedProjects] = useState<any>([]);
+  const [summarizedInvolvments, setSummarizedInvolvments] = useState<any>([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const projectSummaries = await Promise.all(
+          project.map(async (pr: any) => {
+            try {
+              const summary = await summarizeGPT(
+                "summarizeDesc",
+                pr.project_role_description
+              );
+              return { ...pr, summarizedDescription: summary };
+            } catch (error) {
+              console.error("Error summarizing description:", error);
+              return {
+                ...pr,
+                summarizedDescription: "Error summarizing description",
+              };
+            }
+          })
+        );
+        setSummarizedProjects(projectSummaries);
+      } catch (error) {
+        console.error("Error fetching summaries:", error);
+      }
+    };
+
+    if (project?.length > 0) {
+      fetchProjects();
+    }
+
+    const fetchInvolvements = async () => {
+      try {
+        const InvolvementSummaries = await Promise.all(
+          involvement.map(async (inv: any) => {
+            try {
+              const summary = await summarizeGPT(
+                "summarizeDesc",
+                inv.involvement_description
+              );
+              return { ...inv, summarizedDescription: summary };
+            } catch (error) {
+              console.error("Error summarizing description:", error);
+              return {
+                ...inv,
+                summarizedDescription: "Error summarizing description",
+              };
+            }
+          })
+        );
+        setSummarizedInvolvments(InvolvementSummaries);
+      } catch (error) {
+        console.error("Error fetching summaries:", error);
+      }
+    };
+
+    if (involvement?.length > 0) {
+      fetchInvolvements();
+    }
+  }, [involvement, project]);
+
   return (
     <div className="p-4">
-      <header className="pb-4">
+      <header className="pb-4 flex flex-col items-center justify-center">
         <h1 className="text-2xl font-bold mb-2">{contact?.contact_name}</h1>
-        <div className="flex items-center space-x-2">
-          <p className="text-md font-normal">
-            Telephone: {contact?.contact_phone}
+        <div className="flex items-center space-x-6">
+          <p className="text-md font-normal  flex items-center">
+            <Smartphone className="size-4 mr-1" />
+            {contact?.contact_phone}
           </p>
-          <span className="h-2 w-px bg-black"></span>
-          <p className="text-md font-normal">Email: {contact?.contact_email}</p>
-          <span className="h-2 w-px bg-black"></span>
-          <p className="text-md font-normal">
-            Location: {contact?.contact_city}
+
+          <p className="text-md font-normal flex items-center">
+            <Mail className="size-4 mr-1" /> {contact?.contact_email}
+          </p>
+          <p className="text-md font-normal flex items-center">
+            <MapPin className="size-4 mr-1" /> {contact?.contact_city}
           </p>
         </div>
         <div className="pt-2">
-          <p className="text-md font-normal">
-            LinkedIn: {contact?.contact_linkedin}
+          <p className="text-md font-normal flex items-center">
+            <Linkedin className="size-4 mr-1" /> {contact?.contact_linkedin}
           </p>
         </div>
       </header>
 
-      <section className="py-4">
+      <section className="py-2">
         <h2 className="text-xl font-medium text-honoluluBlue border-b border-honoluluBlue pb-1">
-          Summary
+          Professional Summary
         </h2>
-        <p className="text-md mt-2">{summary?.summary_description}</p>
+        <p className="text-md mt-2 text-justify">
+          {summary?.summary_description}
+        </p>
       </section>
 
-      <section className="py-4">
+      <section className="py-2">
         <h2 className="text-xl font-medium text-honoluluBlue border-b border-honoluluBlue pb-1">
           Experience
         </h2>
@@ -240,9 +309,12 @@ export const WordPage = ({
           <div key={exp.id} className="mb-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center">
-                <h3 className="text-md font-normal capitalize mr-2">
+                <h3 className="text-md font-semibold capitalize mr-2">
                   {exp?.company_role},
                 </h3>
+                <h4 className="text-md font-semibold mr-2">
+                  {exp?.company_name},
+                </h4>
                 <span className="text-md font-normal capitalize">
                   {exp?.company_location}
                 </span>
@@ -251,7 +323,7 @@ export const WordPage = ({
                 <p className="text-md">
                   {new Date(exp?.company_start_date).toLocaleDateString(
                     "en-US",
-                    { month: "long", year: "numeric" }
+                    { month: "short", year: "numeric" }
                   )}
                 </p>
                 <span className="text-md"> - </span>
@@ -259,24 +331,24 @@ export const WordPage = ({
                   {exp?.company_end_date
                     ? new Date(exp?.company_end_date).toLocaleDateString(
                         "en-US",
-                        { month: "long", year: "numeric" }
+                        { month: "short", year: "numeric" }
                       )
                     : "Current"}
                 </p>
               </div>
             </div>
-            <div className="mt-2">
-              <h4 className="text-md font-semibold">{exp?.company_name}</h4>
-              <div className="flex items-start mt-1">
-                <div className="w-4 h-4 rounded-full bg-honoluluBlue mt-1 mr-2"></div>
-                <p className="text-md">{exp?.company_role_description}</p>
+
+            <div className="mt-2 flex">
+              <div className="w-3 h-3 flex items-center justify-center mt-1.5 mr-1">
+                <span className="h-1 w-1 bg-honoluluBlue rounded-full" />
               </div>
+              <p className="text-md">{exp?.company_role_description}</p>
             </div>
           </div>
         ))}
       </section>
 
-      <section className="py-4">
+      <section className="py-2">
         <h2 className="text-xl font-medium text-honoluluBlue border-b border-honoluluBlue pb-1">
           Education
         </h2>
@@ -284,7 +356,7 @@ export const WordPage = ({
           <div key={edu.id} className="mb-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center">
-                <h3 className="text-md font-normal capitalize mr-2">
+                <h3 className="text-md capitalize mr-2 font-semibold">
                   {edu?.education_institute},
                 </h3>
                 <span className="text-md font-normal capitalize">
@@ -293,14 +365,36 @@ export const WordPage = ({
               </div>
               <div className="flex items-center space-x-1">
                 <p className="text-md">
-                  {new Date(edu?.education_completion_year).getFullYear()}
+                  {new Date(edu?.education_start_date).toLocaleDateString(
+                    "en-US",
+                    { month: "short", year: "numeric" }
+                  )}
+                </p>
+                <span className="text-md"> - </span>
+                <p className="text-md">
+                  {new Date(edu?.education_end_date).toLocaleDateString(
+                    "en-US",
+                    {
+                      month: "short",
+                      year: "numeric",
+                    }
+                  )}
                 </p>
               </div>
             </div>
             <div className="mt-2">
-              <h4 className="text-md font-semibold">
-                Specialization: {edu?.education_major}
-              </h4>
+              <div className="flex">
+                <div className="w-3 h-3 flex items-center justify-center mt-1.5 mr-1">
+                  <span className="h-1 w-1 bg-honoluluBlue rounded-full" />
+                </div>
+                <h4 className="text-md font-normal">{edu?.education_major}</h4>
+              </div>
+
+              {edu?.education_specialization && (
+                <h4 className="text-md font-normal">
+                  Specialization: {edu?.education_specialization}
+                </h4>
+              )}
               {edu?.educatoin_additional_information && (
                 <p className="text-md mt-1">
                   {edu?.educatoin_additional_information}
@@ -311,15 +405,15 @@ export const WordPage = ({
         ))}
       </section>
 
-      <section className="py-4">
+      <section className="py-2">
         <h2 className="text-xl font-medium text-honoluluBlue border-b border-honoluluBlue pb-1">
           Projects and Involvements
         </h2>
-        {project?.map((pro: any) => (
+        {summarizedIProjects?.map((pro: any) => (
           <div key={pro.id} className="mb-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center">
-                <h3 className="text-md font-normal capitalize mr-2">
+                <h3 className="text-md font-semibold capitalize mr-2">
                   {pro?.project_name},
                 </h3>
                 <span className="text-md font-normal capitalize">
@@ -330,30 +424,33 @@ export const WordPage = ({
                 <p className="text-md">
                   {new Date(pro?.project_start_date).toLocaleDateString(
                     "en-US",
-                    { month: "long", year: "numeric" }
+                    { month: "short", year: "numeric" }
                   )}
                 </p>
                 <span className="text-md"> - </span>
                 <p className="text-md">
                   {new Date(pro?.project_end_date).toLocaleDateString("en-US", {
-                    month: "long",
+                    month: "short",
                     year: "numeric",
                   })}
                 </p>
               </div>
             </div>
-            <div className="mt-2">
-              <h4 className="text-md font-semibold">
-                {pro?.project_role_description}
+            <div className="mt-2 flex">
+              <div className="w-3 h-3 flex items-center justify-center mt-1.5 mr-1">
+                <span className="h-1 w-1 bg-honoluluBlue rounded-full" />
+              </div>
+              <h4 className="text-md font-normal text-justify">
+                {pro?.summarizedDescription}
               </h4>
             </div>
           </div>
         ))}
-        {involvement?.map((inv: any) => (
+        {summarizedInvolvments?.map((inv: any) => (
           <div key={inv.id} className="mb-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center">
-                <h3 className="text-md font-normal capitalize mr-2">
+                <h3 className="text-md font-semibold capitalize mr-2">
                   {inv?.involvement_organization_role},
                 </h3>
                 <span className="text-md font-normal capitalize">
@@ -364,28 +461,31 @@ export const WordPage = ({
                 <p className="text-md">
                   {new Date(inv?.involvement_start_date).toLocaleDateString(
                     "en-US",
-                    { month: "long", year: "numeric" }
+                    { month: "short", year: "numeric" }
                   )}
                 </p>
                 <span className="text-md"> - </span>
                 <p className="text-md">
                   {new Date(inv?.involvement_end_date).toLocaleDateString(
                     "en-US",
-                    { month: "long", year: "numeric" }
+                    { month: "short", year: "numeric" }
                   )}
                 </p>
               </div>
             </div>
-            <div className="mt-2">
-              <h4 className="text-md font-semibold">
-                {inv?.involvement_description}
+            <div className="mt-2 flex">
+              <div className="w-3 h-3 flex items-center justify-center mt-1.5 mr-1">
+                <span className="h-1 w-1 bg-honoluluBlue rounded-full" />
+              </div>
+              <h4 className="text-md font-normal text-justify">
+                {inv?.summarizedDescription}
               </h4>
             </div>
           </div>
         ))}
       </section>
 
-      <section className="py-4">
+      <section className="py-2">
         <h2 className="text-xl font-medium text-honoluluBlue border-b border-honoluluBlue pb-1">
           Skills, Languages, and Interests
         </h2>
