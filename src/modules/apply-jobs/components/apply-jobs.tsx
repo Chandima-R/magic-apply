@@ -266,7 +266,6 @@ export const ApplyJobs = () => {
   const [insertCoverLetter] = useMutation(ADD_NEW_COVER_LETTER_BY_JOB_ID);
 
   const handleApply = async (item: any) => {
-    console.log("item id: ", item.id);
     const message = {
       jobDescription: item.jobDescription,
       companyDescription: item.companyDescription,
@@ -284,7 +283,6 @@ export const ApplyJobs = () => {
         throw new Error("User is not authenticated");
       }
       await generateResponse(promptType, message).then((response) => {
-        console.log(12, item.id);
         // insertCoverLetter({
         //   variables: {
         //     apply_jobs_id: item.id,

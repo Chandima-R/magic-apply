@@ -8,7 +8,7 @@ interface Props {
 
 export const ProfileActiveLinks = ({ activeLink }: Props) => {
   return (
-    <div className="flex flex-wrap gap-6 mb-10 w-full justify-start lg:justify-center">
+    <div className="flex flex-wrap gap-6 mb-10 w-full justify-start ">
       {profileLinks.map((link) => (
         <Link href={link.href} key={link.href}>
           <Button

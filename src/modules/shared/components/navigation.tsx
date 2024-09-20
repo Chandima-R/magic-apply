@@ -27,7 +27,7 @@ export const Navigation = () => {
             <Button
               variant={"outline"}
               size="sm"
-              className="font-normal hover:bg-black/20 hover:text-blak border-none focus-visible:ring-offset-0 focus-visible:ring-transparent outline-none text-black focus:bg-black/30 transtion"
+              className="font-normal hover:bg-sky-100 hover:text-blak border-none focus-visible:ring-offset-0 focus-visible:ring-transparent outline-none text-black focus:bg-sky-100 transtion"
             >
               <Menu className="size-4" />
             </Button>
@@ -105,10 +105,10 @@ export const Navigation = () => {
   return (
     <div
       className={
-        "w-full flex items-center justify-between shadow-md border sticky top-0 left-0 right-0 bg-white z-40"
+        "w-full flex items-center justify-center shadow-md border sticky top-0 left-0 right-0 bg-white z-40"
       }
     >
-      <header className="w-full px-4 py-8 lg:px-14">
+      <header className="w-full px-4 py-8 max-w-[1280px]">
         <div className="max-w-screen-2xl mx-auto">
           <div className="w-full flex items-center justify-between">
             <div className="flex items-center lg:gap-x-16">

@@ -199,7 +199,7 @@ export const Involvements = () => {
   const activeLink = path.split("/")[2];
 
   return (
-    <>
+    <div className="p-4 border-[1px] shadow-md rounded">
       <ProfileActiveLinks activeLink={activeLink} />
       <div className={"w-full flex flex-col lg:flex-row"}>
         <div className={"w-full lg:w-1/3"}>
@@ -399,6 +399,6 @@ export const Involvements = () => {
           </Form>
         </div>
       </div>
-    </>
+    </div>
   );
 };

@@ -148,7 +148,7 @@ export const Contact = () => {
   const activeLink = path.split("/")[2];
 
   return (
-    <>
+    <div className="p-4 border-[1px] shadow-md rounded">
       <ProfileActiveLinks activeLink={activeLink} />
       {contactLoading ? (
         <LoadingSpinner />
@@ -224,6 +224,6 @@ export const Contact = () => {
           </form>
         </Form>
       )}
-    </>
+    </div>
   );
 };

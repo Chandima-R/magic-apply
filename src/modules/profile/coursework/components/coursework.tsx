@@ -193,7 +193,7 @@ export const Coursework = () => {
   );
 
   return (
-    <>
+    <div className="p-4 border-[1px] shadow-md rounded">
       <ProfileActiveLinks activeLink={activeLink} />
       <div className={"w-full flex flex-col lg:flex-row"}>
         <div className={"w-full lg:w-1/3"}>
@@ -380,6 +380,6 @@ export const Coursework = () => {
           </Form>
         </div>
       </div>
-    </>
+    </div>
   );
 };

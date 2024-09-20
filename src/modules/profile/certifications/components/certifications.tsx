@@ -182,7 +182,7 @@ export const Certifications = () => {
   const activeLink = path.split("/")[2];
 
   return (
-    <>
+    <div className="p-4 border-[1px] shadow-md rounded">
       <ProfileActiveLinks activeLink={activeLink} />
 
       <div className={"w-full flex flex-col lg:flex-row"}>
@@ -348,6 +348,6 @@ export const Certifications = () => {
           </Form>
         </div>
       </div>
-    </>
+    </div>
   );
 };
