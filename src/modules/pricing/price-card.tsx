@@ -8,7 +8,7 @@ interface Props {
 
 export const PriceCard = ({ title, price, customButtonFn }: Props) => {
   return (
-    <div className="bg-white overflow-hidden rounded-lg shadow-xl">
+    <div className="bg-white overflow-hidden rounded-lg shadow-lg hover:shadow-xl cursor-pointer hover:bg-lightCyan w-full">
       <div className="p-6">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-medium leading-6 text-federalBlue">

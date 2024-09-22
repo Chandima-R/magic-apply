@@ -16,7 +16,7 @@ export const Pricing = () => {
   };
 
   return (
-    <div className="py-8">
+    <div className="py-14">
       <div className="flex items-center justify-center flex-wrap gap-4 mb-2">
         <h1 className="text-6xl font-normal text-center">Pay only for </h1>
         <p className="text-center capitalize font-semibold text-6xl text-transparent bg-clip-text bg-gradient-to-r from-nonPhotoBlue to-federalBlue">
@@ -30,7 +30,7 @@ export const Pricing = () => {
         </p>
       </div>
 
-      <div className="bg-gray-50 py-24 px-4 sm:px-6 lg:px-8">
+      <div className="bg-gray-100 py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <div className="mt-10">
             <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-10 lg:grid-cols-3">
