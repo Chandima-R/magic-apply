@@ -31,6 +31,32 @@ export const GET_USER = gql`
       user_clerk_id
       user_image_url
       user_lastname
+      user_plan
+    }
+  }
+`;
+
+export const SET_USER_PLAN = gql`
+  mutation setUserPlan($_eq: String, $user_plan: String) {
+    update_user(
+      where: { user_clerk_id: { _eq: $_eq } }
+      _set: { user_plan: $user_plan }
+    ) {
+      affected_rows
+    }
+  }
+`;
+
+export const GET_USER_BY_CLERK_ID = gql`
+  subscription getUserByUserClerkId($_eq: String) {
+    user(where: { user_clerk_id: { _eq: $_eq } }) {
+      user_clerk_id
+      user_email
+      user_firstname
+      user_image_url
+      user_lastname
+      user_plan
+      id
     }
   }
 `;
