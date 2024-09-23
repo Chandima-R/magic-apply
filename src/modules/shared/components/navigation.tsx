@@ -14,10 +14,25 @@ import { NavButton } from "@/modules/shared/components/nav-button";
 import { HeaderLogo } from "@/modules/shared/components/header-logo";
 import Link from "next/link";
 
+import { useUser } from "@clerk/nextjs";
+import { useSubscription } from "@apollo/client";
+import { GET_USER } from "@/graphql/user";
+
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const isMobile = useMedia("(max-width: 1024px", false);
+  const isMobile = useMedia("(max-width: 1024px)", false);
+  const { user } = useUser();
+
+  const { data: userData, loading: userLoading } = useSubscription(GET_USER);
+
+  const activeUser = userData?.user?.find(
+    (existingUser: any) => existingUser.user_clerk_id === user?.id
+  );
+
+  const userPlan = activeUser?.user_plan?.toLowerCase();
+
+  const links = sidebarLinks(userPlan);
 
   if (isMobile) {
     return (
@@ -61,7 +76,7 @@ export const Navigation = () => {
               </div>
 
               <div>
-                {sidebarLinks.map((route) => (
+                {links.map((route) => (
                   <SidebarLink
                     label={route.label}
                     href={route.href}
@@ -114,7 +129,7 @@ export const Navigation = () => {
             <div className="flex items-center lg:gap-x-16">
               <HeaderLogo />
               <nav className="hidden lg:flex items-center gap-x-2 overflow-x-auto">
-                {sidebarLinks.map((route) => (
+                {links.map((route) => (
                   <NavButton
                     key={route.href}
                     href={route.href}
