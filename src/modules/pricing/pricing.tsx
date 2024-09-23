@@ -1,20 +1,39 @@
 "use client";
 
+import { GET_USER_BY_CLERK_ID, SET_USER_PLAN } from "@/graphql/user";
 import { PriceCard } from "./price-card";
+import { useMutation, useSubscription } from "@apollo/client";
+import { useUser } from "@clerk/nextjs";
+import { useState } from "react";
 
 export const Pricing = () => {
-  const handleFreePlanClick = () => {
-    console.log("Free Plan selected");
+  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useUser();
+
+  const [updateUserPlan] = useMutation(SET_USER_PLAN);
+
+  const handlePlanClick = async (planName: string) => {
+    setIsLoading(true);
+
+    try {
+      const { data } = await updateUserPlan({
+        variables: {
+          _eq: user?.id,
+          user_plan: planName,
+        },
+      });
+
+      console.log(`${planName} Plan selected`, data);
+    } catch (error) {
+      console.error("Error updating plan:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleBasicPlanClick = () => {
-    console.log("Basic Plan selected");
-  };
-
-  const handlePremiumPlanClick = () => {
-    console.log("Premium Plan selected");
-  };
-
+  const handleFreePlanClick = () => handlePlanClick("Free");
+  const handleBasicPlanClick = () => handlePlanClick("Basic");
+  const handlePremiumPlanClick = () => handlePlanClick("Premium");
   return (
     <div className="py-14">
       <div className="flex items-center justify-center flex-wrap gap-4 mb-2">
