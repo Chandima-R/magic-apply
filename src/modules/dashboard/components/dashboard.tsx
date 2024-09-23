@@ -7,6 +7,7 @@ import { Aperture, CircleUser, Link } from "lucide-react";
 import { useMutation, useSubscription } from "@apollo/client";
 import { ADD_USER_BY_CLERK_ID, GET_USER } from "@/graphql/user";
 import { useEffect } from "react";
+import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 
 export const Dashboard = () => {
   const { user } = useUser();
@@ -16,7 +17,7 @@ export const Dashboard = () => {
   useEffect(() => {
     if (user && !userLoading && userData) {
       const userExists = userData?.user?.some(
-        (existingUser: any) => existingUser.user_clerk_id === user.id
+        (existingUser: any) => existingUser.user_clerk_id === user?.id
       );
 
       if (!userExists) {
@@ -33,6 +34,10 @@ export const Dashboard = () => {
     }
   }, [user, userData, userLoading, addUser]);
 
+  const activeUser = userData?.user?.find(
+    (existingUser: any) => existingUser.user_clerk_id === user?.id
+  );
+
   return (
     <div>
       <div className="mb-8">
@@ -43,19 +48,69 @@ export const Dashboard = () => {
         <hr />
       </div>
 
-      <div className="flex items-center gap-8 lg:gap-16 flex-col lg:flex-row">
-        <CustomButtonCard
-          icon={CircleUser}
-          title="your profile"
-          link="profile/contact"
-        />
-        <CustomButtonCard
-          icon={Aperture}
-          title="your master resume"
-          link="master-resume"
-        />
-        <CustomButtonCard icon={Link} title="apply jobs" link="apply-jobs" />
-      </div>
+      {userLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <div className="flex items-center gap-8 lg:gap-16 flex-col lg:flex-row">
+          {activeUser?.user_plan?.toLowerCase() === "free" && (
+            <>
+              <CustomButtonCard
+                icon={CircleUser}
+                title="your profile"
+                link="profile/contact"
+              />
+
+              <CustomButtonCard
+                icon={Aperture}
+                title="your master resume"
+                link="master-resume"
+              />
+            </>
+          )}
+
+          {activeUser?.user_plan?.toLowerCase() === "basic" && (
+            <>
+              <CustomButtonCard
+                icon={CircleUser}
+                title="your profile"
+                link="profile/contact"
+              />
+
+              <CustomButtonCard
+                icon={Aperture}
+                title="your master resume"
+                link="master-resume"
+              />
+              <CustomButtonCard
+                icon={Link}
+                title="apply jobs"
+                link="apply-jobs"
+              />
+            </>
+          )}
+
+          {activeUser?.user_plan?.toLowerCase() === "premium" && (
+            <>
+              <CustomButtonCard
+                icon={CircleUser}
+                title="your profile"
+                link="profile/contact"
+              />
+
+              <CustomButtonCard
+                icon={Aperture}
+                title="your master resume"
+                link="master-resume"
+              />
+              <CustomButtonCard
+                icon={Link}
+                title="apply jobs"
+                link="apply-jobs"
+              />
+            </>
+          )}
+        </div>
+      )}
 
       <div>
         <Image
