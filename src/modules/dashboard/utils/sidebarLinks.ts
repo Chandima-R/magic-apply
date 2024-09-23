@@ -14,18 +14,19 @@ export const sidebarLinks = (userPlan: string) => {
       icon: LayoutDashboard,
     },
     {
-      href: "/apply-jobs",
-      label: "apply jobs",
-      icon: AppWindow,
+      href: "/master-resume",
+      label: "master resume",
+      icon: ScrollText,
     },
   ];
 
   const basicLinks = [
     ...freeLinks,
+
     {
-      href: "/master-resume",
-      label: "master resume",
-      icon: ScrollText,
+      href: "/apply-jobs",
+      label: "apply jobs",
+      icon: AppWindow,
     },
   ];
 

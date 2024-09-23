@@ -30,8 +30,6 @@ export const Navigation = () => {
     (existingUser: any) => existingUser.user_clerk_id === user?.id
   );
 
-  console.log(112, activeUser);
-
   const userPlan = activeUser?.user_plan?.toLowerCase();
 
   const links = sidebarLinks(userPlan);
