@@ -30,6 +30,8 @@ import { usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { CheckboxField } from "@/modules/shared/components/checkbox-input";
+import { CustomPopupButton } from "@/modules/shared/components/custom-popup";
+import { GET_USER } from "@/graphql/user";
 
 const experienceSchema = z
   .object({
@@ -88,6 +90,14 @@ export const Experience = () => {
       },
     }
   );
+
+  const { data: userData, loading: userLoading } = useSubscription(GET_USER);
+
+  const activeUser = userData?.user?.find(
+    (existingUser: any) => existingUser.user_clerk_id === user?.id
+  );
+
+  const userPlan = activeUser?.user_plan?.toLowerCase();
 
   const visibleExperience = experienceData?.experience?.filter(
     (exp: any) => exp.visibility === true
@@ -410,12 +420,19 @@ export const Experience = () => {
                         <CustomButton
                           disabled
                           type="submit"
-                          title="Save to experience list"
+                          title="Save to experiences list"
                         />
                       ) : (
-                        <CustomButton
-                          type="submit"
-                          title="Save to experience list"
+                        // <CustomButton
+                        //   type="submit"
+                        //   title="Save to experience list"
+                        // />
+                        <CustomPopupButton
+                          title="Experience"
+                          userPlan={userPlan}
+                          usedSlots={parseInt(
+                            experienceData?.experience?.length
+                          )}
                         />
                       )}
                     </>

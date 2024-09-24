@@ -22,8 +22,6 @@ export const Pricing = () => {
           user_plan: planName,
         },
       });
-
-      console.log(`${planName} Plan selected`, data);
     } catch (error) {
       console.error("Error updating plan:", error);
     } finally {
