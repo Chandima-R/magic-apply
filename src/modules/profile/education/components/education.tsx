@@ -12,10 +12,10 @@ import {useUser} from "@clerk/nextjs";
 import {useState} from "react";
 import {useMutation, useSubscription} from "@apollo/client";
 import {
-  ADD_NEW_EDUCATION_BY_USER_ID,
-  DELETE_EDUCATION_BY_PK,
-  EDUCATION_INFORMATION_BY_USER_ID,
-  HIDE_EDUCATION_BY_PK,
+    ADD_NEW_EDUCATION_BY_USER_ID,
+    DELETE_EDUCATION_BY_PK,
+    EDUCATION_INFORMATION_BY_USER_ID,
+    HIDE_EDUCATION_BY_PK,
 } from "@/graphql/education";
 import {LoadingSpinner} from "@/modules/shared/components/loading-spinner";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger,} from "@/components/ui/accordion";
@@ -24,6 +24,7 @@ import {LoadingButton} from "@/modules/shared/components/loading-button";
 import {usePathname} from "next/navigation";
 import {ProfileActiveLinks} from "../../../shared/components/profile-active-links";
 import {CalendarField} from "@/modules/shared/components/calendar-field";
+import {RequiredIndicator} from "@/modules/shared/components/required-indicator";
 
 const educationSchema = z
     .object({
@@ -197,6 +198,11 @@ export const Education = () => {
     return (
         <div className="p-4 border-[1px] shadow-md rounded">
             <ProfileActiveLinks activeLink={activeLink}/>
+
+            <p className={'text-sm space-x-1 mb-4'}>
+                <RequiredIndicator/> <span>This is  required section for the resume, Please fill this section.</span>
+            </p>
+
             <div className={"w-full flex flex-col lg:flex-row"}>
                 <div className={"w-full lg:w-1/3"}>
                     <div className={"rounded-sm overflow-hidden shadow mb-4"}>

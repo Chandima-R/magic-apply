@@ -15,6 +15,7 @@ import {usePathname, useRouter} from "next/navigation";
 import {ProfileActiveLinks} from "@/modules/shared/components/profile-active-links";
 import {LoadingSpinner} from "@/modules/shared/components/loading-spinner";
 import {LoadingButton} from "@/modules/shared/components/loading-button";
+import {RequiredIndicator} from "@/modules/shared/components/required-indicator";
 
 const contactSchema = z.object({
     fullName: z.string().nonempty("Full name is required."),
@@ -151,6 +152,10 @@ export const Contact = () => {
     return (
         <div className="p-4 border-[1px] shadow-md rounded">
             <ProfileActiveLinks activeLink={activeLink}/>
+
+            <p className={'text-sm space-x-1 mb-4'}>
+                <RequiredIndicator/> <span>This is  required section for the resume, Please fill this section.</span>
+            </p>
             {contactLoading ? (
                 <LoadingSpinner/>
             ) : (
