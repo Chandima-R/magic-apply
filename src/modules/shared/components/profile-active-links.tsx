@@ -22,7 +22,8 @@ export const ProfileActiveLinks = ({activeLink}: Props) => {
                                 : ""
                         } hover:bg-slate-400/40 transition duration-100 space-x-2`}
                     >
-                        {link.label} {link.required && <RequiredIndicator/>}
+                        {link.label}
+                        <div className={'ml-1'}>{link.required && <RequiredIndicator/>}</div>
                     </Button>
                 </Link>
             ))}
