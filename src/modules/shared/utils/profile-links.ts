@@ -24,16 +24,16 @@ export const profileLinks = [
         label: "summary",
     },
     {
-        href: "/profile/certification",
-        label: "certification",
+        href: "/profile/certifications",
+        label: "certifications",
     },
     {
         href: "/profile/coursework",
         label: "coursework",
     },
     {
-        href: "/profile/involvement",
-        label: "involvement",
+        href: "/profile/involvements",
+        label: "involvements",
     },
 
     {
