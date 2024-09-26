@@ -1,21 +1,21 @@
 "use client";
 
-import {Form} from "@/components/ui/form";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {TextInput} from "@/modules/shared/components/text-input";
-import {CustomButton} from "@/modules/shared/components/custom-button";
-import {useEffect, useMemo, useState} from "react";
-import {useToast} from "@/components/ui/use-toast";
-import {useMutation, useSubscription} from "@apollo/client";
-import {ADD_NEW_CONTACT, CONTACT_INFORMATION, UPDATE_CONTACT,} from "@/graphql/contact";
-import {useUser} from "@clerk/nextjs";
-import {usePathname, useRouter} from "next/navigation";
-import {ProfileActiveLinks} from "@/modules/shared/components/profile-active-links";
-import {LoadingSpinner} from "@/modules/shared/components/loading-spinner";
-import {LoadingButton} from "@/modules/shared/components/loading-button";
-import {RequiredIndicator} from "@/modules/shared/components/required-indicator";
+import { Form } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TextInput } from "@/modules/shared/components/text-input";
+import { CustomButton } from "@/modules/shared/components/custom-button";
+import { useEffect, useMemo, useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { useMutation, useSubscription } from "@apollo/client";
+import { ADD_NEW_CONTACT, CONTACT_INFORMATION, UPDATE_CONTACT } from "@/graphql/contact";
+import { useUser } from "@clerk/nextjs";
+import { usePathname, useRouter } from "next/navigation";
+import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
+import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
+import { LoadingButton } from "@/modules/shared/components/loading-button";
+import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
 
 const contactSchema = z.object({
     fullName: z.string().nonempty("Full name is required."),
@@ -31,11 +31,11 @@ const contactSchema = z.object({
 
 export const Contact = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const {toast} = useToast();
-    const {user} = useUser();
+    const { toast } = useToast();
+    const { user } = useUser();
     const router = useRouter();
 
-    const {data: contactData, loading: contactLoading} = useSubscription(
+    const { data: contactData, loading: contactLoading } = useSubscription(
         CONTACT_INFORMATION,
         {
             variables: {
@@ -63,7 +63,10 @@ export const Contact = () => {
             state: "",
             city: "",
         },
+        mode: "onChange",
     });
+
+    const { isValid } = form.formState;
 
     useEffect(() => {
         if (contactDetails && Object.keys(contactDetails).length > 0) {
@@ -132,7 +135,7 @@ export const Contact = () => {
                 });
             }
             form.reset();
-            // Redirect to dashboard after successful submission
+
             router.push("/");
         } catch (error) {
             console.error(error);
@@ -151,13 +154,13 @@ export const Contact = () => {
 
     return (
         <div className="p-4 border-[1px] shadow-md rounded">
-            <ProfileActiveLinks activeLink={activeLink}/>
+            <ProfileActiveLinks activeLink={activeLink} />
 
-            <p className={'text-sm space-x-1 mb-4'}>
-                <RequiredIndicator/> <span>This is  required section for the resume, Please fill this section.</span>
+            <p className={"text-sm space-x-1 mb-4"}>
+                <RequiredIndicator /> <span>This is a required section for the resume, Please fill this section.</span>
             </p>
             {contactLoading ? (
-                <LoadingSpinner/>
+                <LoadingSpinner />
             ) : (
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -230,11 +233,11 @@ export const Contact = () => {
 
                         <div className="flex justify-end w-full mt-8">
                             <div className="w-38">
-                                {isLoading ? (
-                                    <LoadingButton/>
-                                ) : (
-                                    <CustomButton type="submit" title="Save basic info"/>
-                                )}
+                                <CustomButton
+                                    type="submit"
+                                    title="Save basic info"
+                                    disabled={!isValid}
+                                />
                             </div>
                         </div>
                     </form>

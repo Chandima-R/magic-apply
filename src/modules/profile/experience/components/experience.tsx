@@ -12,10 +12,10 @@ import {useToast} from "@/components/ui/use-toast";
 import {useUser} from "@clerk/nextjs";
 import {useMutation, useSubscription} from "@apollo/client";
 import {
-  ADD_NEW_EXPERIENCE_BY_USER_ID,
-  DELETE_EXPERIENCE_BY_PK,
-  EXPERIENCE_INFORMATION_BY_USER_ID,
-  HIDE_EXPERIENCE_BY_PK,
+    ADD_NEW_EXPERIENCE_BY_USER_ID,
+    DELETE_EXPERIENCE_BY_PK,
+    EXPERIENCE_INFORMATION_BY_USER_ID,
+    HIDE_EXPERIENCE_BY_PK,
 } from "@/graphql/experience";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger,} from "@/components/ui/accordion";
 import {LoadingSpinner} from "@/modules/shared/components/loading-spinner";
@@ -76,7 +76,7 @@ export const Experience = () => {
         }
     }, [isCurrent, setValue]);
 
-    const {data: experienceData, loading: expoerienceLoading} = useSubscription(
+    const {data: experienceData, loading: experienceLoading} = useSubscription(
         EXPERIENCE_INFORMATION_BY_USER_ID,
         {
             variables: {
@@ -234,7 +234,7 @@ export const Experience = () => {
                         </video>
                     </div>
                     <div>
-                        {expoerienceLoading ? (
+                        {experienceLoading ? (
                             <LoadingSpinner/>
                         ) : (
                             <>
