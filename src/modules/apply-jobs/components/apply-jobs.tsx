@@ -2,14 +2,21 @@
 
 import React, { FC, ReactNode, useEffect, useState } from "react";
 import { Form } from "@/components/ui/form";
-import { FileDown, MailPlus, PlusCircle, Send, Trash2 } from "lucide-react";
+import {
+  FileDown,
+  MailPlus,
+  PlusCircle,
+  Send,
+  Trash2,
+  Lock,
+  Info,
+} from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { TextInput } from "@/modules/shared/components/text-input";
 import { CheckboxField } from "@/modules/shared/components/checkbox-input";
-import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useSubscription } from "@apollo/client";
@@ -25,7 +32,9 @@ import { ADD_NEW_COVER_LETTER_BY_JOB_ID } from "@/graphql/cover-letter";
 import { MultiInputField } from "@/modules/shared/mult-input-field";
 import { CONTACT_INFORMATION } from "@/graphql/contact";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
+import { GET_USER } from "@/graphql/user";
 import Link from "next/link";
+import { PlanOverlay } from "./plan-overlay";
 
 const applyJobSchema = z.object({
   items: z.array(
@@ -60,7 +69,7 @@ interface ScrollBarProps {
 }
 
 const ScrollBar: FC<ScrollBarProps> = ({ children }) => (
-  <div className="overflow-auto h-auto rounded mb-4 p-4">{children}</div>
+  <div className="overflow-auto h-auto rounded mb-4 p-4 md:p-0">{children}</div>
 );
 
 export const ApplyJobs = () => {
@@ -313,8 +322,15 @@ export const ApplyJobs = () => {
     }
   };
 
+  const { data: userData, loading: userLoading } = useSubscription(GET_USER);
+
+  const activeUser = userData?.user?.find(
+    (existingUser: any) => existingUser.user_clerk_id === user?.id
+  );
+
   return (
     <>
+      {activeUser?.user_plan.toLowerCase() === "free" && <PlanOverlay />}
       {jobsLoading ? (
         <LoadingSpinner />
       ) : (
@@ -415,7 +431,7 @@ export const ApplyJobs = () => {
                             <Button
                               type="submit"
                               size="sm"
-                              className=" bg-blue-500 hover:bg-blue-600 text-white hover:text-white  border-blue-600"
+                              className=" bg-honoluluBlue hover:bg-federalBlue text-white hover:text-white  border-federalBlue"
                               onClick={() => handleApply(item)}
                             >
                               <Send className="size-4 mr-2" />

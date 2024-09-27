@@ -30,8 +30,7 @@ import { usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { CheckboxField } from "@/modules/shared/components/checkbox-input";
-import { CustomPopupButton } from "@/modules/shared/components/custom-popup";
-import { GET_USER } from "@/graphql/user";
+import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
 
 const experienceSchema = z
   .object({
@@ -82,7 +81,7 @@ export const Experience = () => {
     }
   }, [isCurrent, setValue]);
 
-  const { data: experienceData, loading: expoerienceLoading } = useSubscription(
+  const { data: experienceData, loading: experienceLoading } = useSubscription(
     EXPERIENCE_INFORMATION_BY_USER_ID,
     {
       variables: {
@@ -90,14 +89,6 @@ export const Experience = () => {
       },
     }
   );
-
-  const { data: userData, loading: userLoading } = useSubscription(GET_USER);
-
-  const activeUser = userData?.user?.find(
-    (existingUser: any) => existingUser.user_clerk_id === user?.id
-  );
-
-  const userPlan = activeUser?.user_plan?.toLowerCase();
 
   const visibleExperience = experienceData?.experience?.filter(
     (exp: any) => exp.visibility === true
@@ -119,6 +110,7 @@ export const Experience = () => {
     allExperience?.length - visibleExperience?.length;
 
   const [addExperience] = useMutation(ADD_NEW_EXPERIENCE_BY_USER_ID);
+
   async function onSubmit(values: z.infer<typeof experienceSchema>) {
     try {
       setIsLoading(true);
@@ -234,6 +226,14 @@ export const Experience = () => {
   return (
     <div className="p-4 border-[1px] shadow-md rounded">
       <ProfileActiveLinks activeLink={activeLink} />
+
+      <p className={"text-sm space-x-1 mb-4"}>
+        <RequiredIndicator />{" "}
+        <span>
+          This is required section for the resume, Please fill this section.
+        </span>
+      </p>
+
       <div className={"w-full flex flex-col lg:flex-row"}>
         <div className={"w-full lg:w-1/3"}>
           <div className={"rounded-sm overflow-hidden shadow mb-4"}>
@@ -242,7 +242,7 @@ export const Experience = () => {
             </video>
           </div>
           <div>
-            {expoerienceLoading ? (
+            {experienceLoading ? (
               <LoadingSpinner />
             ) : (
               <>
@@ -420,19 +420,12 @@ export const Experience = () => {
                         <CustomButton
                           disabled
                           type="submit"
-                          title="Save to experiences list"
+                          title="Save to experience list"
                         />
                       ) : (
-                        // <CustomButton
-                        //   type="submit"
-                        //   title="Save to experience list"
-                        // />
-                        <CustomPopupButton
-                          title="Experience"
-                          userPlan={userPlan}
-                          usedSlots={parseInt(
-                            experienceData?.experience?.length
-                          )}
+                        <CustomButton
+                          type="submit"
+                          title="Save to experience list"
                         />
                       )}
                     </>
