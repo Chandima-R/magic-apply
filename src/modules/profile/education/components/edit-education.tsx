@@ -286,7 +286,7 @@ export const EditEducation = () => {
                             deleteAction={() =>
                               deleteEducationAction(education.id)
                             }
-                            hideTitle={"Hide your education."}
+                            hideTitle={"Hide this education."}
                             hideDescription={
                               "Are you sure to hide this education. This action cannot be undone and it will completely hide this education from your educations."
                             }
@@ -328,14 +328,14 @@ export const EditEducation = () => {
                               deleteAction={() =>
                                 deleteEducationAction(education.id)
                               }
-                              hideTitle={"Hide your education."}
+                              hideTitle={"Hide this education."}
                               hideDescription={
                                 "Are you sure to hide this education. This action cannot be undone and it will completely hide this education from your educations."
                               }
                               hideAction={() =>
                                 hideEducationAction(education.id)
                               }
-                              unhideTitle={"Unhide your certification."}
+                              unhideTitle={"Show this certification."}
                               unhideDescription={
                                 "Are you sure to unhide this education. This action cannot be undone and it will completely add this education to your educations list."
                               }

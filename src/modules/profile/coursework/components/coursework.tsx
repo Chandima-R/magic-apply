@@ -235,7 +235,7 @@ export const Coursework = () => {
                             deleteAction={() =>
                               deleteCourseworkAction(coursework.id)
                             }
-                            hideTitle={"Hide your coursework."}
+                            hideTitle={"Hide this coursework."}
                             hideDescription={
                               "Are you sure to hide this coursework. This action cannot be undone and it will completely hide this coursework from your coursework."
                             }
@@ -279,14 +279,14 @@ export const Coursework = () => {
                               deleteAction={() =>
                                 deleteCourseworkAction(coursework.id)
                               }
-                              hideTitle={"Hide your coursework."}
+                              hideTitle={"Hide this coursework."}
                               hideDescription={
                                 "Are you sure to hide this coursework. This action cannot be undone and it will completely hide this coursework from your coursework."
                               }
                               hideAction={() =>
                                 hideCourseworkAction(coursework.id)
                               }
-                              unhideTitle={"Unhide your coursework."}
+                              unhideTitle={"Show this coursework."}
                               unhideDescription={
                                 "Are you sure to unhide this coursework. This action cannot be undone and it will completely add this coursework from your coursework."
                               }

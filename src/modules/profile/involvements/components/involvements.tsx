@@ -248,7 +248,7 @@ export const Involvements = () => {
                             deleteAction={() =>
                               deleteInvolvementAction(involvement.id)
                             }
-                            hideTitle={"Hide your involvement."}
+                            hideTitle={"Hide this involvement."}
                             hideDescription={
                               "Are you sure to hide this involvement. This action cannot be undone and it will completely hide this involvement from your involvements."
                             }
@@ -293,14 +293,14 @@ export const Involvements = () => {
                               deleteAction={() =>
                                 deleteInvolvementAction(involvement.id)
                               }
-                              hideTitle={"Hide your involvement."}
+                              hideTitle={"Hide this involvement."}
                               hideDescription={
                                 "Are you sure to hide this involvement. This action cannot be undone and it will completely hide this involvement from your involvements."
                               }
                               hideAction={() =>
                                 hideinvolvementAction(involvement.id)
                               }
-                              unhideTitle={"Unhide your involvelement."}
+                              unhideTitle={"Show this involvelement."}
                               unhideDescription={
                                 "Are you sure to unhide this involvement. This action cannot be undone and it will completely add this involvement to your involvements list."
                               }

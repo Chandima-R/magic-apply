@@ -255,7 +255,7 @@ export const EditCertificate = () => {
                             deleteAction={() =>
                               deleteCertifictionAction(certificate.id)
                             }
-                            hideTitle={"Hide your certification."}
+                            hideTitle={"Hide this certification."}
                             hideDescription={
                               "Are you sure to hide this certificate. This action cannot be undone and it will completely hide this certificate from your certifications."
                             }
@@ -299,14 +299,14 @@ export const EditCertificate = () => {
                               deleteAction={() =>
                                 deleteCertifictionAction(certificate.id)
                               }
-                              hideTitle={"Hide your certification."}
+                              hideTitle={"Hide this certification."}
                               hideDescription={
                                 "Are you sure to hide this certificate. This action cannot be undone and it will completely hide this certificate from your certifications."
                               }
                               hideAction={() =>
                                 hideCertificationAction(certificate.id)
                               }
-                              unhideTitle={"Unhide your certification."}
+                              unhideTitle={"Show this certification."}
                               unhideDescription={
                                 "Are you sure to unhide this certificate. This action cannot be undone and it will completely add this certificate to your certifications list."
                               }

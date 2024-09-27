@@ -279,7 +279,7 @@ export const Experience = () => {
                               "Are you sure you want to delete this experience? This action is irreversible and will permanently remove it from your experiences list."
                             }
                             deleteAction={() => deleteExperienceAction(exp.id)}
-                            hideTitle={"Hide your experience."}
+                            hideTitle={"Hide this experience."}
                             hideDescription={
                               "Are you sure to hide this experience. This action cannot be undone and it will completely hide this experience from your experience list."
                             }
@@ -322,12 +322,12 @@ export const Experience = () => {
                               deleteAction={() =>
                                 deleteExperienceAction(exp.id)
                               }
-                              hideTitle={"Hide your experience."}
+                              hideTitle={"Hide this experience."}
                               hideDescription={
                                 "Are you sure to hide this certificate. This action cannot be undone and it will completely hide this experience from your experience list."
                               }
                               hideAction={() => hideExperienceAction(exp.id)}
-                              unhideTitle={"Unhide your experience."}
+                              unhideTitle={"Show this experience."}
                               unhideDescription={
                                 "Are you sure to unhide this experience. This action cannot be undone and it will completely add this experience to your experience list."
                               }

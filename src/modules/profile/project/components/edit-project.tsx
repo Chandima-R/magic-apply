@@ -289,7 +289,7 @@ export const EditProject = () => {
                               "Are you sure you want to delete this project? This action is irreversible and will permanently remove it from your projects list."
                             }
                             deleteAction={() => deleteProjectAction(project.id)}
-                            hideTitle={"Hide your project."}
+                            hideTitle={"Hide this project."}
                             hideDescription={
                               "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
                             }
@@ -331,12 +331,12 @@ export const EditProject = () => {
                               deleteAction={() =>
                                 deleteProjectAction(project.id)
                               }
-                              hideTitle={"Hide your project."}
+                              hideTitle={"Hide this project."}
                               hideDescription={
                                 "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
                               }
                               hideAction={() => hideProjectAction(project.id)}
-                              unhideTitle={"Unhide your project."}
+                              unhideTitle={"Show this project."}
                               unhideDescription={
                                 "Are you sure to unhide this project. This action cannot be undone and it will completely add this project to your projects list."
                               }
