@@ -227,20 +227,20 @@ export const Certifications = () => {
                             toDate={certificate.certification_completion_year}
                             deleteTitle={"Delete your certification."}
                             deleteDescription={
-                              "Are you sure to delete this certificate. This action cannot be undone and it will completely remove this certificate from your certifications."
+                              " Are you sure you want to delete this certificate? This action is irreversible and will permanently remove it from your certificate list."
                             }
                             deleteAction={() =>
                               deleteCertifictionAction(certificate.id)
                             }
-                            hideTitle={"Hide your certification."}
+                            hideTitle={"Hide this certification."}
                             hideDescription={
-                              "Are you sure to hide this certificate. This action cannot be undone and it will completely hide this certificate from your certifications."
+                              "Are you sure you want to hide this certificate? This action is irreversible and will permanently hide the certificate from your list and master resume."
                             }
                             hideAction={() =>
                               hideCertificationAction(certificate.id)
                             }
                             status={certificate.visibility}
-                            tab={"certification"}
+                            tab={"certifications"}
                           />
                         </AccordionContent>
                       ))}
@@ -257,21 +257,21 @@ export const Certifications = () => {
                           toDate={certificate.certification_completion_year}
                           deleteTitle={"Delete your certification."}
                           deleteDescription={
-                            "Are you sure to delete this certificate. This action cannot be undone and it will completely remove this certificate from your certifications."
+                            " Are you sure you want to delete this certificate? This action is irreversible and will permanently remove it from your certificates list."
                           }
                           deleteAction={() =>
                             deleteCertifictionAction(certificate.id)
                           }
-                          hideTitle={"Hide your certification."}
+                          hideTitle={"Hide this certification."}
                           hideDescription={
-                            "Are you sure to hide this certificate. This action cannot be undone and it will completely hide this certificate from your certifications."
+                            "Are you sure you want to hide this certificate? This action is irreversible and will permanently hide the certificate from your list and master resume."
                           }
                           hideAction={() =>
                             hideCertificationAction(certificate.id)
                           }
-                          unhideTitle={"Unhide your certification."}
+                          unhideTitle={"Show this certification."}
                           unhideDescription={
-                            "Are you sure to unhide this certificate. This action cannot be undone and it will completely add this certificate to your certifications list."
+                            "Are you sure you want to unhide this certificate? This action is irreversible and will permanently add the certificate from your list and master resume."
                           }
                           unhideAction={() =>
                             unhideCertificationAction(certificate.id)

@@ -146,7 +146,7 @@ export const EditInvolvement = () => {
         });
       }
       form.reset();
-      router.push("/profile/involvement");
+      router.push("/profile/involvements");
     } catch (error) {
       console.error(error);
       toast({
@@ -277,14 +277,14 @@ export const EditInvolvement = () => {
                               toDate={involvement.involvement_end_date}
                               deleteTitle={"Delete your involvement."}
                               deleteDescription={
-                                "Are you sure to delete this involvement. This action cannot be undone and it will completely remove this involvement from your involvements."
+                                "Are you sure you want to delete this involvement? This action is irreversible and will permanently remove it from your involvements list."
                               }
                               deleteAction={() =>
                                 deleteInvolvementAction(involvement.id)
                               }
-                              hideTitle={"Hide your involvement."}
+                              hideTitle={"Hide this involvement."}
                               hideDescription={
-                                "Are you sure to hide this involvement. This action cannot be undone and it will completely hide this involvement from your involvements."
+                                "Are you sure you want to hide this involvement? This action is irreversible and will permanently hide the involvement from your list and master resume."
                               }
                               hideAction={() =>
                                 hideinvolvementAction(involvement.id)
@@ -323,21 +323,21 @@ export const EditInvolvement = () => {
                                 toDate={involvement.involvement_end_date}
                                 deleteTitle={"Delete your involvement."}
                                 deleteDescription={
-                                  "Are you sure to delete this involvement. This action cannot be undone and it will completely remove this involvement from your involvements."
+                                  "Are you sure you want to delete this involvement? This action is irreversible and will permanently remove it from your involvements list."
                                 }
                                 deleteAction={() =>
                                   deleteInvolvementAction(involvement.id)
                                 }
-                                hideTitle={"Hide your involvement."}
+                                hideTitle={"Hide this involvement."}
                                 hideDescription={
-                                  "Are you sure to hide this involvement. This action cannot be undone and it will completely hide this involvement from your involvements."
+                                  "Are you sure you want to hide this involvement? This action is irreversible and will permanently hide the involvement from your list and master resume."
                                 }
                                 hideAction={() =>
                                   hideinvolvementAction(involvement.id)
                                 }
-                                unhideTitle={"Unhide your involvelement."}
+                                unhideTitle={"Show this involvelement."}
                                 unhideDescription={
-                                  "Are you sure to unhide this involvement. This action cannot be undone and it will completely add this involvement to your involvements list."
+                                  "Are you sure you want to unhide this involvement? This action is irreversible and will permanently add the involvement from your list and master resume."
                                 }
                                 unhideAction={() =>
                                   unhideinvolvementAction(involvement.id)

@@ -51,7 +51,7 @@ export const ActionCard = ({
       }`}
     >
       <div className="mb-2">
-        <div className="flex items-start justify-between mb-2">
+        <div className="flex items-start justify-between mb-1">
           <div className={"w-full"}>
             <h2 className="font-semibold text-lg capitalize leading-4">
               {role}
@@ -89,7 +89,7 @@ export const ActionCard = ({
           {company}
           {country && (
             <>
-              , <span className="font-normal"> {country}</span>
+              ,<span className="font-normal">{country}</span>
             </>
           )}
         </p>
@@ -123,10 +123,10 @@ export const ActionCard = ({
         <CustomAlertDialog
           buttonVariant={"outline"}
           buttonSize={"sm"}
-          buttonText={status ? "hide" : "show"}
+          buttonText={status ? "Hide" : "Show"}
           title={status ? hideTitle : unhideTitle}
           description={status ? hideDescription : unhideDescription}
-          actionButtonText={status ? "hide" : "show"}
+          actionButtonText={status ? "Hide" : "Show"}
           actionButtonFn={
             status ? () => hideAction(id) : () => unhideAction?.(id)
           }

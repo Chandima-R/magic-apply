@@ -56,13 +56,13 @@ export const Dashboard = () => {
             <>
               <CustomButtonCard
                 icon={CircleUser}
-                title="your profile"
+                title="my profile"
                 link="profile/contact"
               />
 
               <CustomButtonCard
                 icon={Aperture}
-                title="your master resume"
+                title="my master resume"
                 link="master-resume"
               />
             </>
@@ -72,13 +72,13 @@ export const Dashboard = () => {
             <>
               <CustomButtonCard
                 icon={CircleUser}
-                title="your profile"
+                title="my profile"
                 link="profile/contact"
               />
 
               <CustomButtonCard
                 icon={Aperture}
-                title="your master resume"
+                title="my master resume"
                 link="master-resume"
               />
               <CustomButtonCard
@@ -93,13 +93,13 @@ export const Dashboard = () => {
             <>
               <CustomButtonCard
                 icon={CircleUser}
-                title="your profile"
+                title="my profile"
                 link="profile/contact"
               />
 
               <CustomButtonCard
                 icon={Aperture}
-                title="your master resume"
+                title="my master resume"
                 link="master-resume"
               />
               <CustomButtonCard

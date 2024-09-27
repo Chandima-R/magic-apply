@@ -230,14 +230,14 @@ export const Coursework = () => {
                             toDate={coursework.course_completion_year}
                             deleteTitle={"Delete your coursework."}
                             deleteDescription={
-                              "Are you sure to delete this coursework. This action cannot be undone and it will completely remove this coursework from your coursework."
+                              "Are you sure you want to delete this coursework? This action is irreversible and will permanently remove it from your coursework list."
                             }
                             deleteAction={() =>
                               deleteCourseworkAction(coursework.id)
                             }
-                            hideTitle={"Hide your coursework."}
+                            hideTitle={"Hide this coursework."}
                             hideDescription={
-                              "Are you sure to hide this coursework. This action cannot be undone and it will completely hide this coursework from your coursework."
+                              "Are you sure you want to hide this coursework? This action is irreversible and will permanently hide the coursework from your list and master resume."
                             }
                             hideAction={() =>
                               hideCourseworkAction(coursework.id)
@@ -274,21 +274,21 @@ export const Coursework = () => {
                               toDate={coursework.course_completion_year}
                               deleteTitle={"Delete your coursework."}
                               deleteDescription={
-                                "Are you sure to delete this coursework. This action cannot be undone and it will completely remove this coursework from your coursework."
+                                "Are you sure you want to delete this coursework? This action is irreversible and will permanently remove it from your coursework list."
                               }
                               deleteAction={() =>
                                 deleteCourseworkAction(coursework.id)
                               }
-                              hideTitle={"Hide your coursework."}
+                              hideTitle={"Hide this coursework."}
                               hideDescription={
-                                "Are you sure to hide this coursework. This action cannot be undone and it will completely hide this coursework from your coursework."
+                                "Are you sure you want to hide this coursework? This action is irreversible and will permanently hide the coursework from your list and master resume."
                               }
                               hideAction={() =>
                                 hideCourseworkAction(coursework.id)
                               }
-                              unhideTitle={"Unhide your coursework."}
+                              unhideTitle={"Show this coursework."}
                               unhideDescription={
-                                "Are you sure to unhide this coursework. This action cannot be undone and it will completely add this coursework from your coursework."
+                                "Are you sure you want to unhide this coursework? This action is irreversible and will permanently add the coursework from your list and master resume."
                               }
                               unhideAction={() =>
                                 unhideCourseworkAction(coursework.id)
