@@ -200,7 +200,6 @@ export const Contact = () => {
                 control={form.control}
                 placeholder="in/cbloomberg"
                 required
-                disabled={!!contactDetails?.contact_linkedin}
               />
               <TextInput
                 fieldLabel="Personal Website"
