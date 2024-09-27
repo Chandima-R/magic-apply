@@ -123,10 +123,10 @@ export const ActionCard = ({
         <CustomAlertDialog
           buttonVariant={"outline"}
           buttonSize={"sm"}
-          buttonText={status ? "hide" : "show"}
+          buttonText={status ? "Hide" : "Show"}
           title={status ? hideTitle : unhideTitle}
           description={status ? hideDescription : unhideDescription}
-          actionButtonText={status ? "hide" : "show"}
+          actionButtonText={status ? "Hide" : "Show"}
           actionButtonFn={
             status ? () => hideAction(id) : () => unhideAction?.(id)
           }

@@ -281,7 +281,7 @@ export const Experience = () => {
                             deleteAction={() => deleteExperienceAction(exp.id)}
                             hideTitle={"Hide this experience."}
                             hideDescription={
-                              "Are you sure you want to hide this experience? This action is irreversible and will permanently hide the experience from your list and master resume"
+                              "Are you sure you want to hide this experience? This action is irreversible and will permanently hide the experience from your list and master resume."
                             }
                             hideAction={() => hideExperienceAction(exp.id)}
                             status={exp.visibility}
@@ -324,7 +324,7 @@ export const Experience = () => {
                               }
                               hideTitle={"Hide this experience."}
                               hideDescription={
-                                "Are you sure you want to hide this experience? This action is irreversible and will permanently hide the experience from your list and master resume"
+                                "Are you sure you want to hide this experience? This action is irreversible and will permanently hide the experience from your list and master resume."
                               }
                               hideAction={() => hideExperienceAction(exp.id)}
                               unhideTitle={"Show this experience."}

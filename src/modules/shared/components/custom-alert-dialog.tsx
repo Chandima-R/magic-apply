@@ -64,7 +64,10 @@ export const CustomAlertDialog = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={actionButtonFn} className="gap-2">
+          <AlertDialogAction
+            onClick={actionButtonFn}
+            className="gap-2 capitalize"
+          >
             <Icon className="size-3" />
             {actionButtonText}
           </AlertDialogAction>

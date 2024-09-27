@@ -284,7 +284,7 @@ export const EditInvolvement = () => {
                               }
                               hideTitle={"Hide this involvement."}
                               hideDescription={
-                                "Are you sure you want to hide this involvement? This action is irreversible and will permanently hide the involvement from your list and master resume"
+                                "Are you sure you want to hide this involvement? This action is irreversible and will permanently hide the involvement from your list and master resume."
                               }
                               hideAction={() =>
                                 hideinvolvementAction(involvement.id)
@@ -330,7 +330,7 @@ export const EditInvolvement = () => {
                                 }
                                 hideTitle={"Hide this involvement."}
                                 hideDescription={
-                                  "Are you sure you want to hide this involvement? This action is irreversible and will permanently hide the involvement from your list and master resume"
+                                  "Are you sure you want to hide this involvement? This action is irreversible and will permanently hide the involvement from your list and master resume."
                                 }
                                 hideAction={() =>
                                   hideinvolvementAction(involvement.id)
