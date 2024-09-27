@@ -265,7 +265,7 @@ export const EditCoursework = () => {
                               }
                               hideTitle={"Hide this coursework."}
                               hideDescription={
-                                "Are you sure to hide this coursework. This action cannot be undone and it will completely hide this coursework from your coursework."
+                                "Are you sure you want to hide this coursework? This action is irreversible and will permanently hide the coursework from your list and master resume"
                               }
                               hideAction={() =>
                                 hideCourseworkAction(coursework.id)
@@ -309,7 +309,7 @@ export const EditCoursework = () => {
                                 }
                                 hideTitle={"Hide this coursework."}
                                 hideDescription={
-                                  "Are you sure to hide this coursework. This action cannot be undone and it will completely hide this coursework from your coursework."
+                                  "Are you sure you want to hide this coursework? This action is irreversible and will permanently hide the coursework from your list and master resume"
                                 }
                                 hideAction={() =>
                                   hideCourseworkAction(coursework.id)

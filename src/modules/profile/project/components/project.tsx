@@ -274,7 +274,7 @@ export const Project = () => {
                             deleteAction={() => deleteProjectAction(project.id)}
                             hideTitle={"Hide this project."}
                             hideDescription={
-                              "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
+                              "Are you sure you want to hide this project? This action is irreversible and will permanently hide the project from your list and master resume"
                             }
                             hideAction={() => hideProjectAction(project.id)}
                             status={project.visibility}
@@ -316,7 +316,7 @@ export const Project = () => {
                               }
                               hideTitle={"Hide this project."}
                               hideDescription={
-                                "Are you sure to hide this project. This action cannot be undone and it will completely hide this project from your projects."
+                                "Are you sure you want to hide this project? This action is irreversible and will permanently hide the project from your list and master resume"
                               }
                               hideAction={() => hideProjectAction(project.id)}
                               unhideTitle={"Show this project."}

@@ -234,7 +234,7 @@ export const Certifications = () => {
                             }
                             hideTitle={"Hide this certification."}
                             hideDescription={
-                              "Are you sure to hide this certificate. This action cannot be undone and it will completely hide this certificate from your certifications."
+                              "Are you sure you want to hide this certificate? This action is irreversible and will permanently hide the certificate from your list and master resume"
                             }
                             hideAction={() =>
                               hideCertificationAction(certificate.id)
@@ -264,7 +264,7 @@ export const Certifications = () => {
                           }
                           hideTitle={"Hide this certification."}
                           hideDescription={
-                            "Are you sure to hide this certificate. This action cannot be undone and it will completely hide this certificate from your certifications."
+                            "Are you sure you want to hide this certificate? This action is irreversible and will permanently hide the certificate from your list and master resume"
                           }
                           hideAction={() =>
                             hideCertificationAction(certificate.id)

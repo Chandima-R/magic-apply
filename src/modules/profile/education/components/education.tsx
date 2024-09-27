@@ -260,7 +260,7 @@ export const Education = () => {
                             }
                             hideTitle={"Hide this education."}
                             hideDescription={
-                              "Are you sure to hide this education. This action cannot be undone and it will completely hide this education from your educations."
+                              "Are you sure you want to hide this education? This action is irreversible and will permanently hide the education from your list and master resume"
                             }
                             hideAction={() => hideEducationAction(education.id)}
                             status={education.visibility}
@@ -302,7 +302,7 @@ export const Education = () => {
                               }
                               hideTitle={"Hide this education."}
                               hideDescription={
-                                "Are you sure to hide this education. This action cannot be undone and it will completely hide this education from your educations."
+                                "Are you sure you want to hide this education? This action is irreversible and will permanently hide the education from your list and master resume"
                               }
                               hideAction={() =>
                                 hideEducationAction(education.id)
