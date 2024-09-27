@@ -227,7 +227,7 @@ export const Certifications = () => {
                             toDate={certificate.certification_completion_year}
                             deleteTitle={"Delete your certification."}
                             deleteDescription={
-                              "Are you sure to delete this certificate. This action cannot be undone and it will completely remove this certificate from your certifications."
+                              " Are you sure you want to delete this certificate? This action is irreversible and will permanently remove it from your certificate list."
                             }
                             deleteAction={() =>
                               deleteCertifictionAction(certificate.id)
@@ -257,7 +257,7 @@ export const Certifications = () => {
                           toDate={certificate.certification_completion_year}
                           deleteTitle={"Delete your certification."}
                           deleteDescription={
-                            "Are you sure to delete this certificate. This action cannot be undone and it will completely remove this certificate from your certifications."
+                            " Are you sure you want to delete this certificate? This action is irreversible and will permanently remove it from your certificates list."
                           }
                           deleteAction={() =>
                             deleteCertifictionAction(certificate.id)

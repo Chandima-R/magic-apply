@@ -243,7 +243,7 @@ export const Involvements = () => {
                             toDate={involvement.involvement_end_date}
                             deleteTitle={"Delete your involvement."}
                             deleteDescription={
-                              "Are you sure to delete this involvement. This action cannot be undone and it will completely remove this involvement from your involvements."
+                              "Are you sure you want to delete this involvement? This action is irreversible and will permanently remove it from your involvements list."
                             }
                             deleteAction={() =>
                               deleteInvolvementAction(involvement.id)
@@ -288,7 +288,7 @@ export const Involvements = () => {
                               toDate={involvement.involvement_end_date}
                               deleteTitle={"Delete your involvement."}
                               deleteDescription={
-                                "Are you sure to delete this involvement. This action cannot be undone and it will completely remove this involvement from your involvements."
+                                "Are you sure you want to delete this involvement? This action is irreversible and will permanently remove it from your involvements list."
                               }
                               deleteAction={() =>
                                 deleteInvolvementAction(involvement.id)

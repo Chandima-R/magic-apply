@@ -258,7 +258,7 @@ export const EditCoursework = () => {
                               toDate={coursework.course_completion_year}
                               deleteTitle={"Delete your coursework."}
                               deleteDescription={
-                                "Are you sure to delete this coursework. This action cannot be undone and it will completely remove this coursework from your coursework."
+                                "Are you sure you want to delete this coursework? This action is irreversible and will permanently remove it from your coursework list."
                               }
                               deleteAction={() =>
                                 deleteCourseworkAction(coursework.id)
@@ -302,7 +302,7 @@ export const EditCoursework = () => {
                                 toDate={coursework.course_completion_year}
                                 deleteTitle={"Delete your coursework."}
                                 deleteDescription={
-                                  "Are you sure to delete this coursework. This action cannot be undone and it will completely remove this coursework from your coursework."
+                                  "Are you sure you want to delete this coursework? This action is irreversible and will permanently remove it from your coursework list."
                                 }
                                 deleteAction={() =>
                                   deleteCourseworkAction(coursework.id)

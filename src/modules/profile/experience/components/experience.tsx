@@ -276,7 +276,7 @@ export const Experience = () => {
                             toDate={exp.company_end_date}
                             deleteTitle={"Delete your experience."}
                             deleteDescription={
-                              "Are you sure to delete this experience. This action cannot be undone and it will completely remove this experience from your experience list."
+                              "Are you sure you want to delete this experience? This action is irreversible and will permanently remove it from your experiences list."
                             }
                             deleteAction={() => deleteExperienceAction(exp.id)}
                             hideTitle={"Hide your experience."}
@@ -317,7 +317,7 @@ export const Experience = () => {
                               toDate={exp.company_end_date}
                               deleteTitle={"Delete your experience."}
                               deleteDescription={
-                                "Are you sure to delete this experience. This action cannot be undone and it will completely remove this experience from your experience list."
+                                "Are you sure you want to delete this experience? This action is irreversible and will permanently remove it from your experiences list."
                               }
                               deleteAction={() =>
                                 deleteExperienceAction(exp.id)
