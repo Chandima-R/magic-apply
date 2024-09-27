@@ -338,7 +338,7 @@ export const EditProject = () => {
                               hideAction={() => hideProjectAction(project.id)}
                               unhideTitle={"Show this project."}
                               unhideDescription={
-                                "Are you sure to unhide this project. This action cannot be undone and it will completely add this project to your projects list."
+                                "Are you sure you want to unhide this project? This action is irreversible and will permanently add the project from your list and master resume."
                               }
                               unhideAction={() =>
                                 unhideProjectAction(project.id)

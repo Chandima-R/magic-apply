@@ -308,7 +308,7 @@ export const EditCertificate = () => {
                               }
                               unhideTitle={"Show this certification."}
                               unhideDescription={
-                                "Are you sure to unhide this certificate. This action cannot be undone and it will completely add this certificate to your certifications list."
+                                "Are you sure you want to unhide this certificate? This action is irreversible and will permanently add the certificate from your list and master resume."
                               }
                               unhideAction={() =>
                                 unhideCertificationAction(certificate.id)

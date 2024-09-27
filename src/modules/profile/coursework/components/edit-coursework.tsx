@@ -316,7 +316,7 @@ export const EditCoursework = () => {
                                 }
                                 unhideTitle={"Show this coursework."}
                                 unhideDescription={
-                                  "Are you sure to unhide this coursework. This action cannot be undone and it will completely add this coursework to your coursework list."
+                                  "Are you sure you want to unhide this education? This action is irreversible and will permanently add the education from your list and master resume."
                                 }
                                 unhideAction={() =>
                                   unhideCourseworkAction(coursework.id)

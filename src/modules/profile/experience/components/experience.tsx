@@ -329,7 +329,7 @@ export const Experience = () => {
                               hideAction={() => hideExperienceAction(exp.id)}
                               unhideTitle={"Show this experience."}
                               unhideDescription={
-                                "Are you sure to unhide this experience. This action cannot be undone and it will completely add this experience to your experience list."
+                                "Are you sure you want to unhide this experience? This action is irreversible and will permanently add the experience from your list and master resume."
                               }
                               unhideAction={() =>
                                 unhideExperienceAction(exp.id)

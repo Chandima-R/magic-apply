@@ -337,7 +337,7 @@ export const EditEducation = () => {
                               }
                               unhideTitle={"Show this certification."}
                               unhideDescription={
-                                "Are you sure to unhide this education. This action cannot be undone and it will completely add this education to your educations list."
+                                "Are you sure you want to unhide this education? This action is irreversible and will permanently add the education from your list and master resume."
                               }
                               unhideAction={() =>
                                 unhideEducationAction(education.id)
