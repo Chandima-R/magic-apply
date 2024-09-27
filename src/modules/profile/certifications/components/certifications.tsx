@@ -240,7 +240,7 @@ export const Certifications = () => {
                               hideCertificationAction(certificate.id)
                             }
                             status={certificate.visibility}
-                            tab={"certification"}
+                            tab={"certifications"}
                           />
                         </AccordionContent>
                       ))}

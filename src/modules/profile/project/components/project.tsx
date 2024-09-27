@@ -278,7 +278,7 @@ export const Project = () => {
                             }
                             hideAction={() => hideProjectAction(project.id)}
                             status={project.visibility}
-                            tab="project"
+                            tab="projects"
                           />
                         </AccordionContent>
                       ))}

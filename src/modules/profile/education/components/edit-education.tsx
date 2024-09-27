@@ -281,7 +281,7 @@ export const EditEducation = () => {
                             toDate={education.education_end_date}
                             deleteTitle={"Delete your education."}
                             deleteDescription={
-                              "Are you sure you want to delete this education? This action is irreversible and will permanently remove it from your education list.."
+                              "Are you sure you want to delete this education? This action is irreversible and will permanently remove it from your education list."
                             }
                             deleteAction={() =>
                               deleteEducationAction(education.id)

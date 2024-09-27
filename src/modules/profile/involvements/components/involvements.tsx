@@ -256,7 +256,7 @@ export const Involvements = () => {
                               hideinvolvementAction(involvement.id)
                             }
                             status={involvement.visibility}
-                            tab="involvement"
+                            tab="involvements"
                           />
                         </AccordionContent>
                       ))}

@@ -146,7 +146,7 @@ export const EditInvolvement = () => {
         });
       }
       form.reset();
-      router.push("/profile/involvement");
+      router.push("/profile/involvements");
     } catch (error) {
       console.error(error);
       toast({
