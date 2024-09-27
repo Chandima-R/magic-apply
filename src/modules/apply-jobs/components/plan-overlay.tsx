@@ -30,14 +30,14 @@ export const PlanOverlay = () => {
             <li>Priority support and personalized tips</li>
           </ul>
         </div>
-        <Link href="/pricing">
+        <Link href="/plans">
           <p className="mt-6 px-6 py-3 bg-honoluluBlue text-white rounded-md hover:bg-federalBlue transition text-lg">
             Upgrade to Basic Plan
           </p>
         </Link>
         <p className="text-gray-500 text-sm mt-3">
           Browse our{" "}
-          <Link href="/pricing">
+          <Link href="/plans">
             <p className="text-honoluluBlue underline hover:text-blue-700">
               Pricing Page
             </p>

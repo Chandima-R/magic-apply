@@ -4,11 +4,21 @@ interface Props {
   title: string;
   price: number;
   customButtonFn: () => void;
+  userPlan?: boolean;
 }
 
-export const PriceCard = ({ title, price, customButtonFn }: Props) => {
+export const PriceCard = ({
+  title,
+  price,
+  customButtonFn,
+  userPlan,
+}: Props) => {
   return (
-    <div className="bg-white overflow-hidden rounded-lg shadow-lg hover:shadow-xl cursor-pointer hover:bg-lightCyan w-full">
+    <div
+      className={`bg-white overflow-hidden rounded-lg shadow-lg hover:shadow-xl cursor-pointer hover:bg-lightCyan w-full ${
+        userPlan ? "bg-lightCyan" : "bg-white"
+      }`}
+    >
       <div className="p-6">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-medium leading-6 text-federalBlue">
