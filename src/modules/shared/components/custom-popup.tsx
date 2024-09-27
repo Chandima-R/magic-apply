@@ -53,8 +53,8 @@ export const CustomPopupButton = ({ title, userPlan, usedSlots }: Props) => {
                 Currently, you are using {usedSlots} out of {slots} slots.
               </li>
               <li>
-                Once you reach your limit, you won't be able to add more unless
-                you upgrade your plan.
+                Once you reach your limit, you won&rsquo;t be able to add more
+                unless you upgrade your plan.
               </li>
               <li>
                 Ensure you manage your {title}s efficiently to make the most of
