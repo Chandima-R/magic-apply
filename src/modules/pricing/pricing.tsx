@@ -72,9 +72,9 @@ export const Pricing = () => {
             <div className="bg-gray-100 py-24 px-4 sm:px-6 lg:px-8">
               <div className="max-w-7xl mx-auto text-center">
                 <div className="mt-10">
-                  <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-1 lg:grid-cols-3 gap-x-10 justify-center">
+                  <div>
                     {!userPlan && (
-                      <>
+                      <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-1 lg:grid-cols-3 gap-x-10">
                         <PriceCard
                           title="Free"
                           price={0}
@@ -90,11 +90,11 @@ export const Pricing = () => {
                           price={19.9}
                           customButtonFn={handlePremiumPlanClick}
                         />
-                      </>
+                      </div>
                     )}
 
                     {userPlan === "free" && (
-                      <>
+                      <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-1 lg:grid-cols-2 gap-x-10">
                         <PriceCard
                           title="Basic"
                           price={9.99}
@@ -105,17 +105,17 @@ export const Pricing = () => {
                           price={19.9}
                           customButtonFn={handlePremiumPlanClick}
                         />
-                      </>
+                      </div>
                     )}
 
                     {userPlan === "basic" && (
-                      <>
+                      <div className="grid grid-cols-1 gap-y-10 gap-x-10">
                         <PriceCard
                           title="Premium"
                           price={19.9}
                           customButtonFn={handlePremiumPlanClick}
                         />
-                      </>
+                      </div>
                     )}
                   </div>
                 </div>
