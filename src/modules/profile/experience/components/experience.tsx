@@ -254,6 +254,7 @@ export const Experience = () => {
                           You have {hiddenExperienceLength} hidden experience(s)
                           in your bucket.
                         </span>
+                                                
                                             ) : (
                                                 ""
                                             )}

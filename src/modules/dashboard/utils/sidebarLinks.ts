@@ -18,10 +18,6 @@ export const sidebarLinks = (userPlan: string) => {
       label: "master resume",
       icon: ScrollText,
     },
-  ];
-
-  const basicLinks = [
-    ...freeLinks,
 
     {
       href: "/apply-jobs",
@@ -29,6 +25,8 @@ export const sidebarLinks = (userPlan: string) => {
       icon: AppWindow,
     },
   ];
+
+  const basicLinks = [...freeLinks];
 
   const premiumLinks = [
     ...basicLinks,
