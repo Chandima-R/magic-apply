@@ -259,10 +259,11 @@ export const EditExperience = () => {
     <div className="p-4 border-[1px] shadow-md rounded">
       <ProfileActiveLinks activeLink={activeLink} />
 
-      <p className={"text-sm space-x-1 mb-4"}>
+      <p className={"text-sm space-x-1 mb-4 font-semibold"}>
         <RequiredIndicator />{" "}
         <span>
-          This is required section for the resume, Please fill this section.
+          This is required section for the resume, Please fill this section
+          completely.
         </span>
       </p>
 

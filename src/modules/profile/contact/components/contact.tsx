@@ -158,10 +158,11 @@ export const Contact = () => {
     <div className="p-4 border-[1px] shadow-md rounded">
       <ProfileActiveLinks activeLink={activeLink} />
 
-      <p className={"text-sm space-x-1 mb-4"}>
+      <p className={"text-sm space-x-1 mb-4 font-semibold"}>
         <RequiredIndicator />{" "}
         <span>
-          This is a required section for the resume, Please fill this section.
+          This is a required section for the resume, Please fill this section
+          completly.
         </span>
       </p>
       {contactLoading ? (
