@@ -1,7 +1,7 @@
 "use client";
 
 import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
-import { Loader2, Menu } from "lucide-react";
+import { CheckCircle, Crown, Loader2, Menu, Star } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { sidebarLinks } from "@/modules/dashboard/utils/sidebarLinks";
@@ -139,12 +139,34 @@ export const Navigation = () => {
                 ))}
               </nav>
             </div>
-            <ClerkLoaded>
-              <UserButton afterSignOutUrl="/sign-in" />
-            </ClerkLoaded>
-            <ClerkLoading>
-              <Loader2 className="animate-spin size-8 text-slate-400" />
-            </ClerkLoading>
+            <div className="space-x-2 flex items-center">
+              {userPlan?.toLowerCase() === "free" && (
+                <div className="flex items-center">
+                  <Star className="w-6 h-6 text-blue-500" />
+                  <p className="capitalize ml-2">{userPlan}</p>
+                </div>
+              )}
+              {userPlan?.toLowerCase() === "basic" && (
+                <div className="flex items-center">
+                  <CheckCircle className="w-6 h-6 text-blue-500" />
+                  <p className="capitalize ml-2">{userPlan}</p>
+                </div>
+              )}
+
+              {userPlan?.toLowerCase() === "premium" && (
+                <div className="flex items-center">
+                  <Crown className="w-6 h-6 text-blue-500" />
+                  <p className="capitalize ml-2">{userPlan}</p>
+                </div>
+              )}
+
+              <ClerkLoaded>
+                <UserButton afterSignOutUrl="/sign-in" />
+              </ClerkLoaded>
+              <ClerkLoading>
+                <Loader2 className="animate-spin size-8 text-slate-400" />
+              </ClerkLoading>
+            </div>
           </div>
         </div>
       </header>
