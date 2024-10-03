@@ -36,6 +36,10 @@ const educationSchema = z
   .object({
     degree: z.string().nonempty("Degree or major required."),
     specialization: z.string().optional(),
+    achievement: z
+      .string()
+      .max(50, "Achievement must be 50 characters or less.")
+      .optional(),
     institute: z.string().nonempty("Institute is required."),
     instituteLocation: z
       .string()
@@ -63,6 +67,7 @@ export const EditEducation = () => {
     defaultValues: {
       degree: "",
       specialization: "",
+      achievement: "",
       institute: "",
       instituteLocation: "",
       startDate: new Date(),
@@ -105,6 +110,7 @@ export const EditEducation = () => {
       form.reset({
         degree: education.education_major,
         specialization: education.education_specialization,
+        achievement: education?.education_achievement,
         institute: education.education_institute,
         instituteLocation: education.education_location,
         startDate: education.education_start_date,
@@ -134,6 +140,7 @@ export const EditEducation = () => {
             education_location: values.instituteLocation,
             education_major: values.degree,
             education_specialization: values.specialization,
+            education_achievement: values.achievement,
             educatoin_additional_information: values.additionalInformation,
           },
         });
@@ -276,7 +283,7 @@ export const EditEducation = () => {
                             id={education.id}
                             company={education.education_institute}
                             role={education.education_major}
-                            country={""}
+                            country={education?.education_location}
                             fromDate={education.education_start_date}
                             toDate={education.education_end_date}
                             deleteTitle={"Delete your education."}
@@ -318,7 +325,7 @@ export const EditEducation = () => {
                               id={education.id}
                               company={education.education_institute}
                               role={education.education_major}
-                              country={""}
+                              country={education?.education_location}
                               fromDate={education.education_start_date}
                               toDate={education.education_end_date}
                               deleteTitle={"Delete your education."}
@@ -412,6 +419,13 @@ export const EditEducation = () => {
                     fieldName={"gpa"}
                     control={form.control}
                     placeholder={"3.28"}
+                    required={false}
+                  />
+                  <TextInput
+                    fieldLabel={"What are your achievements?"}
+                    fieldName={"achievement"}
+                    control={form.control}
+                    placeholder={"Deans list"}
                     required={false}
                   />
                   <TextArea

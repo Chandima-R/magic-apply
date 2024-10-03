@@ -35,6 +35,10 @@ const educationSchema = z
   .object({
     degree: z.string().nonempty("Degree or major required."),
     specialization: z.string().optional(),
+    achievement: z
+      .string()
+      .max(50, "Achievement must be 50 characters or less.")
+      .optional(),
     institute: z.string().nonempty("Institute is required."),
     instituteLocation: z
       .string()
@@ -59,6 +63,7 @@ export const Education = () => {
     defaultValues: {
       degree: "",
       specialization: "",
+      achievement: "",
       institute: "",
       instituteLocation: "",
       startDate: new Date(),
@@ -107,6 +112,7 @@ export const Education = () => {
             education_location: values.instituteLocation,
             education_major: values.degree,
             education_specialization: values.specialization,
+            education_achievement: values.achievement,
             educatoin_additional_information: values.additionalInformation,
           },
         });
@@ -248,7 +254,7 @@ export const Education = () => {
                             id={education.id}
                             company={education.education_institute}
                             role={education.education_major}
-                            country={""}
+                            country={education?.education_location}
                             fromDate={education.education_start_date}
                             toDate={education.education_end_date}
                             deleteTitle={"Delete your education."}
@@ -290,7 +296,7 @@ export const Education = () => {
                               id={education.id}
                               company={education.education_institute}
                               role={education.education_major}
-                              country={""}
+                              country={education?.education_location}
                               fromDate={education.education_start_date}
                               toDate={education.education_end_date}
                               deleteTitle={"Delete your education."}
@@ -381,6 +387,13 @@ export const Education = () => {
                   fieldName={"gpa"}
                   control={form.control}
                   placeholder={"3.28"}
+                  required={false}
+                />
+                <TextInput
+                  fieldLabel={"What are your achievements?"}
+                  fieldName={"achievement"}
+                  control={form.control}
+                  placeholder={"Deans list"}
                   required={false}
                 />
                 <TextArea
