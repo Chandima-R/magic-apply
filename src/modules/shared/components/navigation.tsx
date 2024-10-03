@@ -65,7 +65,7 @@ export const Navigation = () => {
                 </Link>
               </div>
 
-              <div>
+              {/* <div>
                 <Button
                   className={
                     "w-full h-10 uppercase bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue"
@@ -73,7 +73,7 @@ export const Navigation = () => {
                 >
                   create new resume
                 </Button>
-              </div>
+              </div> */}
 
               <div>
                 {links.map((route) => (
