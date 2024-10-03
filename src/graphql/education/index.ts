@@ -6,6 +6,7 @@ export const EDUCATION_INFORMATION_BY_USER_ID = gql`
       where: { user_id: { _eq: $_eq } }
       order_by: { education_end_date: desc }
     ) {
+      education_achievement
       education_start_date
       education_end_date
       education_gpa
@@ -24,6 +25,7 @@ export const EDUCATION_INFORMATION_BY_USER_ID = gql`
 export const VIEW_EDUCATION_BY_ID = gql`
   subscription viewEducationById($_eq: uuid!) {
     education(where: { id: { _eq: $_eq } }) {
+      education_achievement
       education_start_date
       education_end_date
       education_gpa
@@ -41,6 +43,7 @@ export const VIEW_EDUCATION_BY_ID = gql`
 
 export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
   mutation addNewEducationByUserId(
+    $education_achievement: String
     $education_start_date: String
     $education_end_date: String
     $education_gpa: String
@@ -53,6 +56,7 @@ export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
   ) {
     insert_education(
       objects: {
+        education_achievement: $education_achievement
         education_start_date: $education_start_date
         education_end_date: $education_end_date
         education_gpa: $education_gpa
@@ -71,6 +75,7 @@ export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
 
 export const UPDATE_EDUCATION_BY_ID = gql`
   mutation updateEducationById(
+    $education_achievement: String
     $education_start_date: String
     $education_end_date: String
     $education_gpa: String
@@ -84,6 +89,7 @@ export const UPDATE_EDUCATION_BY_ID = gql`
     update_education(
       where: { id: { _eq: $_eq } }
       _set: {
+        education_achievement: $education_achievement
         education_start_date: $education_start_date
         education_end_date: $education_end_date
         education_gpa: $education_gpa
@@ -102,6 +108,7 @@ export const UPDATE_EDUCATION_BY_ID = gql`
 export const DELETE_EDUCATION_BY_PK = gql`
   mutation deleteEducationByPk($id: uuid!) {
     delete_education_by_pk(id: $id) {
+      education_achievement
       education_start_date
       education_end_date
       education_gpa
