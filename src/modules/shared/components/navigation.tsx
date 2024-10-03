@@ -1,7 +1,7 @@
 "use client";
 
 import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
-import { Loader2, Menu } from "lucide-react";
+import { CheckCircle, Crown, Loader2, Menu, Star } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { sidebarLinks } from "@/modules/dashboard/utils/sidebarLinks";
@@ -65,7 +65,7 @@ export const Navigation = () => {
                 </Link>
               </div>
 
-              <div>
+              {/* <div>
                 <Button
                   className={
                     "w-full h-10 uppercase bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue"
@@ -73,7 +73,7 @@ export const Navigation = () => {
                 >
                   create new resume
                 </Button>
-              </div>
+              </div> */}
 
               <div>
                 {links.map((route) => (
@@ -105,7 +105,29 @@ export const Navigation = () => {
           </Link>
         </div>
 
-        <div>
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-y-4">
+            {userPlan === "free" && (
+              <div className="flex items-center">
+                <Star className="w-6 h-6 text-blue-500" />
+                <span className="ml-2">Free</span>
+              </div>
+            )}
+
+            {userPlan === "basic" && (
+              <div className="flex items-center">
+                <CheckCircle className="w-6 h-6 text-green-500" />
+                <span className="ml-2">Basic</span>
+              </div>
+            )}
+
+            {userPlan === "premium" && (
+              <div className="flex items-center">
+                <Crown className="w-6 h-6 text-yellow-500" />
+                <span className="ml-2">Premium</span>
+              </div>
+            )}
+          </div>
           <ClerkLoaded>
             <UserButton afterSignOutUrl="/sign-in" />
           </ClerkLoaded>
@@ -139,12 +161,37 @@ export const Navigation = () => {
                 ))}
               </nav>
             </div>
-            <ClerkLoaded>
-              <UserButton afterSignOutUrl="/sign-in" />
-            </ClerkLoaded>
-            <ClerkLoading>
-              <Loader2 className="animate-spin size-8 text-slate-400" />
-            </ClerkLoading>
+
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-y-4">
+                {userPlan === "free" && (
+                  <div className="flex items-center">
+                    <Star className="w-6 h-6 text-blue-500" />
+                    <span className="ml-2">Free</span>
+                  </div>
+                )}
+
+                {userPlan === "basic" && (
+                  <div className="flex items-center">
+                    <CheckCircle className="w-6 h-6 text-green-500" />
+                    <span className="ml-2">Basic</span>
+                  </div>
+                )}
+
+                {userPlan === "premium" && (
+                  <div className="flex items-center">
+                    <Crown className="w-6 h-6 text-yellow-500" />
+                    <span className="ml-2">Premium</span>
+                  </div>
+                )}
+              </div>
+              <ClerkLoaded>
+                <UserButton afterSignOutUrl="/sign-in" />
+              </ClerkLoaded>
+              <ClerkLoading>
+                <Loader2 className="animate-spin size-8 text-slate-400" />
+              </ClerkLoading>
+            </div>
           </div>
         </div>
       </header>
