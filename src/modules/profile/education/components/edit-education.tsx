@@ -276,7 +276,7 @@ export const EditEducation = () => {
                             id={education.id}
                             company={education.education_institute}
                             role={education.education_major}
-                            country={""}
+                            country={education?.education_location}
                             fromDate={education.education_start_date}
                             toDate={education.education_end_date}
                             deleteTitle={"Delete your education."}
@@ -318,7 +318,7 @@ export const EditEducation = () => {
                               id={education.id}
                               company={education.education_institute}
                               role={education.education_major}
-                              country={""}
+                              country={education?.education_location}
                               fromDate={education.education_start_date}
                               toDate={education.education_end_date}
                               deleteTitle={"Delete your education."}
