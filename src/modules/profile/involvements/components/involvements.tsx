@@ -40,7 +40,9 @@ const involvementSchema = z
     organizationRoleEndDate: z.date({
       required_error: "End date is required.",
     }),
-    organizationLocation: z.string().nonempty("Company Location is required."),
+    organizationCollege: z.string().nonempty("College is required."),
+    organizationLocation: z.string().optional(),
+
     organizationRoleDescription: z
       .string()
       .nonempty("Job description is required."),
@@ -65,6 +67,7 @@ export const Involvements = () => {
       organizationName: "",
       organizationRoleStartDate: new Date(),
       organizationRoleEndDate: new Date(),
+      organizationCollege: "",
       organizationLocation: "",
       organizationRoleDescription: "",
     },
@@ -101,11 +104,12 @@ export const Involvements = () => {
           variables: {
             user_id: user?.id,
             involevement_organization: values.organizationName,
-            involvement_college: values.organizationLocation,
+            involvement_college: values.organizationCollege,
             involvement_description: values.organizationRoleDescription,
             involvement_end_date: values.organizationRoleEndDate,
             involvement_organization_role: values.organizationRole,
             involvement_start_date: values.organizationRoleStartDate,
+            involvement_location: values.organizationLocation,
           },
         });
 
@@ -354,10 +358,19 @@ export const Involvements = () => {
                   required={true}
                 />
                 <TextInput
-                  fieldLabel={"At which college was the organization located?"}
-                  fieldName={"organizationLocation"}
+                  fieldLabel={
+                    "At which college/school/university was the organization located?"
+                  }
+                  fieldName={"organizationCollege"}
                   control={form.control}
                   placeholder={"University of Wisconsin, Madison"}
+                  required={true}
+                />
+                <TextInput
+                  fieldLabel={"Where was the organization located?"}
+                  fieldName={"organizationLocation"}
+                  control={form.control}
+                  placeholder={"Wisconsin, MA"}
                   required={true}
                 />
               </div>
