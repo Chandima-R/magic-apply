@@ -106,17 +106,17 @@ export const EditInvolvement = () => {
     if (editData && editData?.involvement) {
       const involvement = editData?.involvement[0];
       form.reset({
-        organizationRole: involvement.involvement_organization_role,
-        organizationName: involvement.involevement_organization,
-        organizationRoleStartDate: involvement.involvement_start_date
-          ? new Date(involvement.involvement_start_date)
+        organizationRole: involvement?.involvement_organization_role,
+        organizationName: involvement?.involevement_organization,
+        organizationRoleStartDate: involvement?.involvement_start_date
+          ? new Date(involvement?.involvement_start_date)
           : new Date(),
-        organizationRoleEndDate: involvement.involvement_end_date
-          ? new Date(involvement.involvement_end_date)
+        organizationRoleEndDate: involvement?.involvement_end_date
+          ? new Date(involvement?.involvement_end_date)
           : new Date(),
-        organizationCollege: involvement.involvement_college,
-        organizationLocation: involvement.involvement_location,
-        organizationRoleDescription: involvement.involvement_description,
+        organizationCollege: involvement?.involvement_college,
+        organizationLocation: involvement?.involvement_location,
+        organizationRoleDescription: involvement?.involvement_description,
       });
     }
   }, [editData, form]);
