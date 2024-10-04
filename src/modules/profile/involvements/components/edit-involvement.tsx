@@ -394,7 +394,7 @@ export const EditInvolvement = () => {
                   />
                   <TextInput
                     fieldLabel={
-                      "At which college was the organization located?"
+                      "At which college/school/university was the organization located?"
                     }
                     fieldName={"organizationCollege"}
                     control={form.control}

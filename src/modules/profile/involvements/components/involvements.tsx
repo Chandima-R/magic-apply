@@ -358,7 +358,9 @@ export const Involvements = () => {
                   required={true}
                 />
                 <TextInput
-                  fieldLabel={"At which college was the organization located?"}
+                  fieldLabel={
+                    "At which college/school/university was the organization located?"
+                  }
                   fieldName={"organizationCollege"}
                   control={form.control}
                   placeholder={"University of Wisconsin, Madison"}
