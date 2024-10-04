@@ -2,7 +2,10 @@ import { gql } from "@apollo/client";
 
 export const INVOLVEMENT_INFORMATION_BY_USER_ID = gql`
   subscription involvementInformationByUserId($_eq: String) {
-    involvement(where: { user_id: { _eq: $_eq } }, order_by: {involvement_end_date: desc}) {
+    involvement(
+      where: { user_id: { _eq: $_eq } }
+      order_by: { involvement_end_date: desc }
+    ) {
       involevement_organization
       id
       involvement_college
@@ -10,6 +13,7 @@ export const INVOLVEMENT_INFORMATION_BY_USER_ID = gql`
       involvement_end_date
       involvement_organization_role
       involvement_start_date
+      involvement_location
       user_id
       visibility
     }
@@ -26,6 +30,7 @@ export const VIEW_INVOLVEMENT_BY_ID = gql`
       involvement_end_date
       involvement_organization_role
       involvement_start_date
+      involvement_location
       user_id
       visibility
     }
@@ -40,6 +45,7 @@ export const ADD_NEW_INVOLVEMENT_BY_USER_ID = gql`
     $involvement_end_date: String
     $involvement_organization_role: String
     $involvement_start_date: String
+    $involvement_location: String
     $user_id: String
   ) {
     insert_involvement(
@@ -50,6 +56,7 @@ export const ADD_NEW_INVOLVEMENT_BY_USER_ID = gql`
         involvement_end_date: $involvement_end_date
         involvement_organization_role: $involvement_organization_role
         involvement_start_date: $involvement_start_date
+        involvement_location: $involvement_location
         user_id: $user_id
       }
     ) {
@@ -66,6 +73,7 @@ export const UPDATE_INVOLVEMENT_BY_ID = gql`
     $involvement_end_date: String
     $involvement_organization_role: String
     $involvement_start_date: String
+    $involvement_location: String
     $_eq: uuid!
   ) {
     update_involvement(
@@ -77,6 +85,7 @@ export const UPDATE_INVOLVEMENT_BY_ID = gql`
         involvement_end_date: $involvement_end_date
         involvement_organization_role: $involvement_organization_role
         involvement_start_date: $involvement_start_date
+        involvement_location: $involvement_location
       }
     ) {
       affected_rows
@@ -94,6 +103,7 @@ export const DELETE_INVOLVEMENT_BY_PK = gql`
       involvement_end_date
       involvement_organization_role
       involvement_start_date
+      involvement_location
       user_id
     }
   }

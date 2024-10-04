@@ -41,7 +41,8 @@ const involvementSchema = z
     organizationRoleEndDate: z.date({
       required_error: "End date is required.",
     }),
-    organizationLocation: z.string().nonempty("Company Location is required."),
+    organizationCollege: z.string().nonempty("Company Location is required."),
+    organizationLocation: z.string().optional(),
     organizationRoleDescription: z
       .string()
       .nonempty("Job description is required."),
@@ -69,6 +70,7 @@ export const EditInvolvement = () => {
       organizationName: "",
       organizationRoleStartDate: new Date(),
       organizationRoleEndDate: new Date(),
+      organizationCollege: "",
       organizationLocation: "",
       organizationRoleDescription: "",
     },
@@ -112,7 +114,8 @@ export const EditInvolvement = () => {
         organizationRoleEndDate: involvement.involvement_end_date
           ? new Date(involvement.involvement_end_date)
           : new Date(),
-        organizationLocation: involvement.involvement_college,
+        organizationCollege: involvement.involvement_college,
+        organizationLocation: involvement.involvement_location,
         organizationRoleDescription: involvement.involvement_description,
       });
     }
@@ -131,10 +134,11 @@ export const EditInvolvement = () => {
             _eq: involvementId,
             user_id: user?.id,
             involevement_organization: values.organizationName,
-            involvement_college: values.organizationLocation,
+            involvement_college: values.organizationCollege,
             involvement_description: values.organizationRoleDescription,
             involvement_end_date: values.organizationRoleEndDate,
             involvement_organization_role: values.organizationRole,
+            involvement_location: values.organizationLocation,
             involvement_start_date: values.organizationRoleStartDate,
           },
         });
@@ -290,7 +294,7 @@ export const EditInvolvement = () => {
                                 hideinvolvementAction(involvement.id)
                               }
                               status={involvement.visibility}
-                              tab="involvement"
+                              tab="involvements"
                             />
                           </AccordionContent>
                         ))}
@@ -392,10 +396,17 @@ export const EditInvolvement = () => {
                     fieldLabel={
                       "At which college was the organization located?"
                     }
-                    fieldName={"organizationLocation"}
+                    fieldName={"organizationCollege"}
                     control={form.control}
                     placeholder={"University of Wisconsin, Madison"}
                     required={true}
+                  />
+                  <TextInput
+                    fieldLabel={"Where was the organization located?"}
+                    fieldName={"organizationLocation"}
+                    control={form.control}
+                    placeholder={"Wisconsin, MA"}
+                    required={false}
                   />
                 </div>
                 <div className={"mt-4 lg:mt-8 "}>
