@@ -32,11 +32,14 @@ import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-l
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { CheckboxField } from "@/modules/shared/components/checkbox-input";
 import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
+import { SelectInput } from "@/modules/shared/components/select-input";
+import { employmentType } from "@/modules/shared/utils/employment-type";
 
 const experienceSchema = z
   .object({
     role: z.string().nonempty("Role is required."),
     company: z.string().nonempty("Company is required."),
+    employmentType: z.string().nonempty("Employment type is required."),
     startDate: z.date({
       required_error: "Start date is required.",
     }),
@@ -68,6 +71,7 @@ export const EditExperience = () => {
     defaultValues: {
       role: "",
       company: "",
+      employmentType: "",
       startDate: new Date(),
       endDate: "",
       companyLocation: "",
@@ -125,6 +129,7 @@ export const EditExperience = () => {
       form.reset({
         role: experience.company_role,
         company: experience.company_name,
+        employmentType: experience.company_employment_type,
         startDate: experience.company_start_date
           ? new Date(experience.company_start_date)
           : new Date(),
@@ -157,6 +162,7 @@ export const EditExperience = () => {
               : null,
             company_location: values.companyLocation,
             company_name: values.company,
+            company_employment_type: values.employmentType,
             company_role: values.role,
             company_role_description: values.jobDescription,
             company_start_date: values.startDate,
@@ -404,6 +410,19 @@ export const EditExperience = () => {
                     fieldName={"company"}
                     control={form.control}
                     placeholder={"Google"}
+                    required={true}
+                  />
+                  <SelectInput
+                    fieldName={"employmentType"}
+                    fieldLabel={"Select your employment type of the company?"}
+                    placeholder={"Select your employment type"}
+                    control={form.control}
+                    options={
+                      employmentType?.map((emp: any) => ({
+                        label: emp.label,
+                        value: emp.value,
+                      })) || []
+                    }
                     required={true}
                   />
                   <div className="flex flex-col gap-2">
