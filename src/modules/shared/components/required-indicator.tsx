@@ -1,3 +1,3 @@
 export function RequiredIndicator() {
-  return <span className="text-red-500 w-auto">*</span>;
+  return <span className="text-red-500">*</span>;
 }
