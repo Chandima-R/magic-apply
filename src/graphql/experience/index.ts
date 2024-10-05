@@ -9,6 +9,7 @@ export const EXPERIENCE_INFORMATION_BY_USER_ID = gql`
       company_end_date
       company_location
       company_name
+      company_employment_type
       company_role
       company_role_description
       company_start_date
@@ -26,6 +27,7 @@ export const VIEW_EXPERIENCE_BY_ID = gql`
       company_end_date
       company_location
       company_name
+      company_employment_type
       company_role
       company_role_description
       company_start_date
@@ -42,6 +44,7 @@ export const ADD_NEW_EXPERIENCE_BY_USER_ID = gql`
     $company_end_date: String
     $company_location: String
     $company_name: String
+    $company_employment_type: String
     $company_role: String
     $company_role_description: String
     $company_start_date: String
@@ -53,6 +56,7 @@ export const ADD_NEW_EXPERIENCE_BY_USER_ID = gql`
         company_end_date: $company_end_date
         company_location: $company_location
         company_name: $company_name
+        company_employment_type: $company_employment_type
         company_role: $company_role
         company_role_description: $company_role_description
         company_start_date: $company_start_date
@@ -70,6 +74,7 @@ export const UPDATE_EXPERIENCE_BY_ID = gql`
     $company_end_date: String
     $company_location: String
     $company_name: String
+    $company_employment_type: String
     $company_role: String
     $company_role_description: String
     $company_start_date: String
@@ -82,6 +87,7 @@ export const UPDATE_EXPERIENCE_BY_ID = gql`
         company_end_date: $company_end_date
         company_location: $company_location
         company_name: $company_name
+        company_employment_type: $company_employment_type
         company_role: $company_role
         company_role_description: $company_role_description
         company_start_date: $company_start_date
@@ -99,6 +105,7 @@ export const DELETE_EXPERIENCE_BY_PK = gql`
       company_end_date
       company_location
       company_name
+      company_employment_type
       company_role
       company_role_description
       company_start_date
