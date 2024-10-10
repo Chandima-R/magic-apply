@@ -401,6 +401,7 @@ export const WordPage = ({
             )}
           </>
         ))}
+
         {summarizedExperience?.map((exp: any) => (
           <>
             {exp?.company_end_date?.length > 0 && (
@@ -490,16 +491,32 @@ export const WordPage = ({
                 </p>
               </div>
             </div>
-            <div className="mt-2">
+            <div>
               <div className="flex">
-                <h4 className="text-md font-normal">{edu?.education_major}</h4>
+                <span className="text-md font-normal">
+                  {edu?.education_major}
+
+                  {edu?.education_specialization && (
+                    <span className="text-md font-normal">
+                      {" | "}
+                      <span className="font-semibold">
+                        Specialization:
+                      </span>{" "}
+                      {edu?.education_specialization}
+                    </span>
+                  )}
+
+                  {edu?.education_achievement && (
+                    <span className="text-md font-normal">
+                      {" | "}
+                      <span className="font-semibold">Achivements:</span>{" "}
+                      {edu?.education_achievement}
+                    </span>
+                  )}
+                </span>
               </div>
 
-              {edu?.education_specialization && (
-                <h4 className="text-md font-normal">
-                  Specialization: {edu?.education_specialization}
-                </h4>
-              )}
+              {/* add coursework things here */}
               {edu?.educatoin_additional_information && (
                 <p className="text-md mt-1">
                   {edu?.educatoin_additional_information}
