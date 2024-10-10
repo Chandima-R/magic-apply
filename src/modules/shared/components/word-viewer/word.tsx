@@ -1,11 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { CustomButton } from "../custom-button";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx";
 import { saveAs } from "file-saver";
 import { Button } from "@/components/ui/button";
 import { summarizeGPT } from "@/utils/summarize-gpt";
-import { Linkedin, Mail, MapPin, Phone, Smartphone } from "lucide-react";
+import { Linkedin, Mail, MapPin, Phone, Smartphone, X } from "lucide-react";
 import { summarizAndBulletGPT } from "@/utils/summarize-bullets-gpt";
+import {
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+import Image from "next/image";
+import { jsPDF } from "jspdf";
 
 interface Props {
   certificate: any;
@@ -206,6 +218,185 @@ export const WordPage = ({
     });
   };
 
+  const generatePdfFile = () => {
+    console.log("clicking on pdf");
+    const doc = new jsPDF();
+
+    // Set title
+    doc.setFontSize(20);
+    doc.text(contact?.contact_name, 20, 20);
+
+    // Contact Information
+    doc.setFontSize(12);
+    doc.text(`Telephone: ${contact?.contact_phone}`, 20, 30);
+    doc.text(`Email: ${contact?.contact_email}`, 20, 35);
+    doc.text(`Location: ${contact?.contact_city}`, 20, 40);
+    doc.text(`LinkedIn: ${contact?.contact_linkedin}`, 20, 45);
+
+    // Summary
+    doc.setFontSize(16);
+    doc.text("Summary", 20, 55);
+    doc.setFontSize(12);
+    doc.text(summary?.summary_description, 20, 60, { maxWidth: 180 });
+
+    // Experience
+    doc.setFontSize(16);
+    doc.text("Experience", 20, 90);
+    experience?.forEach((exp: any, index: any) => {
+      const expY = 100 + index * 30; // Adjust Y position for each experience entry
+      doc.setFontSize(12);
+      doc.text(`${exp?.company_role}, ${exp?.company_location}`, 20, expY);
+      doc.text(
+        ` ${new Date(exp?.company_start_date).toLocaleDateString("en-US", {
+          month: "short",
+          year: "numeric",
+        })} - ${
+          exp?.company_end_date
+            ? new Date(exp?.company_end_date).toLocaleDateString("en-US", {
+                month: "short",
+                year: "numeric",
+              })
+            : "Current"
+        }`,
+        20,
+        expY + 5
+      );
+      doc.text(
+        `${exp?.company_name}: ${exp?.company_role_description}`,
+        20,
+        expY + 10
+      );
+    });
+
+    // Education
+    doc.setFontSize(16);
+    doc.text("Education", 20, 150);
+    education?.forEach((edu: any, index: any) => {
+      const eduY = 160 + index * 30; // Adjust Y position for each education entry
+      doc.setFontSize(12);
+      doc.text(
+        `${edu?.education_institute}, ${edu?.education_location}`,
+        20,
+        eduY
+      );
+      doc.text(
+        ` ${new Date(edu?.education_completion_year).getFullYear()}`,
+        20,
+        eduY + 5
+      );
+      doc.text(`Specialization: ${edu?.education_major}`, 20, eduY + 10);
+      if (edu?.educatoin_additional_information) {
+        doc.text(`${edu?.educatoin_additional_information}`, 20, eduY + 15);
+      }
+    });
+
+    // Projects and Involvements
+    doc.setFontSize(16);
+    doc.text("Projects and Involvements", 20, 230);
+    project?.forEach((pro: any, index: any) => {
+      const proY = 240 + index * 30; // Adjust Y position for each project entry
+      doc.setFontSize(12);
+      doc.text(`${pro?.project_name}, ${pro?.project_organization}`, 20, proY);
+      doc.text(
+        ` ${new Date(pro?.project_start_date).toLocaleDateString("en-US", {
+          month: "short",
+          year: "numeric",
+        })} - ${new Date(pro?.project_end_date).toLocaleDateString("en-US", {
+          month: "short",
+          year: "numeric",
+        })}`,
+        20,
+        proY + 5
+      );
+      doc.text(`${pro?.project_role_description}`, 20, proY + 10);
+    });
+
+    // Involvements
+    involvement?.forEach((inv: any, index: any) => {
+      const invY = 300 + index * 30; // Adjust Y position for each involvement entry
+      doc.setFontSize(12);
+      doc.text(
+        `${inv?.involvement_organization_role}, ${inv?.involevement_organization}`,
+        20,
+        invY
+      );
+      doc.text(
+        ` ${new Date(inv?.involvement_start_date).toLocaleDateString("en-US", {
+          month: "short",
+          year: "numeric",
+        })} - ${new Date(inv?.involvement_end_date).toLocaleDateString(
+          "en-US",
+          { month: "short", year: "numeric" }
+        )}`,
+        20,
+        invY + 5
+      );
+      doc.text(`${inv?.involvement_description}`, 20, invY + 10);
+    });
+
+    // Skills, Languages, and Interests
+    doc.setFontSize(16);
+    doc.text("Skills, Languages, and Interests", 20, 370);
+
+    // Technical Skills
+    doc.setFontSize(14);
+    doc.text("Technical Skills", 20, 390);
+    technicalSkills?.forEach((skill: any, index: any) => {
+      doc.setFontSize(12);
+      doc.text(skill, 20, 400 + index * 5);
+    });
+
+    // Other Skills
+    doc.setFontSize(14);
+    doc.text("Other Skills", 20, 420 + technicalSkills.length * 5);
+    otherSkills?.forEach((skill: any, index: any) => {
+      doc.setFontSize(12);
+      doc.text(skill, 20, 430 + technicalSkills.length * 5 + index * 5);
+    });
+
+    // Languages
+    doc.setFontSize(14);
+    doc.text(
+      "Languages",
+      20,
+      450 + technicalSkills.length * 5 + otherSkills.length * 5
+    );
+    languageSkills?.forEach((skill: any, index: any) => {
+      doc.setFontSize(12);
+      doc.text(
+        skill,
+        20,
+        460 + technicalSkills.length * 5 + otherSkills.length * 5 + index * 5
+      );
+    });
+
+    // Interests
+    doc.setFontSize(14);
+    doc.text(
+      "Interests",
+      20,
+      480 +
+        technicalSkills.length * 5 +
+        otherSkills.length * 5 +
+        languageSkills.length * 5
+    );
+    interests?.forEach((interest: any, index: any) => {
+      doc.setFontSize(12);
+      doc.text(
+        interest,
+        20,
+        490 +
+          technicalSkills.length * 5 +
+          otherSkills.length * 5 +
+          languageSkills.length * 5 +
+          index * 5
+      );
+    });
+
+    // Save the PDF
+    doc.save(`${contact?.contact_name}.pdf`);
+  };
+
   const [profileSummary, setProfleSummary] = useState<string>("");
   const [summarizedExperience, setSummarizedExperience] = useState<any>([]);
   const [summarizedIProjects, setSummarizedProjects] = useState<any>([]);
@@ -214,9 +405,8 @@ export const WordPage = ({
   useEffect(() => {
     const fetchProfileSummary = async () => {
       try {
-        // Make sure the prompt type matches what you defined in the promptMap
         const sum = await summarizeGPT(
-          "summarizeDesc", // Updated prompt type to match the promptMap key
+          "summarizeDesc",
           summary?.summary_description
         );
 
@@ -322,22 +512,22 @@ export const WordPage = ({
     <div className="p-4">
       <header className="pb-4 flex flex-col items-center justify-center">
         <h1 className="text-2xl font-bold mb-2">{contact?.contact_name}</h1>
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-6 ">
           <p className="text-md font-normal  flex items-center">
-            <Smartphone className="size-4 mr-1" />
+            <Smartphone className="size-3 mr-1" />
             {contact?.contact_phone}
           </p>
 
           <p className="text-md font-normal flex items-center">
-            <Mail className="size-4 mr-1" /> {contact?.contact_email}
+            <Mail className="size-3 mr-1" /> {contact?.contact_email}
           </p>
           <p className="text-md font-normal flex items-center">
-            <MapPin className="size-4 mr-1" /> {contact?.contact_city}
+            <MapPin className="size-3 mr-1" /> {contact?.contact_city}
           </p>
         </div>
-        <div className="pt-2">
+        <div className="pt-2 ">
           <p className="text-md font-normal flex items-center">
-            <Linkedin className="size-4 mr-1" /> {contact?.contact_linkedin}
+            <Linkedin className="size-3 mr-1" /> {contact?.contact_linkedin}
           </p>
         </div>
       </header>
@@ -401,6 +591,7 @@ export const WordPage = ({
             )}
           </>
         ))}
+
         {summarizedExperience?.map((exp: any) => (
           <>
             {exp?.company_end_date?.length > 0 && (
@@ -490,19 +681,32 @@ export const WordPage = ({
                 </p>
               </div>
             </div>
-            <div className="mt-2">
+            <div>
               <div className="flex">
-                <div className="w-3 h-3 flex items-center justify-center mt-1.5 mr-1">
-                  <span className="h-1.5 w-1.5 bg-honoluluBlue rounded-full" />
-                </div>
-                <h4 className="text-md font-normal">{edu?.education_major}</h4>
+                <span className="text-md font-normal">
+                  {edu?.education_major}
+
+                  {edu?.education_specialization && (
+                    <span className="text-md font-normal">
+                      {" | "}
+                      <span className="font-semibold">
+                        Specialization:
+                      </span>{" "}
+                      {edu?.education_specialization}
+                    </span>
+                  )}
+
+                  {edu?.education_achievement && (
+                    <span className="text-md font-normal">
+                      {" | "}
+                      <span className="font-semibold">Achivements:</span>{" "}
+                      {edu?.education_achievement}
+                    </span>
+                  )}
+                </span>
               </div>
 
-              {edu?.education_specialization && (
-                <h4 className="text-md font-normal">
-                  Specialization: {edu?.education_specialization}
-                </h4>
-              )}
+              {/* add coursework things here */}
               {edu?.educatoin_additional_information && (
                 <p className="text-md mt-1">
                   {edu?.educatoin_additional_information}
@@ -638,15 +842,69 @@ export const WordPage = ({
       </section>
 
       <footer className="pt-4 w-full flex items-center justify-end">
-        <Button
-          size={"sm"}
-          className={
-            "bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue"
-          }
-          onClick={generateWordFile}
-        >
-          Downlod word file
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              size={"sm"}
+              className={
+                "bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue"
+              }
+            >
+              Downlod resume
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                <h2 className="text-lg font-semibold mb-4">Download Options</h2>
+              </AlertDialogTitle>
+
+              <AlertDialogDescription>
+                <p className="mb-6">
+                  Select your preferred format to download your content:
+                </p>
+
+                <div className="flex justify-between gap-4">
+                  <button
+                    onClick={generatePdfFile}
+                    className="w-full  text-black py-2 px-4 rounded hover:bg-red-200 transition duration-200 border"
+                  >
+                    <div className="flex items-center justify-center flex-col">
+                      <Image
+                        src={"/images/pdf-file.svg"}
+                        height={400}
+                        width={400}
+                        alt="word file"
+                        className="w-24 h-auto"
+                      />
+                      <p>Download as PDF</p>
+                    </div>
+                  </button>
+                  <button
+                    onClick={generateWordFile}
+                    className="w-full  text-black py-2 px-4 rounded hover:bg-blue-200 transition duration-200 border"
+                  >
+                    <div className="flex items-center justify-center flex-col">
+                      <Image
+                        src={"/images/word-file.svg"}
+                        height={400}
+                        width={400}
+                        alt="word file"
+                        className="w-24 h-auto"
+                      />
+                      <p>Download as Word</p>
+                    </div>
+                  </button>
+                </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="absolute top-2 right-2">
+                <X className="size-4" />
+              </AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </footer>
     </div>
   );
