@@ -322,22 +322,22 @@ export const WordPage = ({
     <div className="p-4">
       <header className="pb-4 flex flex-col items-center justify-center">
         <h1 className="text-2xl font-bold mb-2">{contact?.contact_name}</h1>
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-6 ">
           <p className="text-md font-normal  flex items-center">
-            <Smartphone className="size-4 mr-1" />
+            <Smartphone className="size-3 mr-1" />
             {contact?.contact_phone}
           </p>
 
           <p className="text-md font-normal flex items-center">
-            <Mail className="size-4 mr-1" /> {contact?.contact_email}
+            <Mail className="size-3 mr-1" /> {contact?.contact_email}
           </p>
           <p className="text-md font-normal flex items-center">
-            <MapPin className="size-4 mr-1" /> {contact?.contact_city}
+            <MapPin className="size-3 mr-1" /> {contact?.contact_city}
           </p>
         </div>
-        <div className="pt-2">
+        <div className="pt-2 ">
           <p className="text-md font-normal flex items-center">
-            <Linkedin className="size-4 mr-1" /> {contact?.contact_linkedin}
+            <Linkedin className="size-3 mr-1" /> {contact?.contact_linkedin}
           </p>
         </div>
       </header>
