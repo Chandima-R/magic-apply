@@ -492,9 +492,6 @@ export const WordPage = ({
             </div>
             <div className="mt-2">
               <div className="flex">
-                <div className="w-3 h-3 flex items-center justify-center mt-1.5 mr-1">
-                  <span className="h-1.5 w-1.5 bg-honoluluBlue rounded-full" />
-                </div>
                 <h4 className="text-md font-normal">{edu?.education_major}</h4>
               </div>
 
