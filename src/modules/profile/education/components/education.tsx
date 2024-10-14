@@ -35,6 +35,7 @@ const educationSchema = z
   .object({
     degree: z.string().nonempty("Degree or major required."),
     specialization: z.string().optional(),
+    coursework: z.string().optional(),
     achievement: z
       .string()
       .max(50, "Achievement must be 50 characters or less.")
@@ -63,6 +64,7 @@ export const Education = () => {
     defaultValues: {
       degree: "",
       specialization: "",
+      coursework: "",
       achievement: "",
       institute: "",
       instituteLocation: "",
@@ -112,6 +114,7 @@ export const Education = () => {
             education_location: values.instituteLocation,
             education_major: values.degree,
             education_specialization: values.specialization,
+            education_coursework: values.coursework,
             education_achievement: values.achievement,
             educatoin_additional_information: values.additionalInformation,
           },
