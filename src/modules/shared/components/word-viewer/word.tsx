@@ -14,7 +14,6 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogCancel,
-  AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import Image from "next/image";
 import { jsPDF } from "jspdf";
@@ -32,9 +31,7 @@ interface Props {
 }
 
 export const WordPage = ({
-  certificate,
   contact,
-  coursework,
   education,
   experience,
   involvement,
@@ -272,7 +269,7 @@ export const WordPage = ({
     doc.setFontSize(16);
     doc.text("Education", 20, 150);
     education?.forEach((edu: any, index: any) => {
-      const eduY = 160 + index * 30; // Adjust Y position for each education entry
+      const eduY = 160 + index * 30;
       doc.setFontSize(12);
       doc.text(
         `${edu?.education_institute}, ${edu?.education_location}`,
@@ -294,7 +291,7 @@ export const WordPage = ({
     doc.setFontSize(16);
     doc.text("Projects and Involvements", 20, 230);
     project?.forEach((pro: any, index: any) => {
-      const proY = 240 + index * 30; // Adjust Y position for each project entry
+      const proY = 240 + index * 30;
       doc.setFontSize(12);
       doc.text(`${pro?.project_name}, ${pro?.project_organization}`, 20, proY);
       doc.text(
@@ -313,7 +310,7 @@ export const WordPage = ({
 
     // Involvements
     involvement?.forEach((inv: any, index: any) => {
-      const invY = 300 + index * 30; // Adjust Y position for each involvement entry
+      const invY = 300 + index * 30;
       doc.setFontSize(12);
       doc.text(
         `${inv?.involvement_organization_role}, ${inv?.involevement_organization}`,
@@ -688,7 +685,7 @@ export const WordPage = ({
 
                   {edu?.education_specialization && (
                     <span className="text-md font-normal">
-                      {" | "}
+                      <b>{" | "}</b>
                       <span className="font-semibold">
                         Specialization:
                       </span>{" "}
@@ -696,11 +693,30 @@ export const WordPage = ({
                     </span>
                   )}
 
+                  {edu?.education_coursework && (
+                    <span className="text-md font-normal">
+                      <b>{" | "}</b>
+                      <span className="font-semibold">Coursework:</span>{" "}
+                      {edu?.education_specialization}
+                    </span>
+                  )}
+
                   {edu?.education_achievement && (
                     <span className="text-md font-normal">
-                      {" | "}
+                      <b>{" | "}</b>
                       <span className="font-semibold">Achivements:</span>{" "}
                       {edu?.education_achievement}
+                    </span>
+                  )}
+                </span>
+              </div>
+
+              <div className="flex">
+                <span className="text-md font-normal">
+                  {edu?.education_coursework && (
+                    <span className="text-md font-normal">
+                      <span className="font-semibold">Coursework:</span>{" "}
+                      {edu?.education_coursework}
                     </span>
                   )}
                 </span>
