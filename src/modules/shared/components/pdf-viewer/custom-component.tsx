@@ -6,7 +6,6 @@ import { summarizeGPT } from "@/utils/summarize-gpt";
 interface Props {
   certificate: any;
   contact: any;
-  coursework: any;
   education: any;
   experience: any;
   involvement: any;
@@ -16,9 +15,7 @@ interface Props {
 }
 
 const CustomComponent = ({
-  certificate,
   contact,
-  coursework,
   education,
   experience,
   involvement,
@@ -100,7 +97,7 @@ const CustomComponent = ({
     if (involvement?.length > 0) {
       fetchInvolvements();
     }
-  }, [involvement]);
+  }, [involvement, project]);
 
   return (
     <View style={styles.container}>

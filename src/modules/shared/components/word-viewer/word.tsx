@@ -21,7 +21,6 @@ import { jsPDF } from "jspdf";
 interface Props {
   certificate: any;
   contact: any;
-  coursework: any;
   education: any;
   experience: any;
   involvement: any;

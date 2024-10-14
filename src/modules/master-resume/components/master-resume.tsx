@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useSubscription } from "@apollo/client";
 import { CONTACT_INFORMATION } from "@/graphql/contact";
-import { COURSEWORK_INFORMATION_BY_USER_ID } from "@/graphql/coursework";
 import { CERTIFICATE_INFORMATION_BY_USER_ID } from "@/graphql/certification";
 import { EDUCATION_INFORMATION_BY_USER_ID } from "@/graphql/education";
 import { EXPERIENCE_INFORMATION_BY_USER_ID } from "@/graphql/experience";
@@ -13,12 +11,9 @@ import { PROJECT_INFORMATION_BY_USER_ID } from "@/graphql/project";
 import { SKILLS_INFORMATION_BY_USER_ID } from "@/graphql/skills";
 import { SUMMARY_INFORMATION_BY_USER_ID } from "@/graphql/summary";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
-import PdfPage from "@/modules/shared/components/pdf-viewer/pdf";
-import { Button } from "@/components/ui/button";
 import { WordPage } from "@/modules/shared/components/word-viewer/word";
 
 export const MasterResume = () => {
-  // const [activeView, setActiveView] = useState("pdf");
   const { user } = useUser();
 
   const { data: certificationData } = useSubscription(
@@ -31,13 +26,6 @@ export const MasterResume = () => {
   const { data: contactData } = useSubscription(CONTACT_INFORMATION, {
     variables: { _eq: user?.id },
   });
-
-  const { data: courseworkData } = useSubscription(
-    COURSEWORK_INFORMATION_BY_USER_ID,
-    {
-      variables: { _eq: user?.id },
-    }
-  );
 
   const { data: educationData } = useSubscription(
     EDUCATION_INFORMATION_BY_USER_ID,
@@ -84,11 +72,6 @@ export const MasterResume = () => {
   );
 
   const contact = contactData?.contact[0];
-
-  const coursework = courseworkData?.coursework?.map((c: any) => c);
-  const visibleCoursework = coursework?.filter(
-    (course: any) => course.visibility === true
-  );
 
   const education = educationData?.education?.map((c: any) => c);
   const visibleEducation = education?.filter(
@@ -150,7 +133,6 @@ export const MasterResume = () => {
           <WordPage
             certificate={visibleCertificates}
             contact={contact}
-            coursework={visibleCoursework}
             education={visibleEducation}
             experience={visibleExperience}
             involvement={visibleInvolvement}
