@@ -352,6 +352,18 @@ export const Education = () => {
                   placeholder={"Financial Economics"}
                   required={false}
                 />
+                <TextArea
+                  fieldLabel={
+                    "What subjects or modules did you study in your degree program?"
+                  }
+                  fieldName={"coursework"}
+                  control={form.control}
+                  placeholder={
+                    "Macroeconomics, International trade, Money and banking..."
+                  }
+                  required={false}
+                  description="Seperate modules using a comma(,)."
+                />
                 <TextInput
                   fieldLabel={"Where did you earn your degree / qualification?"}
                   fieldName={"institute"}
