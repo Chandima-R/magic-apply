@@ -6,7 +6,6 @@ import PdfPage from "../../../shared/components/pdf-viewer/pdf";
 import { useUser } from "@clerk/nextjs";
 import { useSubscription } from "@apollo/client";
 import { CONTACT_INFORMATION } from "@/graphql/contact";
-import { COURSEWORK_INFORMATION_BY_USER_ID } from "@/graphql/coursework";
 import { CERTIFICATE_INFORMATION_BY_USER_ID } from "@/graphql/certification";
 import { EDUCATION_INFORMATION_BY_USER_ID } from "@/graphql/education";
 import { EXPERIENCE_INFORMATION_BY_USER_ID } from "@/graphql/experience";
@@ -37,15 +36,6 @@ export const FinishReview = () => {
       _eq: user?.id,
     },
   });
-
-  const { data: courseworkData } = useSubscription(
-    COURSEWORK_INFORMATION_BY_USER_ID,
-    {
-      variables: {
-        _eq: user?.id,
-      },
-    }
-  );
 
   const { data: educationData } = useSubscription(
     EDUCATION_INFORMATION_BY_USER_ID,
@@ -105,11 +95,6 @@ export const FinishReview = () => {
 
   const contact = contactData?.contact[0];
 
-  const coursework = courseworkData?.coursework?.map((c: any) => c);
-  const visibleCoursework = coursework?.filter(
-    (course: any) => course.visibility === true
-  );
-
   const education = educationData?.education?.map((c: any) => c);
   const visibleEducation = education?.filter(
     (ed: any) => ed.visibility === true
@@ -142,7 +127,6 @@ export const FinishReview = () => {
           <WordPage
             certificate={visibileCertificates}
             contact={contact}
-            coursework={visibleCoursework}
             education={visibleEducation}
             experience={visibleExperience}
             involvement={visibleInvolvement}

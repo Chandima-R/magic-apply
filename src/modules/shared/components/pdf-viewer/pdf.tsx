@@ -34,7 +34,6 @@ const PdfPage = ({
       <CustomComponent
         certificate={certificate}
         contact={contact}
-        coursework={coursework}
         education={education}
         experience={experience}
         involvement={involvement}

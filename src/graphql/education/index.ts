@@ -14,6 +14,7 @@ export const EDUCATION_INFORMATION_BY_USER_ID = gql`
       education_location
       education_major
       education_specialization
+      education_coursework
       educatoin_additional_information
       id
       visibility
@@ -33,6 +34,7 @@ export const VIEW_EDUCATION_BY_ID = gql`
       education_location
       education_major
       education_specialization
+      education_coursework
       educatoin_additional_information
       id
       user_id
@@ -51,6 +53,7 @@ export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
     $education_location: String
     $education_major: String
     $education_specialization: String
+    $education_coursework: String
     $educatoin_additional_information: String
     $user_id: String
   ) {
@@ -64,6 +67,7 @@ export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
         education_location: $education_location
         education_major: $education_major
         education_specialization: $education_specialization
+        education_coursework: $education_coursework
         educatoin_additional_information: $educatoin_additional_information
         user_id: $user_id
       }
@@ -83,6 +87,7 @@ export const UPDATE_EDUCATION_BY_ID = gql`
     $education_location: String
     $education_major: String
     $education_specialization: String
+    $education_coursework: String
     $educatoin_additional_information: String
     $_eq: uuid!
   ) {
@@ -97,6 +102,7 @@ export const UPDATE_EDUCATION_BY_ID = gql`
         education_location: $education_location
         education_major: $education_major
         education_specialization: $education_specialization
+        education_coursework: $education_coursework
         educatoin_additional_information: $educatoin_additional_information
       }
     ) {
@@ -116,6 +122,7 @@ export const DELETE_EDUCATION_BY_PK = gql`
       education_location
       education_major
       education_specialization
+      education_coursework
       educatoin_additional_information
       user_id
       id

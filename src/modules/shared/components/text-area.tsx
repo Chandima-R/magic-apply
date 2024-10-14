@@ -44,7 +44,11 @@ export const TextArea = ({
           <FormControl>
             <Textarea placeholder={placeholder} {...field} />
           </FormControl>
-          {description && <FormDescription>{description}</FormDescription>}
+          {description && (
+            <FormDescription className="text-xs">
+              {description} <RequiredIndicator />
+            </FormDescription>
+          )}
           <FormMessage />
         </FormItem>
       )}
