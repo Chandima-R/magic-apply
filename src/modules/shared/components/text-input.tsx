@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
 
 interface Props {
-  fieldLabel: string;
+  fieldLabel?: string;
   fieldName: string;
   control: any;
   placeholder: string;

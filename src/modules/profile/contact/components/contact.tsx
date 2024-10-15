@@ -1,6 +1,6 @@
 "use client";
 
-import { Form } from "@/components/ui/form";
+import { Form, FormDescription, FormLabel } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,17 +18,20 @@ import { useUser } from "@clerk/nextjs";
 import { usePathname, useRouter } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
-import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
+import { ComboBox } from "@/modules/shared/components/combo-box";
+
+import { countries } from "countries-list";
 
 const contactSchema = z.object({
   fullName: z.string().nonempty("Full name is required."),
   email: z.string().nonempty("Email address is required.").email(),
   phone: z.string().nonempty("Phone number is required."),
+  countryCode: z.string().optional(),
   linkedin: z.string().nonempty("LinkedIn is required."),
   personalWebsite: z.string().optional(),
   portfolio: z.string().optional(),
-  country: z.string().nonempty("Country is required."),
+  country: z.string().optional(),
   state: z.string().optional(),
   city: z.string().nonempty("City is required."),
 });
@@ -38,6 +41,7 @@ export const Contact = () => {
   const { toast } = useToast();
   const { user } = useUser();
   const router = useRouter();
+  const [countryCode, setCountryCode] = useState("+1");
 
   const { data: contactData, loading: contactLoading } = useSubscription(
     CONTACT_INFORMATION,
@@ -60,6 +64,7 @@ export const Contact = () => {
       fullName: "",
       email: "",
       phone: "",
+      countryCode: "",
       linkedin: "",
       personalWebsite: "",
       portfolio: "",
@@ -88,10 +93,25 @@ export const Contact = () => {
     }
   }, [contactDetails, form]);
 
+  const countryNames = Object.values(countries).map((country) => country.name);
+
+  const handleCountryChange = (countryName: string) => {
+    const countryData = Object.values(countries).find(
+      (country) => country.name === countryName
+    );
+
+    if (countryData && countryData.phone) {
+      setCountryCode(`+${countryData.phone}`);
+      form.setValue("countryCode", `+${countryData.phone}`);
+    }
+    form.setValue("country", countryName);
+  };
+
   const [addContact] = useMutation(ADD_NEW_CONTACT);
   const [updateContact] = useMutation(UPDATE_CONTACT);
 
   async function onSubmit(values: z.infer<typeof contactSchema>) {
+    console.log(values);
     try {
       if (!user?.id) {
         throw new Error("User is not authenticated");
@@ -107,6 +127,7 @@ export const Contact = () => {
             contact_linkedin: values.linkedin,
             contact_name: values.fullName,
             contact_phone: values.phone,
+            contact_countryCode: values.countryCode,
             contact_state: values.state,
             contact_website: values.personalWebsite,
             contact_portfolio: values.portfolio,
@@ -126,6 +147,7 @@ export const Contact = () => {
             contact_linkedin: values.linkedin,
             contact_name: values.fullName,
             contact_phone: values.phone,
+            contact_countryCode: values.countryCode,
             contact_state: values.state,
             contact_website: values.personalWebsite,
             contact_portfolio: values.portfolio,
@@ -186,14 +208,48 @@ export const Contact = () => {
                 required
                 disabled={!!contactDetails?.contact_email}
               />
-              <TextInput
-                fieldLabel="Phone number"
-                fieldName="phone"
+
+              <ComboBox
+                fieldLabel={"Country"}
+                fieldName={"country"}
                 control={form.control}
-                placeholder="(621) 7999 5548"
-                required
-                disabled={!!contactDetails?.contact_phone}
+                setValue={(name: any, value: any) => {
+                  form.setValue(name, value);
+                  handleCountryChange(value);
+                }}
+                options={
+                  countryNames?.map((country: any) => ({
+                    label: country,
+                    value: country,
+                  })) || []
+                }
               />
+
+              <div className="grid grid-cols gap-2 grid-cols-12">
+                <FormLabel className="-mb-2 col-span-12">
+                  Phone Number <RequiredIndicator />
+                </FormLabel>
+                <div className="col-span-2">
+                  <TextInput
+                    fieldName="countryCode"
+                    control={form.control}
+                    placeholder="+1"
+                    disabled={!!contactDetails?.contact_phone}
+                  />
+                </div>
+                <div className="col-span-10">
+                  <TextInput
+                    fieldName="phone"
+                    control={form.control}
+                    placeholder="7999 5548"
+                    disabled={!!contactDetails?.contact_phone}
+                  />
+                </div>
+                <FormDescription className="text-xs col-span-12">
+                  Enter the phone number in internation method.
+                </FormDescription>
+              </div>
+
               <TextInput
                 fieldLabel="LinkedIn"
                 fieldName="linkedin"
@@ -213,13 +269,7 @@ export const Contact = () => {
                 control={form.control}
                 placeholder="https://www.chaarlesbloomberg.com"
               />
-              <TextInput
-                fieldLabel="Country"
-                fieldName="country"
-                control={form.control}
-                placeholder="Country"
-                required
-              />
+
               <TextInput
                 fieldLabel="State"
                 fieldName="state"
