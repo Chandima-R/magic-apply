@@ -89,6 +89,7 @@ export const Contact = () => {
         country: contactDetails.contact_country || "",
         state: contactDetails.contact_state || "",
         city: contactDetails.contact_city || "",
+        countryCode: contactDetails.contact_countryCode || "",
       });
     }
   }, [contactDetails, form]);
@@ -111,7 +112,6 @@ export const Contact = () => {
   const [updateContact] = useMutation(UPDATE_CONTACT);
 
   async function onSubmit(values: z.infer<typeof contactSchema>) {
-    console.log(values);
     try {
       if (!user?.id) {
         throw new Error("User is not authenticated");
@@ -276,6 +276,7 @@ export const Contact = () => {
                 control={form.control}
                 placeholder="State"
               />
+
               <TextInput
                 fieldLabel="City"
                 fieldName="city"
