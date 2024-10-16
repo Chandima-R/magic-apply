@@ -22,6 +22,7 @@ import { RequiredIndicator } from "@/modules/shared/components/required-indicato
 import { ComboBox } from "@/modules/shared/components/combo-box";
 
 import { countries } from "countries-list";
+import { countryAndCities } from "@/modules/shared/utils/country-city";
 
 const contactSchema = z.object({
   fullName: z.string().nonempty("Full name is required."),
@@ -76,6 +77,13 @@ export const Contact = () => {
   });
 
   const { isValid } = form.formState;
+
+  const { watch } = form;
+  const country = watch("country");
+
+  const cities = countryAndCities?.filter(
+    (c: any) => c.country.toLowerCase() === country?.toLowerCase()
+  );
 
   useEffect(() => {
     if (contactDetails && Object.keys(contactDetails).length > 0) {
@@ -277,11 +285,17 @@ export const Contact = () => {
                 placeholder="State"
               />
 
-              <TextInput
-                fieldLabel="City"
-                fieldName="city"
+              <ComboBox
+                fieldLabel={"City"}
+                fieldName={"city"}
                 control={form.control}
-                placeholder="City"
+                setValue={form.setValue}
+                options={
+                  cities?.map((c: any) => ({
+                    label: c.city,
+                    value: c.city,
+                  })) || []
+                }
                 required
               />
             </div>
