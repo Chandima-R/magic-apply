@@ -484,7 +484,7 @@ export const Project = () => {
                     sectionName={"Projects"}
                     planName={userData?.user[0]?.user_plan}
                     usedSlots={parseInt(projectData?.project.length)}
-                    disabled={!isValidfeat}
+                    disabled={!isValid}
                     onConfirm={() => form.handleSubmit(onSubmit)()}
                   />
                 </div>
