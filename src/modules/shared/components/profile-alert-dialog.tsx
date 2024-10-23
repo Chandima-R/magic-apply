@@ -157,7 +157,7 @@ export const ProfileAlertDialog = ({
     onConfirm();
     setTimeout(() => {
       setOpen(false);
-    }, 2000);
+    }, 3000);
   };
 
   return (

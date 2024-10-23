@@ -6,10 +6,9 @@ import { TextArea } from "@/modules/shared/components/text-area";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CustomButton } from "@/modules/shared/components/custom-button";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useSubscription } from "@apollo/client";
 import {
   ADD_NEW_EDUCATION_BY_USER_ID,
@@ -25,11 +24,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
-import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "../../../shared/components/profile-active-links";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
 import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
+import { ProfileAlertDialog } from "@/modules/shared/components/profile-alert-dialog";
+import { GET_USER_BY_CLERK_ID } from "@/graphql/user";
+import { CheckboxField } from "@/modules/shared/components/checkbox-input";
 
 const educationSchema = z
   .object({
@@ -48,6 +49,7 @@ const educationSchema = z
     endDate: z.date({ required_error: "Completion date is required." }),
     gpa: z.string(),
     additionalInformation: z.string(),
+    isCurrent: z.boolean().default(false).optional(),
   })
   .refine((data) => data.startDate < data.endDate, {
     message: "Start date must be before end date",
@@ -72,8 +74,41 @@ export const Education = () => {
       endDate: new Date(),
       gpa: "",
       additionalInformation: "",
+      isCurrent: false,
     },
   });
+
+  const { watch, setValue } = form;
+  const isCurrent = watch("isCurrent");
+
+  const degree = watch("degree");
+  const institute = watch("institute");
+  const institueLocation = watch("instituteLocation");
+  const startDate = watch("startDate");
+  const endDate = watch("endDate");
+
+  const isStartDateValid =
+    startDate instanceof Date && !isNaN(startDate.getTime());
+
+  const isEndDateValid = !isCurrent
+    ? endDate instanceof Date && !isNaN(endDate.getTime())
+    : true;
+
+  const isDateRangeValid = !isCurrent || (endDate && startDate < endDate);
+
+  const isValid =
+    degree?.length > 0 &&
+    institute?.length > 0 &&
+    isStartDateValid &&
+    isEndDateValid &&
+    isDateRangeValid &&
+    institueLocation?.length > 0;
+
+  useEffect(() => {
+    if (isCurrent) {
+      setValue("endDate", new Date());
+    }
+  }, [isCurrent, setValue]);
 
   const { data: educationData, loading: educationLoading } = useSubscription(
     EDUCATION_INFORMATION_BY_USER_ID,
@@ -87,6 +122,12 @@ export const Education = () => {
   const visibleEducation = educationData?.education?.filter(
     (exp: any) => exp.visibility === true
   );
+
+  const sortedEducation = visibleEducation?.sort((a: any, b: any) => {
+    if (a.isCurrent && !b.isCurrent) return -1;
+    if (!a.isCurrent && b.isCurrent) return 1;
+    return 0;
+  });
 
   const hiddenEducation = educationData?.education?.filter(
     (exp: any) => exp.visibility === false
@@ -108,7 +149,11 @@ export const Education = () => {
           variables: {
             user_id: user?.id,
             education_start_date: values.startDate,
-            education_end_date: values.endDate,
+            education_end_date: values.isCurrent
+              ? ""
+              : values.endDate
+              ? new Date(values.endDate)
+              : null,
             education_gpa: values.gpa,
             education_institute: values.institute,
             education_location: values.instituteLocation,
@@ -117,6 +162,7 @@ export const Education = () => {
             education_coursework: values.coursework,
             education_achievement: values.achievement,
             educatoin_additional_information: values.additionalInformation,
+            isCurrent: isCurrent,
           },
         });
 
@@ -209,6 +255,15 @@ export const Education = () => {
   const path = usePathname();
   const activeLink = path.split("/")[2];
 
+  const { data: userData, loading: userLoading } = useSubscription(
+    GET_USER_BY_CLERK_ID,
+    {
+      variables: {
+        _eq: user?.id,
+      },
+    }
+  );
+
   return (
     <div className="p-4 border-[1px] shadow-md rounded">
       <ProfileActiveLinks activeLink={activeLink} />
@@ -251,7 +306,7 @@ export const Education = () => {
                       ) : (
                         ""
                       )}
-                      {visibleEducation?.map((education: any) => (
+                      {sortedEducation?.map((education: any) => (
                         <AccordionContent key={education.id}>
                           <ActionCard
                             id={education.id}
@@ -274,6 +329,7 @@ export const Education = () => {
                             hideAction={() => hideEducationAction(education.id)}
                             status={education.visibility}
                             tab="education"
+                            isCurrent={isCurrent}
                           />
                         </AccordionContent>
                       ))}
@@ -324,6 +380,7 @@ export const Education = () => {
                                 unhideEducationAction(education.id)
                               }
                               status={education.visibility}
+                              isCurrent={isCurrent}
                             />
                           </AccordionContent>
                         ))}
@@ -381,22 +438,39 @@ export const Education = () => {
                   placeholder={"Madison, WI"}
                   required={true}
                 />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <CalendarField
-                    fieldLabel={
-                      "When did you start your degree/ qualification?"
-                    }
-                    fieldName={"startDate"}
-                    control={form.control}
-                    required={true}
-                  />
-                  <CalendarField
-                    fieldLabel={"When did you earn your degree/ qualification?"}
-                    fieldName={"endDate"}
-                    control={form.control}
-                    required={true}
-                  />
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-2">
+                    <CalendarField
+                      fieldLabel={
+                        "When did you start your degree/ qualification?"
+                      }
+                      fieldName={"startDate"}
+                      control={form.control}
+                      required={true}
+                    />
+                    <CheckboxField
+                      fieldLabel="Is this your current education?"
+                      fieldName="isCurrent"
+                      control={form.control}
+                      required={!isCurrent}
+                    />
+                  </div>
+
+                  {!isCurrent && (
+                    <>
+                      <CalendarField
+                        fieldLabel={
+                          "When did you earn your degree/ qualification?"
+                        }
+                        fieldName={"endDate"}
+                        control={form.control}
+                        required={true}
+                      />
+                    </>
+                  )}
                 </div>
+
                 <TextInput
                   fieldLabel={"GPA (If applicable)"}
                   fieldName={"gpa"}
@@ -424,24 +498,13 @@ export const Education = () => {
 
               <div className="flex justify-end w-full mt-8">
                 <div className="w-38">
-                  {isLoading ? (
-                    <LoadingButton />
-                  ) : (
-                    <>
-                      {educationData?.education?.length >= 5 ? (
-                        <CustomButton
-                          disabled
-                          type="submit"
-                          title="Save to education list"
-                        />
-                      ) : (
-                        <CustomButton
-                          type="submit"
-                          title="Save to education list"
-                        />
-                      )}
-                    </>
-                  )}
+                  <ProfileAlertDialog
+                    sectionName={"Education"}
+                    planName={userData?.user[0]?.user_plan}
+                    usedSlots={parseInt(educationData?.education.length)}
+                    disabled={!isValid}
+                    onConfirm={() => form.handleSubmit(onSubmit)()}
+                  />
                 </div>
               </div>
             </form>
