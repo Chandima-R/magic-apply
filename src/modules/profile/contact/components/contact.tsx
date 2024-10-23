@@ -313,6 +313,7 @@ export const Contact = () => {
                       not be allowed after saving."
                   alertDialogActionButton="Save basic info"
                   onConfirm={() => form.handleSubmit(onSubmit)()}
+                  isLoading={isLoading}
                 />
               </div>
             </div>
