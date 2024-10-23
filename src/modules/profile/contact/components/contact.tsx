@@ -23,6 +23,21 @@ import { ComboBox } from "@/modules/shared/components/combo-box";
 
 import { countries } from "countries-list";
 import { countryAndCities } from "@/modules/shared/utils/country-city";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { OctagonAlert } from "lucide-react";
+import { CustomAlertDialog } from "@/modules/shared/components/custom-alert-dialog";
+import { CustomConfirmDialog } from "@/modules/shared/components/custom-confirm-dialog";
 
 const contactSchema = z.object({
   fullName: z.string().nonempty("Full name is required."),
@@ -302,10 +317,21 @@ export const Contact = () => {
 
             <div className="flex justify-end w-full mt-8">
               <div className="w-38">
-                <CustomButton
+                {/* <CustomButton
                   type="submit"
                   title="Save basic info"
                   disabled={!isValid}
+                /> */}
+                <CustomConfirmDialog
+                  alertTitle="save basic info"
+                  alertDialogHeader="Are you absolutely sure?"
+                  alertDialogIcon={<OctagonAlert />}
+                  alertDialogDescription="Please note that once this form is saved, you will not be
+                      able to modify any of the required fields. Ensure all
+                      information is accurate before submission, as changes will
+                      not be allowed after saving."
+                  alertDialogActionButton="Save basic info"
+                  onConfirm={() => form.handleSubmit(onSubmit)()}
                 />
               </div>
             </div>
