@@ -78,6 +78,30 @@ export const Project = () => {
   const { watch, setValue } = form;
   const isCurrent = watch("isCurrent");
 
+  const projectTitle = watch("projectTitle");
+  const organization = watch("organization");
+  const organizationLocation = watch("organizationLocation");
+  const projectStartDate = watch("projectStartDate");
+  const projectEndDate = watch("projectEndDate");
+
+  const isStartDateValid =
+    projectStartDate instanceof Date && !isNaN(projectStartDate.getTime());
+
+  const isEndDateValid = !isCurrent
+    ? projectEndDate instanceof Date && !isNaN(projectEndDate.getTime())
+    : true;
+
+  const isDateRangeValid =
+    !isCurrent || (projectEndDate && projectStartDate < projectEndDate);
+
+  const isValid =
+    projectTitle?.length > 0 &&
+    organization?.length > 0 &&
+    isStartDateValid &&
+    isEndDateValid &&
+    isDateRangeValid &&
+    organizationLocation?.length > 0;
+
   useEffect(() => {
     if (isCurrent) {
       setValue("projectEndDate", new Date());
@@ -460,7 +484,7 @@ export const Project = () => {
                     sectionName={"Projects"}
                     planName={userData?.user[0]?.user_plan}
                     usedSlots={parseInt(projectData?.project.length)}
-                    disabled={false}
+                    disabled={!isValidfeat}
                     onConfirm={() => form.handleSubmit(onSubmit)()}
                   />
                 </div>
