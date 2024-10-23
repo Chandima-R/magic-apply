@@ -19,6 +19,7 @@ export const EDUCATION_INFORMATION_BY_USER_ID = gql`
       id
       visibility
       user_id
+      isCurrent
     }
   }
 `;
@@ -39,6 +40,7 @@ export const VIEW_EDUCATION_BY_ID = gql`
       id
       user_id
       visibility
+      isCurrent
     }
   }
 `;
@@ -56,6 +58,7 @@ export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
     $education_coursework: String
     $educatoin_additional_information: String
     $user_id: String
+    $isCurrent: Boolean
   ) {
     insert_education(
       objects: {
@@ -70,6 +73,7 @@ export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
         education_coursework: $education_coursework
         educatoin_additional_information: $educatoin_additional_information
         user_id: $user_id
+        isCurrent: $isCurrent
       }
     ) {
       affected_rows
@@ -90,6 +94,7 @@ export const UPDATE_EDUCATION_BY_ID = gql`
     $education_coursework: String
     $educatoin_additional_information: String
     $_eq: uuid!
+    $isCurrent: Boolean
   ) {
     update_education(
       where: { id: { _eq: $_eq } }
@@ -104,6 +109,7 @@ export const UPDATE_EDUCATION_BY_ID = gql`
         education_specialization: $education_specialization
         education_coursework: $education_coursework
         educatoin_additional_information: $educatoin_additional_information
+        isCurrent: $isCurrent
       }
     ) {
       affected_rows
@@ -126,6 +132,7 @@ export const DELETE_EDUCATION_BY_PK = gql`
       educatoin_additional_information
       user_id
       id
+      isCurrent
     }
   }
 `;

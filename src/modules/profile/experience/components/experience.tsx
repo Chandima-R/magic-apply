@@ -6,8 +6,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput } from "@/modules/shared/components/text-input";
 import { TextArea } from "@/modules/shared/components/text-area";
-import { CustomButton } from "@/modules/shared/components/custom-button";
-import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useSubscription } from "@apollo/client";
@@ -25,7 +23,6 @@ import {
 } from "@/components/ui/accordion";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
-import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { ActionCard } from "@/modules/shared/components/action-card";
@@ -33,6 +30,9 @@ import { CheckboxField } from "@/modules/shared/components/checkbox-input";
 import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
 import { SelectInput } from "@/modules/shared/components/select-input";
 import { employmentType } from "@/modules/shared/utils/employment-type";
+import { ProfileAlertDialog } from "@/modules/shared/components/profile-alert-dialog";
+import { useEffect, useState } from "react";
+import { GET_USER_BY_CLERK_ID } from "@/graphql/user";
 
 const experienceSchema = z
   .object({
@@ -78,6 +78,33 @@ export const Experience = () => {
 
   const { watch, setValue } = form;
   const isCurrent = watch("isCurrent");
+
+  const role = watch("role");
+  const company = watch("company");
+  const eType = watch("employmentType");
+  const startDate = watch("startDate");
+  const endDate = watch("endDate");
+  const location = watch("companyLocation");
+  const description = watch("jobDescription");
+
+  const isStartDateValid =
+    startDate instanceof Date && !isNaN(startDate.getTime());
+
+  const isEndDateValid = !isCurrent
+    ? endDate instanceof Date && !isNaN(endDate.getTime())
+    : true;
+
+  const isDateRangeValid = !isCurrent || (endDate && startDate < endDate);
+
+  const isValid =
+    role?.length > 0 &&
+    company?.length > 0 &&
+    eType?.length > 0 &&
+    isStartDateValid &&
+    isEndDateValid &&
+    isDateRangeValid &&
+    location?.length > 0 &&
+    description?.length > 0;
 
   useEffect(() => {
     if (isCurrent) {
@@ -227,6 +254,15 @@ export const Experience = () => {
 
   const path = usePathname();
   const activeLink = path.split("/")[2];
+
+  const { data: userData, loading: userLoading } = useSubscription(
+    GET_USER_BY_CLERK_ID,
+    {
+      variables: {
+        _eq: user?.id,
+      },
+    }
+  );
 
   return (
     <div className="p-4 border-[1px] shadow-md rounded">
@@ -403,13 +439,20 @@ export const Experience = () => {
                   />
                 </div>
                 {!isCurrent && (
-                  <CalendarField
-                    fieldLabel={"End date"}
-                    fieldName={"endDate"}
-                    control={form.control}
-                    required={!isCurrent}
-                  />
+                  <>
+                    <CalendarField
+                      fieldLabel={"End date"}
+                      fieldName={"endDate"}
+                      control={form.control}
+                      required={!isCurrent}
+                    />
+                  </>
                 )}
+
+                {endDate && startDate && endDate < startDate && (
+                  <p>Start date should be less than end date.</p>
+                )}
+
                 <TextInput
                   fieldLabel={"Where is the company located?"}
                   fieldName={"companyLocation"}
@@ -432,24 +475,14 @@ export const Experience = () => {
 
               <div className="flex justify-end w-full mt-8">
                 <div className="w-38">
-                  {isLoading ? (
-                    <LoadingButton />
-                  ) : (
-                    <>
-                      {experienceData?.experience?.length >= 5 ? (
-                        <CustomButton
-                          disabled
-                          type="submit"
-                          title="Save to experience list"
-                        />
-                      ) : (
-                        <CustomButton
-                          type="submit"
-                          title="Save to experience list"
-                        />
-                      )}
-                    </>
-                  )}
+                  <ProfileAlertDialog
+                    sectionName={"Experience"}
+                    planName={userData?.user[0]?.user_plan}
+                    usedSlots={parseInt(experienceData?.experience.length)}
+                    disabled={!isValid}
+                    onConfirm={() => form.handleSubmit(onSubmit)()}
+                    isLoading={isLoading}
+                  />
                 </div>
               </div>
             </form>

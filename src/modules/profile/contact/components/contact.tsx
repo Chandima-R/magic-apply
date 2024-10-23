@@ -20,9 +20,10 @@ import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-l
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
 import { ComboBox } from "@/modules/shared/components/combo-box";
-
 import { countries } from "countries-list";
 import { countryAndCities } from "@/modules/shared/utils/country-city";
+import { CustomConfirmDialog } from "@/modules/shared/components/custom-confirm-dialog";
+import { OctagonAlert } from "lucide-react";
 
 const contactSchema = z.object({
   fullName: z.string().nonempty("Full name is required."),
@@ -302,10 +303,17 @@ export const Contact = () => {
 
             <div className="flex justify-end w-full mt-8">
               <div className="w-38">
-                <CustomButton
-                  type="submit"
-                  title="Save basic info"
-                  disabled={!isValid}
+                <CustomConfirmDialog
+                  alertTitle="save basic info"
+                  alertDialogHeader="Are you absolutely sure?"
+                  alertDialogIcon={<OctagonAlert />}
+                  alertDialogDescription="Please note that once this form is saved, you will not be
+                      able to modify any of the required fields. Ensure all
+                      information is accurate before submission, as changes will
+                      not be allowed after saving."
+                  alertDialogActionButton="Save basic info"
+                  onConfirm={() => form.handleSubmit(onSubmit)()}
+                  isLoading={isLoading}
                 />
               </div>
             </div>

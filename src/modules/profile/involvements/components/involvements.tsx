@@ -10,7 +10,7 @@ import { CustomButton } from "@/modules/shared/components/custom-button";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useSubscription } from "@apollo/client";
 import {
   ADD_NEW_INVOLVEMENT_BY_USER_ID,
@@ -29,6 +29,9 @@ import { ActionCard } from "@/modules/shared/components/action-card";
 import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { ProfileActiveLinks } from "../../../shared/components/profile-active-links";
 import { usePathname } from "next/navigation";
+import { ProfileAlertDialog } from "@/modules/shared/components/profile-alert-dialog";
+import { GET_USER_BY_CLERK_ID } from "@/graphql/user";
+import { CheckboxField } from "@/modules/shared/components/checkbox-input";
 
 const involvementSchema = z
   .object({
@@ -41,11 +44,12 @@ const involvementSchema = z
       required_error: "End date is required.",
     }),
     organizationCollege: z.string().nonempty("College is required."),
-    organizationLocation: z.string().optional(),
+    organizationLocation: z.string().nonempty("College location is required"),
 
     organizationRoleDescription: z
       .string()
       .nonempty("Job description is required."),
+    isCurrent: z.boolean().default(false).optional(),
   })
   .refine(
     (data) => data.organizationRoleStartDate < data.organizationRoleEndDate,
@@ -70,8 +74,45 @@ export const Involvements = () => {
       organizationCollege: "",
       organizationLocation: "",
       organizationRoleDescription: "",
+      isCurrent: false,
     },
   });
+
+  const { watch, setValue } = form;
+  const isCurrent = watch("isCurrent");
+
+  const role = watch("organizationRole");
+  const name = watch("organizationName");
+  const startDate = watch("organizationRoleStartDate");
+  const endDate = watch("organizationRoleEndDate");
+  const college = watch("organizationCollege");
+  const location = watch("organizationLocation");
+  const description = watch("organizationRoleDescription");
+
+  const isStartDateValid =
+    startDate instanceof Date && !isNaN(startDate.getTime());
+
+  const isEndDateValid = !isCurrent
+    ? endDate instanceof Date && !isNaN(endDate.getTime())
+    : true;
+
+  const isDateRangeValid = !isCurrent || (endDate && startDate < endDate);
+
+  const isValid =
+    role?.length > 0 &&
+    name?.length > 0 &&
+    isStartDateValid &&
+    isEndDateValid &&
+    isDateRangeValid &&
+    college?.length > 0 &&
+    location?.length > 0 &&
+    description?.length > 0;
+
+  useEffect(() => {
+    if (isCurrent) {
+      setValue("organizationRoleEndDate", new Date());
+    }
+  }, [isCurrent, setValue]);
 
   const { data: involvementData, loading: involvementLoading } =
     useSubscription(INVOLVEMENT_INFORMATION_BY_USER_ID, {
@@ -83,6 +124,12 @@ export const Involvements = () => {
   const visibleInvolvements = involvementData?.involvement?.filter(
     (inv: any) => inv.visibility === true
   );
+
+  const sortedInvolvements = visibleInvolvements?.sort((a: any, b: any) => {
+    if (a.isCurrent && !b.isCurrent) return -1;
+    if (!a.isCurrent && b.isCurrent) return 1;
+    return 0;
+  });
 
   const hiddenInvolvements = involvementData?.involvement?.filter(
     (inv: any) => inv.visibility === false
@@ -106,10 +153,15 @@ export const Involvements = () => {
             involevement_organization: values.organizationName,
             involvement_college: values.organizationCollege,
             involvement_description: values.organizationRoleDescription,
-            involvement_end_date: values.organizationRoleEndDate,
+            involvement_end_date: values.isCurrent
+              ? ""
+              : values.organizationRoleEndDate
+              ? new Date(values.organizationRoleEndDate)
+              : null,
             involvement_organization_role: values.organizationRole,
             involvement_start_date: values.organizationRoleStartDate,
             involvement_location: values.organizationLocation,
+            isCurrent: isCurrent,
           },
         });
 
@@ -202,6 +254,15 @@ export const Involvements = () => {
   const path = usePathname();
   const activeLink = path.split("/")[2];
 
+  const { data: userData, loading: userLoading } = useSubscription(
+    GET_USER_BY_CLERK_ID,
+    {
+      variables: {
+        _eq: user?.id,
+      },
+    }
+  );
+
   return (
     <div className="p-4 border-[1px] shadow-md rounded">
       <ProfileActiveLinks activeLink={activeLink} />
@@ -236,7 +297,7 @@ export const Involvements = () => {
                       ) : (
                         ""
                       )}
-                      {visibleInvolvements?.map((involvement: any) => (
+                      {sortedInvolvements?.map((involvement: any) => (
                         <AccordionContent key={involvement.id}>
                           <ActionCard
                             id={involvement.id}
@@ -261,6 +322,7 @@ export const Involvements = () => {
                             }
                             status={involvement.visibility}
                             tab="involvements"
+                            isCurrent={isCurrent}
                           />
                         </AccordionContent>
                       ))}
@@ -312,6 +374,7 @@ export const Involvements = () => {
                                 unhideinvolvementAction(involvement.id)
                               }
                               status={involvement.visibility}
+                              isCurrent={isCurrent}
                             />
                           </AccordionContent>
                         ))}
@@ -345,18 +408,32 @@ export const Involvements = () => {
                   placeholder={"Economics Student Association"}
                   required={true}
                 />
-                <CalendarField
-                  fieldLabel={"Start date"}
-                  fieldName={"organizationRoleStartDate"}
-                  control={form.control}
-                  required={true}
-                />
-                <CalendarField
-                  fieldLabel={"End date"}
-                  fieldName={"organizationRoleEndDate"}
-                  control={form.control}
-                  required={true}
-                />
+                <div className="flex flex-col gap-2">
+                  <CalendarField
+                    fieldLabel={"Start date"}
+                    fieldName={"organizationRoleStartDate"}
+                    control={form.control}
+                    required={true}
+                  />
+
+                  <CheckboxField
+                    fieldLabel="Is this your ongoing involvement?"
+                    fieldName="isCurrent"
+                    control={form.control}
+                    required={!isCurrent}
+                  />
+                </div>
+
+                {!isCurrent && (
+                  <>
+                    <CalendarField
+                      fieldLabel={"End date"}
+                      fieldName={"organizationRoleEndDate"}
+                      control={form.control}
+                      required={true}
+                    />
+                  </>
+                )}
                 <TextInput
                   fieldLabel={
                     "At which college/school/university was the organization located?"
@@ -388,24 +465,14 @@ export const Involvements = () => {
 
               <div className="flex justify-end w-full mt-8">
                 <div className="w-38">
-                  {isLoading ? (
-                    <LoadingButton />
-                  ) : (
-                    <>
-                      {involvementData?.involvement?.length >= 5 ? (
-                        <CustomButton
-                          disabled
-                          type="submit"
-                          title="Save to involvement list"
-                        />
-                      ) : (
-                        <CustomButton
-                          type="submit"
-                          title="Save to involvement list"
-                        />
-                      )}
-                    </>
-                  )}
+                  <ProfileAlertDialog
+                    sectionName={"Involvements"}
+                    planName={userData?.user[0]?.user_plan}
+                    usedSlots={parseInt(involvementData?.involvement.length)}
+                    disabled={!isValid}
+                    onConfirm={() => form.handleSubmit(onSubmit)()}
+                    isLoading={isLoading}
+                  />
                 </div>
               </div>
             </form>
