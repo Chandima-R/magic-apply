@@ -16,6 +16,7 @@ export const INVOLVEMENT_INFORMATION_BY_USER_ID = gql`
       involvement_location
       user_id
       visibility
+      isCurrent
     }
   }
 `;
@@ -33,6 +34,7 @@ export const VIEW_INVOLVEMENT_BY_ID = gql`
       involvement_location
       user_id
       visibility
+      isCurrent
     }
   }
 `;
@@ -47,6 +49,7 @@ export const ADD_NEW_INVOLVEMENT_BY_USER_ID = gql`
     $involvement_start_date: String
     $involvement_location: String
     $user_id: String
+    $isCurrent: Boolean
   ) {
     insert_involvement(
       objects: {
@@ -58,6 +61,7 @@ export const ADD_NEW_INVOLVEMENT_BY_USER_ID = gql`
         involvement_start_date: $involvement_start_date
         involvement_location: $involvement_location
         user_id: $user_id
+        isCurrent: $isCurrent
       }
     ) {
       affected_rows
@@ -75,6 +79,7 @@ export const UPDATE_INVOLVEMENT_BY_ID = gql`
     $involvement_start_date: String
     $involvement_location: String
     $_eq: uuid!
+    $isCurrent: Boolean
   ) {
     update_involvement(
       where: { id: { _eq: $_eq } }
@@ -86,6 +91,7 @@ export const UPDATE_INVOLVEMENT_BY_ID = gql`
         involvement_organization_role: $involvement_organization_role
         involvement_start_date: $involvement_start_date
         involvement_location: $involvement_location
+        isCurrent: $isCurrent
       }
     ) {
       affected_rows
@@ -105,6 +111,7 @@ export const DELETE_INVOLVEMENT_BY_PK = gql`
       involvement_start_date
       involvement_location
       user_id
+      isCurrent
     }
   }
 `;
