@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { OctagonAlert, X } from "lucide-react";
+import { LoadingButton } from "./loading-button";
 
 interface Props {
   alertTitle: string;
@@ -20,16 +21,17 @@ interface Props {
   alertDialogDescription?: string;
   alertDialogActionButton: string;
   onConfirm: () => void;
+  isLoading: boolean;
 }
 
 export const CustomConfirmDialog = ({
   alertTitle,
   disabled,
   alertDialogHeader,
-  alertDialogIcon,
   alertDialogDescription,
   alertDialogActionButton,
   onConfirm,
+  isLoading,
 }: Props) => {
   const [open, setOpen] = useState(false);
 
@@ -66,14 +68,22 @@ export const CustomConfirmDialog = ({
           <AlertDialogCancel className="btn-secondary absolute rounded-full h-10 w-10 top-2 right-2 p-0">
             <X className="size-4" />
           </AlertDialogCancel>
-          <Button
-            className="w-auto uppercase bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue"
-            type="submit"
-            size={"sm"}
-            onClick={handleConfirm}
-          >
-            {alertDialogActionButton}
-          </Button>
+          {isLoading ? (
+            <div className="w-full">
+              <LoadingButton />
+            </div>
+          ) : (
+            <>
+              <Button
+                className="w-auto uppercase bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue"
+                type="submit"
+                size={"sm"}
+                onClick={handleConfirm}
+              >
+                {alertDialogActionButton}
+              </Button>
+            </>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
