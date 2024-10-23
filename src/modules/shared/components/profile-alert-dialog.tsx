@@ -129,24 +129,26 @@ export const ProfileAlertDialog = ({
 
         {(planName?.toLowerCase() === "free" ||
           planName?.toLowerCase() === "basic") && (
-          <div className="flex items-center space-x-2 p-4 bg-yellow-100 rounded-md shadow-sm">
-            <Info className="text-blue-500" size={24} />
-            <span className="text-sm text-blue-600">
-              Upgrade to the <strong>Premium</strong> plan to add more{" "}
-              {sectionName} or keep all of your current {sectionName}s.
-            </span>
+          <div className="flex flex-col items-center space-x-2 p-4 bg-yellow-100 rounded-md shadow-sm">
+            <div className="flex items-start space-x-2">
+              <Info className="text-blue-500" size={24} />
+              <span className="text-sm text-blue-600">
+                Upgrade to the <strong>Premium</strong> plan to add more{" "}
+                {sectionName} or keep all of your current {sectionName}.
+              </span>
+            </div>
+
+            <div className="flex items-center justify-end w-full">
+              {(planName?.toLowerCase() === "free" ||
+                planName?.toLowerCase() === "basic") && (
+                <Button variant="outline" size="sm" className="mt-2">
+                  <Crown className="mr-2 text-yellow-400" size={16} /> Upgrade
+                  to Premium
+                </Button>
+              )}
+            </div>
           </div>
         )}
-
-        <div className="flex items-center justify-end w-full">
-          {(planName?.toLowerCase() === "free" ||
-            planName?.toLowerCase() === "basic") && (
-            <Button variant="outline" size="sm" className="mt-2">
-              <Crown className="mr-2 text-yellow-400" size={16} /> Upgrade to
-              Premium
-            </Button>
-          )}
-        </div>
       </div>
     );
   };

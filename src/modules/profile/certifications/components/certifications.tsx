@@ -6,11 +6,9 @@ import { TextArea } from "@/modules/shared/components/text-area";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CustomButton } from "@/modules/shared/components/custom-button";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
-import { LoadingButton } from "@/modules/shared/components/loading-button";
 import {
   ADD_NEW_CERTIFICATE_BY_USER_ID,
   CERTIFICATE_INFORMATION_BY_USER_ID,
@@ -28,13 +26,19 @@ import {
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "../../../shared/components/profile-active-links";
+import { ProfileAlertDialog } from "@/modules/shared/components/profile-alert-dialog";
+import { GET_USER_BY_CLERK_ID } from "@/graphql/user";
 
 const certificationSchema = z.object({
   certificateName: z.string().nonempty("Certificate name is required."),
   certificateInstitute: z
     .string()
     .nonempty("Certificate issued institute is required."),
-  certificateDate: z.string().nonempty("Certificate issued date is required."),
+  certificateDate: z
+    .string()
+    .nonempty("Certificate issued date is required.")
+    .regex(/^\d+$/, "Certificate issued date must be a number."),
+
   certificateDescription: z.string(),
 });
 export const Certifications = () => {
@@ -51,6 +55,19 @@ export const Certifications = () => {
       certificateDescription: "",
     },
   });
+
+  const { watch } = form;
+
+  const name = watch("certificateName");
+  const institute = watch("certificateInstitute");
+  const date = watch("certificateDate");
+  const description = watch("certificateDescription");
+
+  const isValid =
+    name?.length > 0 &&
+    institute?.length > 0 &&
+    date?.length > 0 &&
+    description?.length > 0;
 
   const { data: certificateData, loading: certificateLoding } = useSubscription(
     CERTIFICATE_INFORMATION_BY_USER_ID,
@@ -180,6 +197,15 @@ export const Certifications = () => {
 
   const path = usePathname();
   const activeLink = path.split("/")[2];
+
+  const { data: userData, loading: userLoading } = useSubscription(
+    GET_USER_BY_CLERK_ID,
+    {
+      variables: {
+        _eq: user?.id,
+      },
+    }
+  );
 
   return (
     <div className="p-4 border-[1px] shadow-md rounded">
@@ -324,24 +350,13 @@ export const Certifications = () => {
 
               <div className="flex justify-end w-full mt-8">
                 <div className="w-38">
-                  {isLoading ? (
-                    <LoadingButton />
-                  ) : (
-                    <>
-                      {certificateData?.certification?.length >= 5 ? (
-                        <CustomButton
-                          disabled
-                          type="submit"
-                          title="Save to certificate list"
-                        />
-                      ) : (
-                        <CustomButton
-                          type="submit"
-                          title="Save to certificate list"
-                        />
-                      )}
-                    </>
-                  )}
+                  <ProfileAlertDialog
+                    sectionName={"Certifications"}
+                    planName={userData?.user[0]?.user_plan}
+                    usedSlots={parseInt(certificateData?.certification.length)}
+                    disabled={!isValid}
+                    onConfirm={() => form.handleSubmit(onSubmit)()}
+                  />
                 </div>
               </div>
             </form>
