@@ -471,6 +471,7 @@ export const Involvements = () => {
                     usedSlots={parseInt(involvementData?.involvement.length)}
                     disabled={!isValid}
                     onConfirm={() => form.handleSubmit(onSubmit)()}
+                    isLoading={isLoading}
                   />
                 </div>
               </div>

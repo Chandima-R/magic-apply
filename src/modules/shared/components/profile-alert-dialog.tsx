@@ -8,17 +8,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  CheckCircle,
-  AlertTriangle,
-  Info,
-  ArrowRightCircle,
-  X,
-  Crown,
-} from "lucide-react";
+import { CheckCircle, Info, X, Crown } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
+import { LoadingButton } from "./loading-button";
 
 interface Props {
   sectionName: string;
@@ -26,6 +20,7 @@ interface Props {
   usedSlots: number;
   disabled: boolean;
   onConfirm: () => void;
+  isLoading?: boolean;
 }
 
 export const ProfileAlertDialog = ({
@@ -34,6 +29,7 @@ export const ProfileAlertDialog = ({
   planName,
   sectionName,
   usedSlots,
+  isLoading,
 }: Props) => {
   const [open, setOpen] = useState(false);
 
@@ -195,17 +191,25 @@ export const ProfileAlertDialog = ({
             <X className="size-4" />
           </AlertDialogCancel>
 
-          {availableSlots > 0 ? (
-            <Button
-              onClick={handleConfirm}
-              className="w-full uppercase bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue"
-            >
-              Add More {sectionName}
-            </Button>
+          {isLoading ? (
+            <div className="w-full">
+              <LoadingButton />
+            </div>
           ) : (
-            <Button className="w-full uppercase bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue">
-              Upgrade Plan
-            </Button>
+            <>
+              {availableSlots > 0 ? (
+                <Button
+                  onClick={handleConfirm}
+                  className="w-full uppercase bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue"
+                >
+                  Add More {sectionName}
+                </Button>
+              ) : (
+                <Button className="w-full uppercase bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue">
+                  Upgrade Plan
+                </Button>
+              )}
+            </>
           )}
         </AlertDialogFooter>
       </AlertDialogContent>

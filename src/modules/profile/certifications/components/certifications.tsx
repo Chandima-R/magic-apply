@@ -356,6 +356,7 @@ export const Certifications = () => {
                     usedSlots={parseInt(certificateData?.certification.length)}
                     disabled={!isValid}
                     onConfirm={() => form.handleSubmit(onSubmit)()}
+                    isLoading={isLoading}
                   />
                 </div>
               </div>

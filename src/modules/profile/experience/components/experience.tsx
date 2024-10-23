@@ -481,6 +481,7 @@ export const Experience = () => {
                     usedSlots={parseInt(experienceData?.experience.length)}
                     disabled={!isValid}
                     onConfirm={() => form.handleSubmit(onSubmit)()}
+                    isLoading={isLoading}
                   />
                 </div>
               </div>

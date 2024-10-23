@@ -504,6 +504,7 @@ export const Education = () => {
                     usedSlots={parseInt(educationData?.education.length)}
                     disabled={!isValid}
                     onConfirm={() => form.handleSubmit(onSubmit)()}
+                    isLoading={isLoading}
                   />
                 </div>
               </div>
