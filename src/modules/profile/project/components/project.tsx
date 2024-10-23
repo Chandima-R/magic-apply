@@ -30,6 +30,9 @@ import { ActionCard } from "@/modules/shared/components/action-card";
 import { usePathname } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
+import { CheckboxField } from "@/modules/shared/components/checkbox-input";
+import { ProfileAlertDialog } from "@/modules/shared/components/profile-alert-dialog";
+import { GET_USER_BY_CLERK_ID } from "@/graphql/user";
 
 const projectSchema = z
   .object({
@@ -46,6 +49,7 @@ const projectSchema = z
     }),
     projectUrl: z.string().optional(),
     projectDescription: z.string().nonempty("Project description is required."),
+    isCurrent: z.boolean().default(false).optional(),
   })
   .refine((data) => data.projectStartDate < data.projectEndDate, {
     message: "Start date must be before end date",
@@ -67,8 +71,18 @@ export const Project = () => {
       projectEndDate: new Date(),
       projectUrl: "",
       projectDescription: "",
+      isCurrent: false,
     },
   });
+
+  const { watch, setValue } = form;
+  const isCurrent = watch("isCurrent");
+
+  useEffect(() => {
+    if (isCurrent) {
+      setValue("projectEndDate", new Date());
+    }
+  }, [isCurrent, setValue]);
 
   const { data: projectData, loading: projectLoading } = useSubscription(
     PROJECT_INFORMATION_BY_USER_ID,
@@ -82,6 +96,14 @@ export const Project = () => {
   const visibleProjects = projectData?.project?.filter(
     (exp: any) => exp.visibility === true
   );
+
+  const sortedProjects = visibleProjects?.sort((a: any, b: any) => {
+    if (a.isCurrent && !b.isCurrent) return -1;
+    if (!a.isCurrent && b.isCurrent) return 1;
+    return 0;
+  });
+
+  console.log(projectData);
 
   const hiddenProjects = projectData?.project?.filter(
     (exp: any) => exp.visibility === false
@@ -104,12 +126,17 @@ export const Project = () => {
             user_id: user?.id,
             project_url: values.projectUrl,
             project_start_date: values.projectStartDate,
-            project_end_date: values.projectEndDate,
+            project_end_date: values.isCurrent
+              ? ""
+              : values.projectEndDate
+              ? new Date(values.projectEndDate)
+              : null,
             project_name: values.projectTitle,
             project_role: values.projectDescription,
             project_organization: values.organization,
             project_location: values.organizationLocation,
             project_role_description: values.projectDescription,
+            isCurrent: isCurrent,
           },
         });
 
@@ -205,6 +232,15 @@ export const Project = () => {
   const startDate = form.watch("projectStartDate");
   const endDate = form.watch("projectEndDate");
 
+  const { data: userData, loading: userLoading } = useSubscription(
+    GET_USER_BY_CLERK_ID,
+    {
+      variables: {
+        _eq: user?.id,
+      },
+    }
+  );
+
   useEffect(() => {
     if (startDate && endDate && startDate >= endDate) {
       form.setError("projectEndDate", {
@@ -258,7 +294,7 @@ export const Project = () => {
                       ) : (
                         ""
                       )}
-                      {visibleProjects?.map((project: any) => (
+                      {sortedProjects?.map((project: any) => (
                         <AccordionContent key={project.id}>
                           <ActionCard
                             id={project.id}
@@ -279,6 +315,7 @@ export const Project = () => {
                             hideAction={() => hideProjectAction(project.id)}
                             status={project.visibility}
                             tab="projects"
+                            isCurrent={isCurrent}
                           />
                         </AccordionContent>
                       ))}
@@ -327,6 +364,7 @@ export const Project = () => {
                                 unhideProjectAction(project.id)
                               }
                               status={project.visibility}
+                              isCurrent={isCurrent}
                             />
                           </AccordionContent>
                         ))}
@@ -367,18 +405,34 @@ export const Project = () => {
                   placeholder={"New York, NY"}
                   required={true}
                 />
-                <CalendarField
-                  fieldLabel={"Start date"}
-                  fieldName={"projectStartDate"}
-                  control={form.control}
-                  required={true}
-                />
-                <CalendarField
-                  fieldLabel={"End date"}
-                  fieldName={"projectEndDate"}
-                  control={form.control}
-                  required={true}
-                />
+
+                <div className="flex flex-col gap-2">
+                  <CalendarField
+                    fieldLabel={"Start date"}
+                    fieldName={"projectStartDate"}
+                    control={form.control}
+                    required={true}
+                  />
+
+                  <CheckboxField
+                    fieldLabel="Is this your ongoing project?"
+                    fieldName="isCurrent"
+                    control={form.control}
+                    required={!isCurrent}
+                  />
+                </div>
+
+                {!isCurrent && (
+                  <>
+                    <CalendarField
+                      fieldLabel={"End date"}
+                      fieldName={"projectEndDate"}
+                      control={form.control}
+                      required={true}
+                    />
+                  </>
+                )}
+
                 <TextInput
                   fieldLabel={"Project URL"}
                   fieldName={"projectUrl"}
@@ -402,24 +456,13 @@ export const Project = () => {
 
               <div className="flex justify-end w-full mt-8">
                 <div className="w-38">
-                  {isLoading ? (
-                    <LoadingButton />
-                  ) : (
-                    <>
-                      {projectData?.project?.length >= 5 ? (
-                        <CustomButton
-                          disabled
-                          type="submit"
-                          title="Save to project list"
-                        />
-                      ) : (
-                        <CustomButton
-                          type="submit"
-                          title="Save to project list"
-                        />
-                      )}
-                    </>
-                  )}
+                  <ProfileAlertDialog
+                    sectionName={"Projects"}
+                    planName={userData?.user[0]?.user_plan}
+                    usedSlots={parseInt(projectData?.project.length)}
+                    disabled={false}
+                    onConfirm={() => form.handleSubmit(onSubmit)()}
+                  />
                 </div>
               </div>
             </form>
