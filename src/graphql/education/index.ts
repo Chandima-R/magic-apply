@@ -58,7 +58,7 @@ export const ADD_NEW_EDUCATION_BY_USER_ID = gql`
     $education_coursework: String
     $educatoin_additional_information: String
     $user_id: String
-    $isCurrent: Boolean
+    $isCurrent: Boolean!
   ) {
     insert_education(
       objects: {
@@ -94,7 +94,7 @@ export const UPDATE_EDUCATION_BY_ID = gql`
     $education_coursework: String
     $educatoin_additional_information: String
     $_eq: uuid!
-    $isCurrent: Boolean
+    $isCurrent: Boolean!
   ) {
     update_education(
       where: { id: { _eq: $_eq } }

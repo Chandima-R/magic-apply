@@ -6,7 +6,6 @@ import { TextArea } from "@/modules/shared/components/text-area";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CustomButton } from "@/modules/shared/components/custom-button";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
@@ -26,11 +25,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
-import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname, useRouter } from "next/navigation";
 import { ProfileActiveLinks } from "../../../shared/components/profile-active-links";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
 import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
+import { CheckboxField } from "@/modules/shared/components/checkbox-input";
+import { UpdateProfileAlertDialog } from "@/modules/shared/components/update-profile-alert-dialog";
 
 const educationSchema = z
   .object({
@@ -49,6 +49,7 @@ const educationSchema = z
     endDate: z.date({ required_error: "Completion date is required." }),
     gpa: z.string(),
     additionalInformation: z.string(),
+    isCurrent: z.boolean().default(false).optional(),
   })
   .refine((data) => data.startDate < data.endDate, {
     message: "Start date must be before end date",
@@ -76,6 +77,7 @@ export const EditEducation = () => {
       endDate: new Date(),
       gpa: "",
       additionalInformation: "",
+      isCurrent: false,
     },
   });
 
@@ -88,6 +90,15 @@ export const EditEducation = () => {
     }
   );
 
+  const { watch, setValue } = form;
+  const isCurrent = watch("isCurrent");
+
+  useEffect(() => {
+    if (isCurrent) {
+      setValue("endDate", new Date());
+    }
+  }, [isCurrent, setValue]);
+
   const { data: editData } = useSubscription(VIEW_EDUCATION_BY_ID, {
     variables: {
       _eq: educationId,
@@ -98,6 +109,13 @@ export const EditEducation = () => {
     (exp: any) => exp.visibility === true
   );
 
+  const sortedEducation = visibleEducation?.sort((a: any, b: any) => {
+    if (a.isCurrent && !b.isCurrent) return -1;
+    if (!a.isCurrent && b.isCurrent) return 1;
+    return 0;
+  });
+
+  console.log(sortedEducation);
   const hiddenEducation = educationData?.education?.filter(
     (exp: any) => exp.visibility === false
   );
@@ -116,10 +134,11 @@ export const EditEducation = () => {
         achievement: education?.education_achievement,
         institute: education.education_institute,
         instituteLocation: education.education_location,
-        startDate: education.education_start_date,
-        endDate: education.education_end_date,
+        startDate: new Date(education.education_start_date),
+        endDate: new Date(education.education_end_date),
         gpa: education.education_gpa,
         additionalInformation: education.educatoin_additional_information,
+        isCurrent: education.isCurrent,
       });
     }
   }, [editData, form]);
@@ -137,7 +156,11 @@ export const EditEducation = () => {
           variables: {
             _eq: educationId,
             education_start_date: values.startDate,
-            education_end_date: values.endDate,
+            education_end_date: values.isCurrent
+              ? ""
+              : values.endDate
+              ? new Date(values.endDate)
+              : null,
             education_gpa: values.gpa,
             education_institute: values.institute,
             education_location: values.instituteLocation,
@@ -146,6 +169,7 @@ export const EditEducation = () => {
             education_coursework: values.coursework,
             education_achievement: values.achievement,
             educatoin_additional_information: values.additionalInformation,
+            isCurrent: isCurrent,
           },
         });
 
@@ -281,7 +305,7 @@ export const EditEducation = () => {
                       ) : (
                         ""
                       )}
-                      {visibleEducation?.map((education: any) => (
+                      {sortedEducation?.map((education: any) => (
                         <AccordionContent key={education.id}>
                           <ActionCard
                             id={education.id}
@@ -304,6 +328,7 @@ export const EditEducation = () => {
                             hideAction={() => hideEducationAction(education.id)}
                             status={education.visibility}
                             tab="education"
+                            isCurrent={isCurrent}
                           />
                         </AccordionContent>
                       ))}
@@ -354,6 +379,7 @@ export const EditEducation = () => {
                                 unhideEducationAction(education.id)
                               }
                               status={education.visibility}
+                              isCurrent={isCurrent}
                             />
                           </AccordionContent>
                         ))}
@@ -412,23 +438,36 @@ export const EditEducation = () => {
                     placeholder={"Madison, WI"}
                     required={true}
                   />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <CalendarField
-                      fieldLabel={
-                        "When did you start your degree/ qualification?"
-                      }
-                      fieldName={"startDate"}
-                      control={form.control}
-                      required={true}
-                    />
-                    <CalendarField
-                      fieldLabel={
-                        "When did you earn your degree/ qualification?"
-                      }
-                      fieldName={"endDate"}
-                      control={form.control}
-                      required={true}
-                    />
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <CalendarField
+                        fieldLabel={
+                          "When did you start your degree/ qualification?"
+                        }
+                        fieldName={"startDate"}
+                        control={form.control}
+                        required={true}
+                      />
+                      <CheckboxField
+                        fieldLabel="Is this your current education?"
+                        fieldName="isCurrent"
+                        control={form.control}
+                        required={!isCurrent}
+                      />
+                    </div>
+
+                    {!isCurrent && (
+                      <>
+                        <CalendarField
+                          fieldLabel={
+                            "When did you earn your degree/ qualification?"
+                          }
+                          fieldName={"endDate"}
+                          control={form.control}
+                          required={true}
+                        />
+                      </>
+                    )}
                   </div>
                   <TextInput
                     fieldLabel={"GPA (If applicable)"}
@@ -457,13 +496,12 @@ export const EditEducation = () => {
 
                 <div className="flex justify-end w-full mt-8">
                   <div className="w-38">
-                    {isLoading ? (
-                      <LoadingButton />
-                    ) : (
-                      <>
-                        <CustomButton type="submit" title="Update education" />
-                      </>
-                    )}
+                    <UpdateProfileAlertDialog
+                      sectionName={"Education"}
+                      disabled={false}
+                      onConfirm={() => form.handleSubmit(onSubmit)()}
+                      isLoading={isLoading}
+                    />
                   </div>
                 </div>
               </form>
