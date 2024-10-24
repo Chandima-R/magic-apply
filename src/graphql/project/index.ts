@@ -49,7 +49,7 @@ export const ADD_NEW_PROJECT_BY_USER_ID = gql`
     $project_location: String
     $project_name: String
     $project_end_date: String
-    $isCurrent: Boolean
+    $isCurrent: Boolean!
   ) {
     insert_project(
       objects: {
@@ -79,7 +79,7 @@ export const UPDATE_PROJECT_BY_ID = gql`
     $project_start_date: String
     $project_url: String
     $_eq: uuid
-    $isCurrent: Boolean
+    $isCurrent: Boolean!
   ) {
     update_project(
       where: { id: { _eq: $_eq } }

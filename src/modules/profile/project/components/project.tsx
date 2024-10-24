@@ -44,17 +44,24 @@ const projectSchema = z
     projectStartDate: z.date({
       required_error: "Start date is required.",
     }),
-    projectEndDate: z.date({
-      required_error: "End date is required.",
-    }),
+    projectEndDate: z
+      .union([z.date().optional(), z.literal("").optional()])
+      .refine((val) => val === "" || val instanceof Date, {
+        message: "End date is required.",
+      })
+      .optional(),
     projectUrl: z.string().optional(),
     projectDescription: z.string().nonempty("Project description is required."),
     isCurrent: z.boolean().default(false).optional(),
   })
-  .refine((data) => data.projectStartDate < data.projectEndDate, {
-    message: "Start date must be before end date",
-    path: ["projectEndDate"],
-  });
+  .refine(
+    (data) =>
+      !data.projectEndDate || data.projectStartDate < data.projectEndDate,
+    {
+      message: "Start date must be before end date",
+      path: ["projectEndDate"],
+    }
+  );
 
 export const Project = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -83,6 +90,7 @@ export const Project = () => {
   const organizationLocation = watch("organizationLocation");
   const projectStartDate = watch("projectStartDate");
   const projectEndDate = watch("projectEndDate");
+  const projectDescription = watch("projectDescription");
 
   const isStartDateValid =
     projectStartDate instanceof Date && !isNaN(projectStartDate.getTime());
@@ -100,7 +108,8 @@ export const Project = () => {
     isStartDateValid &&
     isEndDateValid &&
     isDateRangeValid &&
-    organizationLocation?.length > 0;
+    organizationLocation?.length > 0 &&
+    projectDescription?.length > 0;
 
   useEffect(() => {
     if (isCurrent) {
@@ -126,8 +135,6 @@ export const Project = () => {
     if (!a.isCurrent && b.isCurrent) return 1;
     return 0;
   });
-
-  console.log(projectData);
 
   const hiddenProjects = projectData?.project?.filter(
     (exp: any) => exp.visibility === false
@@ -253,9 +260,6 @@ export const Project = () => {
   const path = usePathname();
   const activeLink = path.split("/")[2];
 
-  const startDate = form.watch("projectStartDate");
-  const endDate = form.watch("projectEndDate");
-
   const { data: userData, loading: userLoading } = useSubscription(
     GET_USER_BY_CLERK_ID,
     {
@@ -264,17 +268,6 @@ export const Project = () => {
       },
     }
   );
-
-  useEffect(() => {
-    if (startDate && endDate && startDate >= endDate) {
-      form.setError("projectEndDate", {
-        type: "manual",
-        message: "End date must be after start date",
-      });
-    } else {
-      form.clearErrors("projectEndDate");
-    }
-  }, [startDate, endDate, form]);
 
   return (
     <div className="p-4 border-[1px] shadow-md rounded">

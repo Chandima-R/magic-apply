@@ -29,6 +29,7 @@ import {
 import { ActionCard } from "@/modules/shared/components/action-card";
 import { usePathname, useRouter } from "next/navigation";
 import { ProfileActiveLinks } from "../../../shared/components/profile-active-links";
+import { UpdateProfileAlertDialog } from "@/modules/shared/components/update-profile-alert-dialog";
 
 const certificationSchema = z.object({
   certificateName: z.string().nonempty("Certificate name is required."),
@@ -120,7 +121,7 @@ export const EditCertificate = () => {
         });
       }
       form.reset();
-      router.push("/profile/certification");
+      router.push("/profile/certifications");
     } catch (error) {
       console.error(error);
       toast({
@@ -362,11 +363,12 @@ export const EditCertificate = () => {
 
                 <div className="flex justify-end w-full mt-8">
                   <div className="w-38">
-                    {isLoading ? (
-                      <LoadingButton />
-                    ) : (
-                      <CustomButton type="submit" title="Update certificate" />
-                    )}
+                    <UpdateProfileAlertDialog
+                      sectionName={"Certification"}
+                      disabled={false}
+                      onConfirm={() => form.handleSubmit(onSubmit)()}
+                      isLoading={isLoading}
+                    />
                   </div>
                 </div>
               </form>

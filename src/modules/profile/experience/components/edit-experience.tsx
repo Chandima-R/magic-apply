@@ -6,7 +6,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput } from "@/modules/shared/components/text-input";
 import { TextArea } from "@/modules/shared/components/text-area";
-import { CustomButton } from "@/modules/shared/components/custom-button";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
@@ -26,7 +25,6 @@ import {
 } from "@/components/ui/accordion";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
-import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { usePathname, useRouter } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { ActionCard } from "@/modules/shared/components/action-card";
@@ -34,6 +32,7 @@ import { CheckboxField } from "@/modules/shared/components/checkbox-input";
 import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
 import { SelectInput } from "@/modules/shared/components/select-input";
 import { employmentType } from "@/modules/shared/utils/employment-type";
+import { UpdateProfileAlertDialog } from "@/modules/shared/components/update-profile-alert-dialog";
 
 const experienceSchema = z
   .object({
@@ -468,13 +467,12 @@ export const EditExperience = () => {
 
                 <div className="flex justify-end w-full mt-8">
                   <div className="w-38">
-                    {isLoading ? (
-                      <LoadingButton />
-                    ) : (
-                      <>
-                        <CustomButton type="submit" title="Update experience" />
-                      </>
-                    )}
+                    <UpdateProfileAlertDialog
+                      sectionName={"Experience"}
+                      disabled={false}
+                      onConfirm={() => form.handleSubmit(onSubmit)()}
+                      isLoading={isLoading}
+                    />
                   </div>
                 </div>
               </form>
