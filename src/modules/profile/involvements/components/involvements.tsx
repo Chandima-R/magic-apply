@@ -26,7 +26,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
-import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { ProfileActiveLinks } from "../../../shared/components/profile-active-links";
 import { usePathname } from "next/navigation";
 import { ProfileAlertDialog } from "@/modules/shared/components/profile-alert-dialog";
@@ -40,9 +39,12 @@ const involvementSchema = z
     organizationRoleStartDate: z.date({
       required_error: "Start date is required.",
     }),
-    organizationRoleEndDate: z.date({
-      required_error: "End date is required.",
-    }),
+    organizationRoleEndDate: z
+      .union([z.date().optional(), z.literal("").optional()])
+      .refine((val) => val === "" || val instanceof Date, {
+        message: "End date is required.",
+      })
+      .optional(),
     organizationCollege: z.string().nonempty("College is required."),
     organizationLocation: z.string().nonempty("College location is required"),
 
@@ -52,7 +54,9 @@ const involvementSchema = z
     isCurrent: z.boolean().default(false).optional(),
   })
   .refine(
-    (data) => data.organizationRoleStartDate < data.organizationRoleEndDate,
+    (data) =>
+      !data.organizationRoleEndDate ||
+      data.organizationRoleStartDate < data.organizationRoleEndDate,
     {
       message: "Start date must be before end date",
       path: ["organizationRoleEndDate"],
