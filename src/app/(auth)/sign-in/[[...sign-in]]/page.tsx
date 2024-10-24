@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { FlipCard } from "@/modules/shared/components/flip-card";
 import { SessionCounterCard } from "@/modules/shared/components/session-counter-card";
 import { ClerkLoaded, ClerkLoading, SignIn } from "@clerk/nextjs";
 import {
@@ -57,7 +57,7 @@ export default function page() {
           <div className="flex flex-col items-center justify-center">
             <div className="flex items-center justify-center bg-honoluluBlue text-white px-6 py-3 rounded-md cursor-pointer hover:bg-federalBlue transition-all duration-200 shadow-lg mb-6">
               <UserPlus size={24} className="mr-2" />
-              <span className="text-lg font-medium">Register Now</span>
+              <span className="text-md font-medium">Register Now</span>
             </div>
           </div>
         </div>
@@ -115,13 +115,34 @@ export default function page() {
             </p>
           </div>
 
-          <div className="flex items-center justify-between space-y-4 gap-4 h-auto py-auto w-full ">
-            <SessionCounterCard
-              title={"Total Users(this is annoying to update)"}
-              count={"2,442,215"}
+          <div className="flex items-center justify-between  gap-4 h-auto w-full">
+            <FlipCard
+              frontTitle="AI-Powered Tailoring"
+              frontDescription=" Our cutting-edge I analyzes and tailors your resume for the best
+            fit."
+              backTitle="Intelligent Matching"
+              backDescription="We optimize your application to match job descriptions with 90%
+            accuracy."
             />
-            <SessionCounterCard title={"Interview Rate"} count={"62.18%"} />
-            <SessionCounterCard title={"Avg. User Review"} count={"8.23/10"} />
+            <FlipCard
+              frontTitle="One-Click Application"
+              frontDescription="Apply for multiple jobs in a single go, saving hours of time."
+              backTitle="Resume Perfection"
+              backDescription="Get resume feedback and enhancements powered by AI, tailored to specific industries."
+            />
+
+            <FlipCard
+              frontTitle="Job Match Fuarantee"
+              frontDescription="Magic Apply ensures a 90%+ match with job descriptions to increase your interview chances."
+              backTitle="Effortless Application"
+              backDescription="Submit 50 applicaitons with one click, no more manual entry."
+            />
+          </div>
+
+          <div className="w-full flex items-center justify-center my-8">
+            <div className="w-auto flex items-center justify-center bg-white border-federalBlue border-2 text-black px-12 py-3 rounded-md cursor-pointer hover:bg-federalBlue hover:text-white transition-all duration-200 shadow-lg mb-6">
+              <span className="text-md font-medium">Get started for free</span>
+            </div>
           </div>
         </div>
       </div>
