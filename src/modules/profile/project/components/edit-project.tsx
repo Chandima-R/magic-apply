@@ -31,6 +31,8 @@ import { ActionCard } from "@/modules/shared/components/action-card";
 import { usePathname, useRouter } from "next/navigation";
 import { ProfileActiveLinks } from "@/modules/shared/components/profile-active-links";
 import { RequiredIndicator } from "@/modules/shared/components/required-indicator";
+import { CheckboxField } from "@/modules/shared/components/checkbox-input";
+import { UpdateProfileAlertDialog } from "@/modules/shared/components/update-profile-alert-dialog";
 
 const projectSchema = z
   .object({
@@ -42,16 +44,24 @@ const projectSchema = z
     projectStartDate: z.date({
       required_error: "Start date is required.",
     }),
-    projectEndDate: z.date({
-      required_error: "end date is required.",
-    }),
+    projectEndDate: z
+      .union([z.date().optional(), z.literal("").optional()])
+      .refine((val) => val === "" || val instanceof Date, {
+        message: "End date is required.",
+      })
+      .optional(),
     projectUrl: z.string(),
     projectDescription: z.string().nonempty("Job description is required."),
+    isCurrent: z.boolean().default(false).optional(),
   })
-  .refine((data) => data.projectStartDate < data.projectEndDate, {
-    message: "Start date must be before end date",
-    path: ["projectEndDate"],
-  });
+  .refine(
+    (data) =>
+      !data.projectEndDate || data.projectStartDate < data.projectEndDate,
+    {
+      message: "Start date must be before end date",
+      path: ["projectEndDate"],
+    }
+  );
 export const EditProject = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -70,8 +80,44 @@ export const EditProject = () => {
       projectEndDate: new Date(),
       projectUrl: "",
       projectDescription: "",
+      isCurrent: false,
     },
   });
+
+  const { watch, setValue } = form;
+  const isCurrent = watch("isCurrent");
+
+  const projectTitle = watch("projectTitle");
+  const organization = watch("organization");
+  const organizationLocation = watch("organizationLocation");
+  const projectStartDate = watch("projectStartDate");
+  const projectEndDate = watch("projectEndDate");
+  const projectDescription = watch("projectDescription");
+
+  const isStartDateValid =
+    projectStartDate instanceof Date && !isNaN(projectStartDate.getTime());
+
+  const isEndDateValid = !isCurrent
+    ? projectEndDate instanceof Date && !isNaN(projectEndDate.getTime())
+    : true;
+
+  const isDateRangeValid =
+    !isCurrent || (projectEndDate && projectStartDate < projectEndDate);
+
+  const isValid =
+    projectTitle?.length > 0 &&
+    organization?.length > 0 &&
+    isStartDateValid &&
+    isEndDateValid &&
+    isDateRangeValid &&
+    organizationLocation?.length > 0 &&
+    projectDescription?.length > 0;
+
+  useEffect(() => {
+    if (isCurrent) {
+      setValue("projectEndDate", new Date());
+    }
+  }, [isCurrent, setValue]);
 
   const { data: projectData, loading: projectLoading } = useSubscription(
     PROJECT_INFORMATION_BY_USER_ID,
@@ -91,6 +137,12 @@ export const EditProject = () => {
   const visibleProjects = projectData?.project?.filter(
     (exp: any) => exp.visibility === true
   );
+
+  const sortedProjects = visibleProjects?.sort((a: any, b: any) => {
+    if (a.isCurrent && !b.isCurrent) return -1;
+    if (!a.isCurrent && b.isCurrent) return 1;
+    return 0;
+  });
 
   const hiddenProjects = projectData?.project?.filter(
     (exp: any) => exp.visibility === false
@@ -115,6 +167,7 @@ export const EditProject = () => {
           : new Date(),
         projectUrl: project.project_url,
         projectDescription: project.project_role_description,
+        isCurrent: project.isCurrent,
       });
     }
   }, [editData, form]);
@@ -140,6 +193,7 @@ export const EditProject = () => {
             project_organization: values.organization,
             project_location: values.organizationLocation,
             project_role_description: values.projectDescription,
+            isCurrent: isCurrent,
           },
         });
 
@@ -150,7 +204,7 @@ export const EditProject = () => {
         });
       }
       form.reset();
-      router.push("/profile/project");
+      router.push("/profile/projects");
     } catch (error) {
       console.error(error);
       toast({
@@ -275,7 +329,7 @@ export const EditProject = () => {
                       ) : (
                         ""
                       )}
-                      {visibleProjects?.map((project: any) => (
+                      {sortedProjects?.map((project: any) => (
                         <AccordionContent key={project.id}>
                           <ActionCard
                             id={project.id}
@@ -296,6 +350,7 @@ export const EditProject = () => {
                             hideAction={() => hideProjectAction(project.id)}
                             status={project.visibility}
                             tab="project"
+                            isCurrent={isCurrent}
                           />
                         </AccordionContent>
                       ))}
@@ -344,6 +399,7 @@ export const EditProject = () => {
                                 unhideProjectAction(project.id)
                               }
                               status={project.visibility}
+                              isCurrent={isCurrent}
                             />
                           </AccordionContent>
                         ))}
@@ -385,18 +441,32 @@ export const EditProject = () => {
                     placeholder={"New York, NY"}
                     required={true}
                   />
-                  <CalendarField
-                    fieldLabel={"Start date"}
-                    fieldName={"projectStartDate"}
-                    control={form.control}
-                    required={true}
-                  />
-                  <CalendarField
-                    fieldLabel={"End date"}
-                    fieldName={"projectEndDate"}
-                    control={form.control}
-                    required={true}
-                  />
+                  <div className="flex flex-col gap-2">
+                    <CalendarField
+                      fieldLabel={"Start date"}
+                      fieldName={"projectStartDate"}
+                      control={form.control}
+                      required={true}
+                    />
+
+                    <CheckboxField
+                      fieldLabel="Is this your ongoing project?"
+                      fieldName="isCurrent"
+                      control={form.control}
+                      required={!isCurrent}
+                    />
+                  </div>
+
+                  {!isCurrent && (
+                    <>
+                      <CalendarField
+                        fieldLabel={"End date"}
+                        fieldName={"projectEndDate"}
+                        control={form.control}
+                        required={true}
+                      />
+                    </>
+                  )}
                   <TextInput
                     fieldLabel={"Project URL"}
                     fieldName={"projectUrl"}
@@ -419,13 +489,12 @@ export const EditProject = () => {
 
                 <div className="flex justify-end w-full mt-8">
                   <div className="w-38">
-                    {isLoading ? (
-                      <LoadingButton />
-                    ) : (
-                      <>
-                        <CustomButton type="submit" title="Update project" />
-                      </>
-                    )}
+                    <UpdateProfileAlertDialog
+                      sectionName={"Projects"}
+                      disabled={false}
+                      onConfirm={() => form.handleSubmit(onSubmit)()}
+                      isLoading={isLoading}
+                    />
                   </div>
                 </div>
               </form>

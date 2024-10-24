@@ -74,9 +74,7 @@ export const UpdateProfileAlertDialog = ({
               onClick={handleConfirm}
               className="w-full uppercase bg-honoluluBlue tracking-wider text-white hover:bg-federalBlue"
             >
-              <CheckCircle className="mr-2" size={18} />{" "}
-              {/* Confirmation icon */}
-              Confirm Update
+              <CheckCircle className="mr-2" size={18} /> Confirm Update
             </Button>
           )}
         </AlertDialogFooter>
