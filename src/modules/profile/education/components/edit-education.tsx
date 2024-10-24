@@ -129,16 +129,16 @@ export const EditEducation = () => {
       const education = editData?.education[0];
       form.reset({
         degree: education.education_major,
-        specialization: education.education_specialization,
-        coursework: education.education_coursework,
-        achievement: education?.education_achievement,
+        specialization: education.education_specialization || "",
+        coursework: education.education_coursework || "",
+        achievement: education?.education_achievement || "",
         institute: education.education_institute,
         instituteLocation: education.education_location,
         startDate: new Date(education.education_start_date),
         endDate: new Date(education.education_end_date),
-        gpa: education.education_gpa,
-        additionalInformation: education.educatoin_additional_information,
-        isCurrent: education.isCurrent,
+        gpa: education.education_gpa || "",
+        additionalInformation: education.educatoin_additional_information || "",
+        isCurrent: education.isCurrent ? education?.isCurrent : false,
       });
     }
   }, [editData, form]);
