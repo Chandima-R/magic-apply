@@ -268,7 +268,7 @@ export const ApplyJobs = () => {
                               jobDescription: "",
                               companyDescription: "",
                               customInput: "masterResume",
-                              masterResume: "",
+                              masterResume: false,
                               fileUpload: "",
                               customText: "",
                               additionalInformation: "",
