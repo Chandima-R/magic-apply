@@ -1,14 +1,14 @@
 export const resumeSelection = [
   {
     label: "Master resume",
-    value: "master resume",
+    value: "masterResume",
   },
   {
     label: "Upload a file",
-    value: "upload a file",
+    value: "fileUpload",
   },
   {
     label: "Use custom text",
-    value: "use custom text",
+    value: "customText",
   },
 ];
