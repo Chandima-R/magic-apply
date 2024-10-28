@@ -4,15 +4,18 @@ export const APPLY_JOBS_INFORMATION_BY_USER_ID = gql`
   subscription applyJobsInformationByUserId($_eq: String) {
     apply_jobs(where: { user_id: { _eq: $_eq } }) {
       user_id
-      master_resume
       job_description
-      id
       cover_letter
+      id
       company_description
+      additional_question_one
       additional_question_two
       additional_question_three
-      additional_question_one
       additional_information
+      custom_input
+      file_upload
+      custom_text
+      master_resume
       cover_letters {
         letter
       }
@@ -29,7 +32,10 @@ export const ADD_NEW_APPLY_JOBS_ROW_BY_USER_ID = gql`
     $company_description: String
     $cover_letter: Boolean = false
     $job_description: String
-    $master_resume: String
+    $master_resume: Boolean = false
+    $custom_input: String
+    $custom_text: String
+    $file_upload: String
     $user_id: String
   ) {
     insert_apply_jobs(
@@ -42,6 +48,9 @@ export const ADD_NEW_APPLY_JOBS_ROW_BY_USER_ID = gql`
         cover_letter: $cover_letter
         job_description: $job_description
         master_resume: $master_resume
+        custom_input: $custom_input
+        custom_text: $custom_text
+        file_upload: $file_upload
         user_id: $user_id
       }
     ) {
@@ -59,7 +68,11 @@ export const UPDATE_APPLY_JOBS_ROW_BY_USER_ID = gql`
     $company_description: String
     $cover_letter: Boolean = false
     $job_description: String
-    $master_resume: String
+    $master_resume: Boolean = false
+    $custom_input: String
+    $custom_text: String
+    $file_upload: String
+    $user_id: String
     $_eq: uuid!
   ) {
     update_apply_jobs(
@@ -73,6 +86,9 @@ export const UPDATE_APPLY_JOBS_ROW_BY_USER_ID = gql`
         cover_letter: $cover_letter
         job_description: $job_description
         master_resume: $master_resume
+        custom_input: $custom_input
+        custom_text: $custom_text
+        file_upload: $file_upload
       }
     ) {
       affected_rows
@@ -85,16 +101,19 @@ export const DELETE_APPLY_JOBS_ROW_BY_PK = gql`
     delete_apply_jobs(where: { id: { _eq: $_eq } }) {
       affected_rows
       returning {
-        additional_information
-        additional_question_one
-        additional_question_three
-        additional_question_two
-        company_description
+        user_id
+        job_description
         cover_letter
         id
-        job_description
+        company_description
+        additional_question_one
+        additional_question_two
+        additional_question_three
+        additional_information
+        custom_input
+        file_upload
+        custom_text
         master_resume
-        user_id
       }
     }
   }

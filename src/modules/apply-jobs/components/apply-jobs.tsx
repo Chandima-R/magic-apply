@@ -58,7 +58,7 @@ export const ApplyJobs = () => {
         {
           jobDescription: "",
           customInput: "masterResume",
-          masterResume: false,
+          masterResume: true,
           fileUpload: "",
           customText: "",
           companyDescription: "",
@@ -79,7 +79,6 @@ export const ApplyJobs = () => {
 
   function onSectionSubmit(index: number) {
     const sectionData = form.getValues(`groups.${index}`);
-    console.log("Submit section:", sectionData);
   }
 
   return (
