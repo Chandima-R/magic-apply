@@ -135,7 +135,10 @@ export const SingleFileDropBox = ({
   };
 
   const { getRootProps, getInputProps } = useDropzone({
-    accept: [".pdf", ".doc", ".docx"],
+    accept: {
+      "application/pdf": [".pdf"],
+      "application/msword": [".doc", ".docx"],
+    },
     maxSize: 10 * 1024 * 1024,
     onDrop,
   });
