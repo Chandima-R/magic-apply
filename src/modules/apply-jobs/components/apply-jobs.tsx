@@ -12,6 +12,12 @@ import { CheckboxField } from "@/modules/shared/components/checkbox-input";
 import { TextArea } from "@/modules/shared/components/text-area";
 import { SingleFileDropBox } from "@/modules/shared/components/dropbox";
 import { PlusCircle, Send, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { useUser } from "@clerk/nextjs";
+import { useMutation, useSubscription } from "@apollo/client";
+import { ADD_NEW_APPLY_JOBS_ROW_BY_USER_ID } from "@/graphql/apply-jobs";
+import { CONTACT_INFORMATION } from "@/graphql/contact";
 
 const groupSchema = z
   .object({
@@ -51,6 +57,10 @@ const formSchema = z.object({
 });
 
 export const ApplyJobs = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const { user } = useUser();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -77,8 +87,61 @@ export const ApplyJobs = () => {
     name: "groups",
   });
 
-  function onSectionSubmit(index: number) {
+  const [addApplyJobs] = useMutation(ADD_NEW_APPLY_JOBS_ROW_BY_USER_ID);
+
+  const { data: contactData, loading: contactLoading } = useSubscription(
+    CONTACT_INFORMATION,
+    {
+      variables: {
+        _eq: user?.id,
+      },
+    }
+  );
+
+  const signedUserData = contactData?.contact[0];
+
+  async function onSectionSubmit(index: number) {
     const sectionData = form.getValues(`groups.${index}`);
+
+    console.log(12, sectionData);
+    try {
+      setIsLoading(true);
+
+      if (!user?.id) {
+        throw new Error("User is not authenticated");
+      } else {
+        await addApplyJobs({
+          variables: {
+            job_description: sectionData.jobDescription,
+            master_resume: sectionData.masterResume,
+            company_description: sectionData.companyDescription,
+            additional_information: sectionData.additionalInformation,
+            additional_question_one: sectionData.additionalQuestion1,
+            additional_question_two: sectionData.additionalQuestion2,
+            additional_question_three: sectionData.additionalQuestion3,
+            cover_letter: sectionData.coverLetter,
+            custom_input: sectionData.customInput,
+            file_upload: sectionData.fileUpload,
+            custom_text: sectionData.customText,
+            user_id: user?.id,
+          },
+        });
+      }
+
+      toast({
+        variant: "default",
+        title: "Success.",
+        description: "Your application(s) were submitted successfully.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
