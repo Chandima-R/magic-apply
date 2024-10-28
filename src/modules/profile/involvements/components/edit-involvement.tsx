@@ -6,7 +6,6 @@ import { TextArea } from "@/modules/shared/components/text-area";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CustomButton } from "@/modules/shared/components/custom-button";
 import { CalendarField } from "@/modules/shared/components/calendar-field";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser } from "@clerk/nextjs";
@@ -27,9 +26,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ActionCard } from "@/modules/shared/components/action-card";
-import { LoadingButton } from "@/modules/shared/components/loading-button";
 import { ProfileActiveLinks } from "../../../shared/components/profile-active-links";
 import { usePathname, useRouter } from "next/navigation";
+import { UpdateProfileAlertDialog } from "@/modules/shared/components/update-profile-alert-dialog";
+import { CheckboxField } from "@/modules/shared/components/checkbox-input";
 
 const involvementSchema = z
   .object({
@@ -38,17 +38,23 @@ const involvementSchema = z
     organizationRoleStartDate: z.date({
       required_error: "Start date is required.",
     }),
-    organizationRoleEndDate: z.date({
-      required_error: "End date is required.",
-    }),
+    organizationRoleEndDate: z
+      .union([z.date().optional(), z.literal("").optional()])
+      .refine((val) => val === "" || val instanceof Date, {
+        message: "End date is required.",
+      })
+      .optional(),
     organizationCollege: z.string().nonempty("Company Location is required."),
     organizationLocation: z.string().optional(),
     organizationRoleDescription: z
       .string()
       .nonempty("Job description is required."),
+    isCurrent: z.boolean().default(false).optional(),
   })
   .refine(
-    (data) => data.organizationRoleStartDate < data.organizationRoleEndDate,
+    (data) =>
+      !data.organizationRoleEndDate ||
+      data.organizationRoleStartDate < data.organizationRoleEndDate,
     {
       message: "Start date must be before end date",
       path: ["organizationRoleEndDate"],
@@ -73,8 +79,12 @@ export const EditInvolvement = () => {
       organizationCollege: "",
       organizationLocation: "",
       organizationRoleDescription: "",
+      isCurrent: false,
     },
   });
+
+  const { watch, setValue } = form;
+  const isCurrent = watch("isCurrent");
 
   const { data: involvementData, loading: involvementLoading } =
     useSubscription(INVOLVEMENT_INFORMATION_BY_USER_ID, {
@@ -92,6 +102,12 @@ export const EditInvolvement = () => {
   const visibleInvolvements = involvementData?.involvement?.filter(
     (inv: any) => inv.visibility === true
   );
+
+  const sortedInvolvements = visibleInvolvements?.sort((a: any, b: any) => {
+    if (a.isCurrent && !b.isCurrent) return -1;
+    if (!a.isCurrent && b.isCurrent) return 1;
+    return 0;
+  });
 
   const hiddenInvolvements = involvementData?.involvement?.filter(
     (inv: any) => inv.visibility === false
@@ -117,6 +133,7 @@ export const EditInvolvement = () => {
         organizationCollege: involvement?.involvement_college,
         organizationLocation: involvement?.involvement_location,
         organizationRoleDescription: involvement?.involvement_description,
+        isCurrent: involvement?.isCurrent ? involvement.isCurrent : false,
       });
     }
   }, [editData, form]);
@@ -136,10 +153,15 @@ export const EditInvolvement = () => {
             involevement_organization: values.organizationName,
             involvement_college: values.organizationCollege,
             involvement_description: values.organizationRoleDescription,
-            involvement_end_date: values.organizationRoleEndDate,
+            involvement_end_date: values.isCurrent
+              ? ""
+              : values.organizationRoleEndDate
+              ? new Date(values.organizationRoleEndDate)
+              : null,
             involvement_organization_role: values.organizationRole,
             involvement_location: values.organizationLocation,
             involvement_start_date: values.organizationRoleStartDate,
+            isCurrent: isCurrent,
           },
         });
 
@@ -270,7 +292,7 @@ export const EditInvolvement = () => {
                         ) : (
                           ""
                         )}
-                        {visibleInvolvements?.map((involvement: any) => (
+                        {sortedInvolvements?.map((involvement: any) => (
                           <AccordionContent key={involvement.id}>
                             <ActionCard
                               id={involvement.id}
@@ -295,6 +317,7 @@ export const EditInvolvement = () => {
                               }
                               status={involvement.visibility}
                               tab="involvements"
+                              isCurrent={isCurrent}
                             />
                           </AccordionContent>
                         ))}
@@ -347,6 +370,7 @@ export const EditInvolvement = () => {
                                   unhideinvolvementAction(involvement.id)
                                 }
                                 status={involvement.visibility}
+                                isCurrent={isCurrent}
                               />
                             </AccordionContent>
                           ))}
@@ -380,18 +404,32 @@ export const EditInvolvement = () => {
                     placeholder={"Economics Student Association"}
                     required={true}
                   />
-                  <CalendarField
-                    fieldLabel={"Start date"}
-                    fieldName={"organizationRoleStartDate"}
-                    control={form.control}
-                    required={true}
-                  />
-                  <CalendarField
-                    fieldLabel={"End date"}
-                    fieldName={"organizationRoleEndDate"}
-                    control={form.control}
-                    required={true}
-                  />
+                  <div className="flex flex-col gap-2">
+                    <CalendarField
+                      fieldLabel={"Start date"}
+                      fieldName={"organizationRoleStartDate"}
+                      control={form.control}
+                      required={true}
+                    />
+
+                    <CheckboxField
+                      fieldLabel="Is this your ongoing involvement?"
+                      fieldName="isCurrent"
+                      control={form.control}
+                      required={!isCurrent}
+                    />
+                  </div>
+
+                  {!isCurrent && (
+                    <>
+                      <CalendarField
+                        fieldLabel={"End date"}
+                        fieldName={"organizationRoleEndDate"}
+                        control={form.control}
+                        required={true}
+                      />
+                    </>
+                  )}
                   <TextInput
                     fieldLabel={
                       "At which college/school/university was the organization located?"
@@ -423,13 +461,12 @@ export const EditInvolvement = () => {
 
                 <div className="flex justify-end w-full mt-8">
                   <div className="w-38">
-                    {isLoading ? (
-                      <LoadingButton />
-                    ) : (
-                      <>
-                        <CustomButton type="submit" title="Edit involvement" />
-                      </>
-                    )}
+                    <UpdateProfileAlertDialog
+                      sectionName={"Involvement"}
+                      disabled={false}
+                      onConfirm={() => form.handleSubmit(onSubmit)()}
+                      isLoading={isLoading}
+                    />
                   </div>
                 </div>
               </form>

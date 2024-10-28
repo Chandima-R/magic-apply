@@ -49,7 +49,7 @@ export const ADD_NEW_INVOLVEMENT_BY_USER_ID = gql`
     $involvement_start_date: String
     $involvement_location: String
     $user_id: String
-    $isCurrent: Boolean
+    $isCurrent: Boolean!
   ) {
     insert_involvement(
       objects: {
@@ -79,7 +79,7 @@ export const UPDATE_INVOLVEMENT_BY_ID = gql`
     $involvement_start_date: String
     $involvement_location: String
     $_eq: uuid!
-    $isCurrent: Boolean
+    $isCurrent: Boolean!
   ) {
     update_involvement(
       where: { id: { _eq: $_eq } }
