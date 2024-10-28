@@ -104,7 +104,7 @@ export const ApplyJobs = () => {
     try {
       await deleteApplyJobsRow({
         variables: {
-          _eq: id, // Ensure this matches the mutation's requirement
+          _eq: id,
         },
       });
       toast({
@@ -113,7 +113,6 @@ export const ApplyJobs = () => {
         description: "Row deleted successfully.",
       });
 
-      // Refresh form state after successful deletion
       const updatedFields = form
         .getValues("groups")
         .filter((_, index) => fields[index].id !== id);
@@ -171,6 +170,7 @@ export const ApplyJobs = () => {
   }, [jobsData, form.reset]);
 
   async function onSectionSubmit(index: number) {
+    console.log(18, user?.id);
     const sectionData = form.getValues(`groups.${index}`);
     try {
       setIsLoading(true);
@@ -192,6 +192,24 @@ export const ApplyJobs = () => {
             file_upload: sectionData.fileUpload,
             custom_text: sectionData.customText,
             user_id: user?.id,
+          },
+        });
+
+        await updateApplyJobs({
+          variables: {
+            job_description: sectionData.jobDescription,
+            master_resume: sectionData.masterResume,
+            company_description: sectionData.companyDescription,
+            additional_information: sectionData.additionalInformation,
+            additional_question_one: sectionData.additionalQuestion1,
+            additional_question_two: sectionData.additionalQuestion2,
+            additional_question_three: sectionData.additionalQuestion3,
+            cover_letter: sectionData.coverLetter,
+            custom_input: sectionData.customInput,
+            file_upload: sectionData.fileUpload,
+            custom_text: sectionData.customText,
+            user_id: user?.id,
+            _eq: user?.id,
           },
         });
       }
