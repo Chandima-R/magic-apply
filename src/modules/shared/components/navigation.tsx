@@ -53,7 +53,7 @@ export const Navigation = () => {
                 <Link href="/">
                   <div className="items-center flex">
                     <Image
-                      src={"/images/logo.svg"}
+                      src={"/images/logo-white.png"}
                       alt="logo"
                       height={28}
                       width={28}
@@ -93,7 +93,7 @@ export const Navigation = () => {
           <Link href="/">
             <div className="items-center flex">
               <Image
-                src={"/images/logo.svg"}
+                src={"/images/logo-white.png"}
                 alt="logo"
                 height={28}
                 width={28}
