@@ -1,81 +1,46 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
-import { MarkdownTextArea } from "@/modules/shared/components/markdown-text-area";
-
-const FormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  description: z.string().min(2, {
-    message: "Description must be at least 2 characters.",
-  }),
-});
+import { EDUCATION_INFORMATION_BY_USER_ID } from "@/graphql/education";
+import { generateResponse } from "@/utils/chatgpt";
+import { useSubscription } from "@apollo/client";
+import { useUser } from "@clerk/nextjs";
 
 export default function Page() {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      username: "",
-      description: "",
-    },
-  });
+  const { user } = useUser();
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
+  const { data: educationData } = useSubscription(
+    EDUCATION_INFORMATION_BY_USER_ID,
+    {
+      variables: { _eq: user?.id },
+    }
+  );
+
+  const education = educationData?.education;
+
+  const enhanceEducationData = async () => {
+    if (!education) return;
+
+    // Prepare the message to send to generateResponse
+    const message = {
+      jobDescription: "Your job description here", // Customize as needed
+      masterResume: JSON.stringify(education), // Convert education array to string
+    };
+
+    try {
+      // Call the generateResponse function with the appropriate prompt type
+      const enhancedData = await generateResponse("resumeEnhancement", message);
+      console.log("Enhanced Education Data:", enhancedData);
+
+      // You can now use the enhancedData as needed
+    } catch (error) {
+      console.error("Error enhancing education data:", error);
+    }
+  };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <MarkdownTextArea
-          fieldLabel={"Description"}
-          fieldName={"description"}
-          control={form.control}
-          placeholder={"Place your description here..."}
-          required={true}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+    <div>
+      <p>Hello</p>
+      <button onClick={enhanceEducationData}>Enhance Education Data</button>
+    </div>
   );
 }
