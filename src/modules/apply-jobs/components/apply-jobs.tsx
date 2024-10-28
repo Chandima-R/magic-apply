@@ -2,7 +2,7 @@
 
 import React, { FC, ReactNode, useEffect, useState } from "react";
 import { Form } from "@/components/ui/form";
-import { MailPlus, PlusCircle, Send, Trash2, Lock, Info } from "lucide-react";
+import { MailPlus, PlusCircle, Send, Trash2 } from "lucide-react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,7 +20,6 @@ import {
 } from "@/graphql/apply-jobs";
 import { LoadingSpinner } from "@/modules/shared/components/loading-spinner";
 import { generateResponse } from "@/utils/chatgpt";
-import { ADD_NEW_COVER_LETTER_BY_JOB_ID } from "@/graphql/cover-letter";
 import { GET_USER } from "@/graphql/user";
 import { PlanOverlay } from "./plan-overlay";
 import { CONTACT_INFORMATION } from "@/graphql/contact";
@@ -267,8 +266,6 @@ export const ApplyJobs = () => {
     handleDeleteItem(id);
   };
 
-  const [insertCoverLetter] = useMutation(ADD_NEW_COVER_LETTER_BY_JOB_ID);
-
   const handleApply = async (item: any) => {
     const message = {
       jobDescription: item.jobDescription,
@@ -294,7 +291,6 @@ export const ApplyJobs = () => {
         //     letter: response,
         //   },
         // });
-        console.log(12, item.id);
       });
 
       toast({
