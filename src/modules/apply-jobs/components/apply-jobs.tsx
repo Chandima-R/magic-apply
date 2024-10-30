@@ -148,6 +148,8 @@ export const ApplyJobs = () => {
     }
   );
 
+  console.log(789, jobsData);
+
   useEffect(() => {
     if (jobsData && jobsData.apply_jobs.length > 0) {
       const formattedData = jobsData.apply_jobs.map((job: any) => ({

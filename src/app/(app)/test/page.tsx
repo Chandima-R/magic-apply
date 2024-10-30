@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { EDUCATION_INFORMATION_BY_USER_ID } from "@/graphql/education";
 import { generateResponse } from "@/utils/chatgpt";
 import { useSubscription } from "@apollo/client";
@@ -16,6 +17,7 @@ export default function Page() {
   );
 
   const education = educationData?.education;
+  console.log(123, education);
 
   const enhanceEducationData = async () => {
     if (!education) return;
@@ -31,6 +33,8 @@ export default function Page() {
       const enhancedData = await generateResponse("resumeEnhancement", message);
       console.log("Enhanced Education Data:", enhancedData);
 
+      console.log(421, education);
+
       // You can now use the enhancedData as needed
     } catch (error) {
       console.error("Error enhancing education data:", error);
@@ -39,8 +43,7 @@ export default function Page() {
 
   return (
     <div>
-      <p>Hello</p>
-      <button onClick={enhanceEducationData}>Enhance Education Data</button>
+      <Button onClick={enhanceEducationData}>Enhance Education Data</Button>
     </div>
   );
 }

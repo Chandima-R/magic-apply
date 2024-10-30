@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     try {
       // Prepare the message for the ChatGPT API
       const message = {
-        jobDescription: "Your job description here", // Customize as needed
+        jobDescription: "Senior ", // Customize as needed
         masterResume: JSON.stringify(educationData), // Convert education array to string
       };
 
