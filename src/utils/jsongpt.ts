@@ -1,33 +1,68 @@
-// pages/api/enhanceEducation.js
+export async function generateJsonResponse(promptType: any, message: any) {
+  const OPENAI_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
-import { generateResponse } from "./chatgpt";
+  const promptMap: any = {
+    resumeEnhancement: (data: any) => `
+      Act as a resume optimization assistant. Use the following user-provided data to create an enhanced and detailed resume suitable for the current year and optimized for ATS. Each section has data relevant to that part of the resume.
 
-export default async function handler(req, res) {
-  if (req.method === "POST") {
-    const { educationData } = req.body;
+      Contact Information:
+      ${data.contact ? JSON.stringify(data.contact) : "N/A"}
 
-    if (!educationData) {
-      return res.status(400).json({ error: "Education data is required" });
-    }
+      Education Information:
+      ${data.education ? JSON.stringify(data.education) : "N/A"}
 
-    try {
-      // Prepare the message for the ChatGPT API
-      const message = {
-        jobDescription: "Senior ", // Customize as needed
-        masterResume: JSON.stringify(educationData), // Convert education array to string
-      };
+      Certification Information:
+      ${data.certification ? JSON.stringify(data.certification) : "N/A"}
 
-      // Call the existing generateResponse function with the prompt type for enhancement
-      const enhancedData = await generateResponse("resumeEnhancement", message);
+      Experience Information:
+      ${data.experience ? JSON.stringify(data.experience) : "N/A"}
 
-      console.log(enhancedData);
-      res.status(200).json({ enhancedData });
-    } catch (error) {
-      console.error("Error contacting ChatGPT:", error);
-      res.status(500).json({ error: "Failed to enhance education data" });
-    }
-  } else {
-    res.setHeader("Allow", ["POST"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+      Involvement Information:
+      ${data.involvement ? JSON.stringify(data.involvement) : "N/A"}
+
+      Project Information:
+      ${data.project ? JSON.stringify(data.project) : "N/A"}
+
+      Skills Information:
+      ${data.skills ? JSON.stringify(data.skills) : "N/A"}
+
+      Summary Information:
+      ${data.summary ? JSON.stringify(data.summary) : "N/A"}
+
+      Please rewrite each section using the user-provided information. Ensure that:
+      - Descriptions are specific, quantify achievements where possible.
+      - Language is professional, consistent, and ATS-optimized.
+      - Each section is represented as a JSON object for easy integration.
+
+      The output should be a single JSON object representing the full enhanced resume.
+    `,
+  };
+
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${OPENAI_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [
+        { role: "system", content: "You are a professional resume assistant." },
+        {
+          role: "user",
+          content: promptMap[promptType](message),
+        },
+      ],
+    }),
+  });
+
+  const data = await response.json();
+  const generatedJsonResponse = data.choices[0].message.content;
+
+  try {
+    return JSON.parse(generatedJsonResponse);
+  } catch (error) {
+    console.error("Error parsing the JSON response:", error);
+    throw new Error("Invalid JSON response format");
   }
 }
