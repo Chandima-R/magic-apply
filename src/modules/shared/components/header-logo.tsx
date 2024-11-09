@@ -12,9 +12,6 @@ export const HeaderLogo = () => {
           width={74}
           className="w-full"
         />
-        <p className="font-semibold text-slate-900 text-2xl ml-2.5">
-          MagicApply
-        </p>
       </div>
     </Link>
   );

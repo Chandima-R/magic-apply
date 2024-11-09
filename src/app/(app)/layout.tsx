@@ -1,4 +1,4 @@
-import "./globals.css";
+import "../globals.css";
 import { Source_Sans_3 } from "next/font/google";
 import React from "react";
 import { ClerkProvider } from "@clerk/nextjs";

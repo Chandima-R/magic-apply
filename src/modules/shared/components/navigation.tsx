@@ -32,6 +32,8 @@ export const Navigation = () => {
 
   const userPlan = activeUser?.user_plan?.toLowerCase();
 
+  console.log(user);
+
   const links = sidebarLinks(userPlan);
 
   if (isMobile) {
